@@ -1,14 +1,22 @@
 .main-content {
-    margin-top: 10%;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 52%;
 }
 
 .empty-space {
     display: none;
 }
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 768px) {
     .empty-space {
         display: block;
         margin-right: 20%;
     }
+
+    .main-content {
+        margin-top: 10%;
+    }
+
+
 }
