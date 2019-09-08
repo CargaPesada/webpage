@@ -13,7 +13,7 @@ class CustomCard extends React.Component {
             <div className="col-sm-1 col-md-3 bg-light card p-3" >
                 <i className={`fas ${this.props.name} fa-5x mx-auto pt-4`} ></i>
                 <div className="card-body mx-auto">
-                    Alguma coisa aqui
+                    {`${this.props.description}`}
                 </div>
             </div>
         );

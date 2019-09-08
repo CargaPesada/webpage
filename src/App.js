@@ -11,7 +11,7 @@ class App extends React.Component {
 
     this.state = {
       isUserAuthenticated: false,
-      isAdmin: true
+      isAdmin: false
     }
   }
 
