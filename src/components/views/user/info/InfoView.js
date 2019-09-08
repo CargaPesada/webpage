@@ -1,4 +1,5 @@
 import React from 'react';
+import './InfoView.css';
 
 class InfoView extends React.Component {
 
@@ -17,14 +18,20 @@ class InfoView extends React.Component {
         }
 
         return (
-            <div style={{marginTop: "5%", marginLeft: "10%", marginRight: "10%", height: "5vh"}}>
-                <div className="card bg-white row d-flex justify-content-center">
-                    <div className="col-sm-4">
-                        <h1 className="display-4 mx-auto pl-3 pr-3">{this.props.description}</h1>
+            <div className="card bg-white " style={{marginTop: "5%", marginLeft: "10%", marginRight: "10%", height: "80vh"}}>
+                <a href="#" className="text-dark text-right" onClick={() => this.props.handleDriverCard(false)} >
+                    <i class="fas fa-2x fa-times-circle"></i>
+                </a>
+                <div className="row d-flex justify-content-center" style={{width: "100%", height: "100%"}}>
+
+                    {/* Coluna principal (a do meio) */}
+                    <div className="col-sm-5">
+                        <h1 className="display-4 text-center">{this.props.description}</h1>
                         <div className="mt-3">
                             {toRender}
                         </div>
                     </div>
+                    
                 </div>
             </div>
         );

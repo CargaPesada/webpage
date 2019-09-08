@@ -10,8 +10,8 @@ class UserView extends React.Component {
 
         this.state = {
             // DEBUG
-            mustHideCards: true, // Trocar para false
-            mustShowDriverInfo: true, // Trocar para false
+            mustHideCards: false,
+            mustShowDriverInfo: false,
             infosToShow: [["Nome", "Teste"], ["Sobrenome", "Higa"]] // Deixar vazio
         };
     }
@@ -60,7 +60,7 @@ class UserView extends React.Component {
             else {
                 if (this.state.mustShowDriverInfo) {
                     toRender.push(
-                        <InfoView description="Dados do Motorista" infosToShow={this.state.infosToShow}/>
+                        <InfoView description="Dados do Motorista" handleDriverCard={this.handleDriverCard} infosToShow={this.state.infosToShow}/>
                     )
                 }
             }
