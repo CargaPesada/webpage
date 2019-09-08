@@ -10,7 +10,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      isUserAuthenticated: false
+      isUserAuthenticated: false,
+      isAdmin: true
     }
   }
 
@@ -48,7 +49,7 @@ class App extends React.Component {
       );
     }
     else {
-      toRender.push(<UserView />);
+      toRender.push(<UserView isAdmin={this.state.isAdmin} />);
     }
 
     return (
