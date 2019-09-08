@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Navbar from './components/navbar/Navbar';
 import Login from './components/forms/login/Login';
-import UserView from './components/views/UserView';
+import UserView from './components/views/user/UserView';
 
 class App extends React.Component {
 
