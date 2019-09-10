@@ -1,0 +1,11 @@
+.margin-left {
+    margin-left: 1vw;
+}
+
+@media screen and (min-width: 800px) {
+
+    .margin-left {
+        margin-left: 0;
+    }
+
+}
