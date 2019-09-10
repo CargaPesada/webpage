@@ -2,6 +2,7 @@ import React from 'react';
 import CustomCard from '../../cards/CustomCard';
 import './UserView.css';
 import InfoView from './info/InfoView';
+import RegisterView from './register/RegisterView';
 
 class UserView extends React.Component {
 
@@ -12,9 +13,11 @@ class UserView extends React.Component {
             // DEBUG
             mustHideCards: false,
             mustShowDriverInfo: false,
+            mustShowRegisterView: false,
             infosToShow: [["Nome", "Teste"], ["Sobrenome", "Higa"]] // Deixar vazio
         };
     }
+
 
 
     /**
@@ -23,12 +26,28 @@ class UserView extends React.Component {
     handleDriverCard = (mustHide) => {
 
         if (mustHide == true) {
-            this.setState({mustHideCards: true, mustShowDriverInfo: true});
+            this.setState({ mustHideCards: true, mustShowDriverInfo: true });
         }
         else {
-            this.setState({mustHideCards: false, mustShowDriverInfo: false});
+            this.setState({ mustHideCards: false, mustShowDriverInfo: false });
         }
     }
+
+
+
+    /**
+     * Método para esconder os cards e demonstrar a view de info do Motorista.
+     */
+    handleRegisterCard = (mustHide) => {
+
+        if (mustHide == true) {
+            this.setState({ mustHideCards: true, mustShowRegisterView: true });
+        }
+        else {
+            this.setState({ mustHideCards: false, mustShowRegisterView: false });
+        }
+    }
+
 
 
     /**
@@ -45,40 +64,49 @@ class UserView extends React.Component {
             // Nesse caso o usuário é o motorista...
             if (!this.state.mustHideCards) {
                 toRender.push(
-                    <div className="row justify-content-between" style={{marginTop: "17%", marginLeft: "10%", marginRight: "10%"}}>
+                    <div className="row justify-content-between" style={{ marginTop: "17%", marginLeft: "10%", marginRight: "10%" }}>
                         {/* Dados do Caminhão */}
                         <CustomCard name="fa-truck" description="Dados do Caminhão" />
 
                         {/* Dados do Usuário */}
-                        <CustomCard name="fa-user-slash" description="Dados do Motorista" customOnClick={() => this.handleDriverCard(true)}/>
+                        <CustomCard name="fa-user-slash" description="Dados do Motorista" customOnClick={() => this.handleDriverCard(true)} />
 
                         {/* Alerta */}
-                        <CustomCard name="fa-exclamation-triangle" description="Emergência"/>
+                        <CustomCard name="fa-exclamation-triangle" description="Emergência" />
                     </div>
                 );
             }
             else {
                 if (this.state.mustShowDriverInfo) {
                     toRender.push(
-                        <InfoView description="Dados do Motorista" handleDriverCard={this.handleDriverCard} infosToShow={this.state.infosToShow}/>
-                    )
+                        <InfoView description="Dados do Motorista" handleCard={this.handleDriverCard} infosToShow={this.state.infosToShow} />
+                    );
                 }
             }
         }
         else {
 
             // Nesse caso o usuário é ADMIN.
-            toRender.push(
-                <div className="row d-flex justify-content-center" style={{marginTop: "17%", marginLeft: "10%", marginRight: "10%"}}>
+            if (!this.state.mustHideCards) {
+                toRender.push(
+                    <div className="row d-flex justify-content-center" style={{ marginTop: "17%", marginLeft: "10%", marginRight: "10%" }}>
 
-                    {/* Gerenciar Dados dos Usuários */}
-                    <CustomCard name="fa-users" description="Gerenciar Usuários"/>
+                        {/* Gerenciar Dados dos Usuários */}
+                        <CustomCard name="fa-users" description="Registrar Usuário" customOnClick={() => this.handleRegisterCard(true)} />
 
-                </div>
-            );
+                    </div>
+                );
+            }
+            else {
+                if (this.state.mustShowRegisterView) {
+                    toRender.push(
+                        <RegisterView description="Registrar Usuário" handleCard={this.handleRegisterCard} />
+                    );
+                }
+            }
         }
 
-        return(
+        return (
             <div>
                 {toRender}
             </div>

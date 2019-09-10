@@ -1,21 +1,24 @@
 import React from 'react';
-import './InfoView.css';
+import FirebaseHandler from '../../../../utils/firebase/FirebaseHandler';
 
-class InfoView extends React.Component {
+class RegisterView extends React.Component {
 
     constructor(props) {
         super(props);
+
     }
+
+    registerNewUser = async () => {
+
+        let httpHandler = new FirebaseHandler();
+        await httpHandler.tryToRegister();
+
+    }
+
 
     render() {
 
-        let toRender = []
-
-        for (let index in this.props.infosToShow) {
-            toRender.push(
-                <p>{this.props.infosToShow[index][0]}: {this.props.infosToShow[index][1]}</p>
-            );
-        }
+        this.registerNewUser();
 
         return (
             <div className="card bg-white " style={{ marginTop: "5%", marginLeft: "10%", marginRight: "10%", height: "80vh" }}>
@@ -28,7 +31,7 @@ class InfoView extends React.Component {
                     <div className="col-sm-5">
                         <h1 className="display-4 text-center">{this.props.description}</h1>
                         <div className="mt-3">
-                            {toRender}
+
                         </div>
                     </div>
 
@@ -36,6 +39,7 @@ class InfoView extends React.Component {
             </div>
         );
     }
-};
 
-export default InfoView;
+}
+
+export default RegisterView;
