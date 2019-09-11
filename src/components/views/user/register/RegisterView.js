@@ -44,7 +44,14 @@ class RegisterView extends React.Component {
 
 
         let httpHandler = new FirebaseHandler();
-        await httpHandler.tryToRegister(newUser);
+        let result = await httpHandler.tryToRegister(newUser);
+
+        if (result) {
+            alert("Registrado com sucesso!");
+        }
+        else {
+            alert("Erro! Impossível registrar! Tente novamente!");
+        }
 
     }
 

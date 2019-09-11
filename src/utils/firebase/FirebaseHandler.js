@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const ENDPOINT_ADDRESS = "https://carga-pesada-d933f.appspot.com"
+const ENDPOINT_ADDRESS = "http://localhost:5000"
 
 class FirebaseHandler {
 
@@ -8,6 +8,8 @@ class FirebaseHandler {
      * Método para tentar realizar um novo registro de usuário.
      */
     tryToRegister = async (user) => {
+
+        let wasSuccessful = false;
 
         let jsonToSend = {
             nome: user.nome,
@@ -26,24 +28,13 @@ class FirebaseHandler {
             ocorrencias: []
         };
 
-        console.log(jsonToSend)
-
-        // await axios.post('https://carga-pesada-d933f.appspot.com/users/register', jsonToSend)
-        //     .then((res) => {
-        //         console.log("Funcionou");
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-
-        await axios.post('http://127.0.0.1:5000/users/register', jsonToSend)
+        // Acionando promisses para o endpoint
+        await axios.post(ENDPOINT_ADDRESS + '/users/register', jsonToSend)
             .then((res) => {
-                console.log("Funcionou");
+                wasSuccessful = true;
             })
-            .catch((err) => {
-                console.log(err);
-            });
 
+        return wasSuccessful;
     }
 
 
@@ -54,13 +45,15 @@ class FirebaseHandler {
 
         let dataExists = false
 
-        await axios.get('http://127.0.0.1:5000/users/' + email)
+        // Acionando promisses para o endpoint
+        await axios.get(ENDPOINT_ADDRESS + '/users/' + email)
             .then((res) => {
 
+                // Verificando se existe um campo "data"
                 try {
                     let jsonReceived = res["data"]
 
-                    if (jsonReceived["data"] == true) {
+                    if (jsonReceived["data"] != null) {
                         dataExists = true
                     }
                 }
