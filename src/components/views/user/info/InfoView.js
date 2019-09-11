@@ -7,10 +7,14 @@ class InfoView extends React.Component {
         super(props);
     }
 
+    /**
+     * Método padrão de renderização.
+     */
     render() {
 
         let toRender = []
 
+        // Checando quais tipos de informação deversão ser renderizadas
         for (let index in this.props.infosToShow) {
             toRender.push(
                 <p>{this.props.infosToShow[index][0]}: {this.props.infosToShow[index][1]}</p>

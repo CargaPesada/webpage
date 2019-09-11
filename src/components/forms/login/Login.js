@@ -1,8 +1,43 @@
 import React from 'react';
 import './Login.css';
+import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
+import { async } from 'q';
 
 class Login extends React.Component {
 
+
+    /**
+     * Método lidar com login.
+     */
+    handleLoginButton = async () => {
+
+        if (document.getElementById("email").value == "admin" &&
+            document.getElementById("password").value == "admin") {
+            this.props.handleUserAuthentication(true);
+        }
+        else if (document.getElementById("email").value != "") {
+
+            let httpHandler = new FirebaseHandler();
+
+            let result = await httpHandler.tryToLogin(document.getElementById("email").value);
+
+            if (result == true) {
+                this.props.handleUserAuthentication(false);
+            }
+            else {
+                alert("Credenciais inválidas!");
+            }
+
+
+        }
+        else {
+            alert("Insira os campos!");
+        }
+    }
+
+    /**
+     * Método padrão de renderização.
+     */
     render() {
         return (
             <div className="col-sm-3 bg-light custom-border">
@@ -17,7 +52,7 @@ class Login extends React.Component {
                         <input type="text" style={{ width: "100%" }} name="password" id="password" type="password" placeholder="Senha"></input>
                     </div>
                     <input className="btn btn-primary" style={{ width: "100%", marginBottom: "5%" }} type="button" name="login" id="login" value="Entrar"
-                        onClick={() => this.props.handleUserAuthentication()}></input>
+                        onClick={() => this.handleLoginButton()}></input>
                 </form>
             </div>
         );

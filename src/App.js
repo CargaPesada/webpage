@@ -11,7 +11,7 @@ class App extends React.Component {
 
     this.state = {
       isUserAuthenticated: false,
-      isAdmin: true
+      isAdmin: false
     }
   }
 
@@ -20,13 +20,18 @@ class App extends React.Component {
   /**
    * Método para alterar o estado se o usuário está autenticado.
    */
-  handleUserAuthentication = () => {
+  handleUserAuthentication = (isAdmin) => {
 
     if (this.state.isUserAuthenticated) {
-      this.setState({ isUserAuthenticated: false });
+      this.setState({ isUserAuthenticated: false, isAdmin: false });
     }
     else {
-      this.setState({ isUserAuthenticated: true });
+      if (isAdmin) {
+        this.setState({ isUserAuthenticated: true, isAdmin: true });
+      }
+      else {
+        this.setState({ isUserAuthenticated: true, isAdmin: false });
+      }
     }
 
   }
