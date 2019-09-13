@@ -93,6 +93,7 @@ typings/
 
 # End of https://www.gitignore.io/api/node
 
+#React
 .DS_STORE
 node_modules
 scripts/flow/*/.flowconfig
@@ -128,3 +129,9 @@ packages/react-devtools-extensions/firefox/*.pem
 packages/react-devtools-extensions/shared/build
 packages/react-devtools-inline/dist
 packages/react-devtools-shell/dist
+
+# Firebase credentials
+credential.js
+
+#Firebase
+.firebase

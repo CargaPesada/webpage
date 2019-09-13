@@ -1,14 +1,18 @@
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import * as credentials from './credential';
 const axios = require('axios');
-
 const ENDPOINT_ADDRESS = 'https://carga-pesada-d933f.appspot.com';
+
+// Initialize Firebase
+firebase.initializeApp(credentials);
 
 class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de usuário.
      */
-	tryToRegister = async (user) => {
-		let wasSuccessful = false;
-
+	tryToRegister = async (user, callback) => {
 		let jsonToSend = {
 			nome: user.nome,
 			cargo: 1,
@@ -26,33 +30,33 @@ class FirebaseHandler {
 			ocorrencias: []
 		};
 
-		// Acionando promisses para o endpoint
-		await axios.post(ENDPOINT_ADDRESS + '/users/register', jsonToSend).then((res) => {
-			wasSuccessful = true;
-		});
-
-		return wasSuccessful;
+		// Registra o usuario no autenticador do Firebase
+		firebase.auth().createUserWithEmailAndPassword(jsonToSend.email, jsonToSend.senha).then(
+			async (user) => {
+				// Acionando promisses para o endpoint
+				await axios.post(ENDPOINT_ADDRESS + '/users/register', jsonToSend).then((res) => {
+					callback();
+				});
+			},
+			(error) => {
+				callback(error);
+				console.log(error);
+			}
+		);
 	};
 
 	/**
      * Método para tentar realizar login.
      */
-	tryToLogin = async (email) => {
-		let dataExists = false;
-
-		// Acionando promisses para o endpoint
-		await axios.get(ENDPOINT_ADDRESS + '/users/' + email).then((res) => {
-			// Verificando se existe um campo "data"
-			try {
-				let jsonReceived = res['data'];
-
-				if (jsonReceived['data'] != null) {
-					dataExists = true;
-				}
-			} catch (e) {}
-		});
-
-		return dataExists;
+	tryToLogin = (email, password, callback) => {
+		firebase.auth().signInWithEmailAndPassword(email, password).then(
+			function(user) {
+				callback(true);
+			},
+			function(error) {
+				callback(false);
+			}
+		);
 	};
 }
 
