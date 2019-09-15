@@ -1,6 +1,7 @@
 import React from 'react';
 import FirebaseHandler from '../../../../utils/firebase/FirebaseHandler';
 import User from '../../../../models/User';
+import { error } from 'util';
 
 class RegisterView extends React.Component {
 	constructor(props) {
@@ -16,6 +17,9 @@ class RegisterView extends React.Component {
      * Método para registrar um novo motorista.
      */
 	registerNewUser = async () => {
+
+		let errorMessages = "";
+
 		let email = document.getElementById('email').value;
 		let senha = document.getElementById('senha').value;
 		let nome = document.getElementById('nome').value;
@@ -27,20 +31,69 @@ class RegisterView extends React.Component {
 		let nomemae = document.getElementById('nomemae').value;
 		let dependentes = this.state.areThereDependents;
 		let endereco = {
+			cep: document.getElementById('cep').value,
 			cidade: document.getElementById('cidade').value,
-			estado: document.getElementById('estado').value
+			estado: document.getElementById('estado').value,
+			rua: document.getElementById('rua').value,
+			complemento: document.getElementById('complemento').value,
+			numero: document.getElementById('numero').value,
+			bairro: document.getElementById('bairro').value
 		};
 
-		let newUser = new User(email, senha, nome, cpf, tipocnh, sexo, ddn, nomepai, nomemae, dependentes, endereco);
+		
+		// Validando o campo de e-mail
+		if (email === "" || /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email) == false) {
+			errorMessages += "\n* E-Mail não está no padrão";
+		}
 
-		let httpHandler = new FirebaseHandler();
-		await httpHandler.tryToRegister(newUser, (error) => {
-			if (!error) {
-				alert('Registrado com sucesso!');
-			} else {
-				alert(error.message);
-			}
-		});
+		// Validando o campo de senha
+		if (senha.length < 6) {
+			errorMessages += "\n* Senha menor que 6 caracteres";
+		}
+
+		// Validando o campo nome
+		if (nome.length === 0) {
+			errorMessages += "\n* Nome não preenchido";
+		}
+
+		// TODO: Validar CPF
+
+		// TODO: Validar CNH
+
+		// TODO: Validar DDN
+
+		// Validando o campo nome da mãe
+		if (nomemae.length === 0) {
+			errorMessages += "\n* Nome da mãe não preenchido";
+		}
+
+		// Validando os campos de endereço
+		if (endereco['cep'] < 8 || endereco['cep'] > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+			errorMessages += "\n* CEP inválido";
+		}
+
+		// Validando os campos de endereço
+		if (endereco['cep'] < 8 || endereco['cep'] > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+			errorMessages += "\n* CEP inválido";
+		}
+
+		// Verificando se existe mensagens de erros a serem exibidas...
+		if (errorMessages === "") {
+
+			let newUser = new User(email, senha, nome, cpf, tipocnh, sexo, ddn, nomepai, nomemae, dependentes, endereco);
+
+			let httpHandler = new FirebaseHandler();
+			await httpHandler.tryToRegister(newUser, (error) => {
+				if (!error) {
+					alert('Registrado com sucesso!');
+				} else {
+					alert(error.message);
+				}
+			});
+		}
+		else {
+			alert('Os seguintes campos estão incorretos:\n'.concat(errorMessages));
+		}
 	};
 
 	/**
@@ -73,7 +126,12 @@ class RegisterView extends React.Component {
 						<div className="mt-3 justify-content-center" style={{ width: '100%' }}>
 							<form>
 								<div className="form-group">
-									<label>E-Mail</label>
+									<p>
+										<label>Olá! Para cadastrar um novo usuário, você deverá preencher todos os campos obrigatórios (*)!</label>
+									</p>
+								</div>
+								<div className="form-group">
+									<label>E-Mail *</label>
 									<input
 										type="email"
 										name="email"
@@ -84,7 +142,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Senha</label>
+									<label>Senha *</label>
 									<input
 										type="password"
 										name="senha"
@@ -95,7 +153,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Nome</label>
+									<label>Nome *</label>
 									<input
 										type="text"
 										name="nome"
@@ -106,7 +164,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>CPF</label>
+									<label>CPF *</label>
 									<input
 										type="text"
 										name="cpf"
@@ -117,7 +175,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Tipo de CNH</label>
+									<label>Tipo de CNH *</label>
 									<input
 										type="text"
 										name="tipocnh"
@@ -128,7 +186,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Gênero do Usuário: </label>
+									<label>Sexo do Usuário *</label>
 
 									<div className="d-flex row justify-content-between ml-1" style={{ width: '60%' }}>
 										<label>
@@ -153,7 +211,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Data de Nascimento</label>
+									<label>Data de Nascimento *</label>
 									<input
 										type="text"
 										name="ddn"
@@ -175,7 +233,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Nome da Mãe</label>
+									<label>Nome da Mãe *</label>
 									<input
 										type="text"
 										name="nomemae"
@@ -186,7 +244,7 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="mt-4 form-group">
-									<label>Tem dependentes: </label>
+									<label>Tem dependentes *</label>
 
 									<div className="d-flex row justify-content-between ml-1" style={{ width: '60%' }}>
 										<label>
@@ -211,7 +269,15 @@ class RegisterView extends React.Component {
 								</div>
 
 								<div className="form-group mt-1">
-									<label>Endereço de Moradia</label>
+									<label>Endereço de Moradia *</label>
+									<p />
+									<input
+										type="text"
+										name="cep"
+										id="cep"
+										placeholder="CEP"
+										style={{ width: '40%' }}
+									/>
 									<p />
 									<input
 										type="text"
@@ -227,6 +293,38 @@ class RegisterView extends React.Component {
 										className="ml-3"
 										placeholder="Estado"
 										style={{ width: '50%' }}
+									/>
+									<p />
+									<input
+										type="text"
+										name="rua"
+										id="rua"
+										placeholder="Rua / Estrada / Avenida"
+										style={{ width: '40%' }}
+									/>
+									<input
+										type="text"
+										name="complemento"
+										id="complemento"
+										className="ml-3"
+										placeholder="Complemento"
+										style={{ width: '50%' }}
+									/>
+									<p />
+									<input
+										type="text"
+										name="numero"
+										id="numero"
+										placeholder="Número"
+										style={{ width: '40%' }}
+									/>
+									<p />
+									<input
+										type="text"
+										name="bairro"
+										id="bairro"
+										placeholder="Bairro"
+										style={{ width: '40%' }}
 									/>
 								</div>
 								<button

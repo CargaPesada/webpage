@@ -10,9 +10,9 @@ class UserView extends React.Component {
 
 		this.state = {
 			// DEBUG
-			mustHideCards: false,
+			mustHideCards: true,
 			mustShowDriverInfo: false,
-			mustShowRegisterView: false,
+			mustShowRegisterView: true,
 			infosToShow: [ [ 'Nome', 'Teste' ], [ 'Sobrenome', 'Higa' ] ] // Deixar vazio
 		};
 	}
