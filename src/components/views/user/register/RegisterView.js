@@ -68,13 +68,34 @@ class RegisterView extends React.Component {
 		}
 
 		// Validando os campos de endereço
-		if (endereco['cep'] < 8 || endereco['cep'] > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+		if (endereco['cep'].length < 8 || endereco['cep'].length > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
 			errorMessages += "\n* CEP inválido";
 		}
 
 		// Validando os campos de endereço
-		if (endereco['cep'] < 8 || endereco['cep'] > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+		if (endereco['cep'].length < 8 || endereco['cep'].length > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
 			errorMessages += "\n* CEP inválido";
+		}
+
+		// Validando os campos de endereço
+		if (endereco['cidade'].length === 0) { 
+			errorMessages += "\n* Cidade não preenchida";
+		}
+
+		if (endereco['estado'].length === 0) { 
+			errorMessages += "\n* Estado não preenchido";
+		}
+
+		if (endereco['rua'].length === 0) { 
+			errorMessages += "\n* Rua não preenchida";
+		}
+
+		if (endereco['numero'].length === 0) { 
+			errorMessages += "\n* Número não preenchido";
+		}
+
+		if (endereco['bairro'].length === 0) { 
+			errorMessages += "\n* Bairro não preenchido";
 		}
 
 		// Verificando se existe mensagens de erros a serem exibidas...
