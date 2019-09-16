@@ -1,5 +1,6 @@
 class User {
-	constructor(email, senha, nome, cpf, tipocnh, sexo, ddn, nomepai, nomemae, dependentes, endereco) {
+	constructor(email, senha, nome, cpf, tipocnh, sexo, ddn, nomepai, nomemae,
+		dependentes, endereco, nivelacesso) {
 		this.email = email;
 		this.senha = senha;
 		this.nome = nome;
@@ -11,6 +12,7 @@ class User {
 		this.nomemae = nomemae;
 		this.dependentes = dependentes;
 		this.endereco = endereco;
+		this.nivelacesso = nivelacesso;
 	}
 }
 

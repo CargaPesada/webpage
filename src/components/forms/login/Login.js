@@ -4,36 +4,37 @@ import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 
 class Login extends React.Component {
 	/**
-     * Método lidar com login.
+     * Método para lidar com login.
      */
 	handleLoginButton = async () => {
-		if (
-			document.getElementById('email').value === 'admin' &&
-			document.getElementById('password').value === 'admin'
-		) {
-			this.props.handleUserAuthentication(true);
-		} else if (document.getElementById('email').value !== '') {
+		if (document.getElementById('email').value !== ''
+			&& document.getElementById('password').value != '') {
 			let httpHandler = new FirebaseHandler();
 
-			httpHandler.tryToLogin(
+			// Tentando realizar autenticação...
+			let cargo = await httpHandler.tryToLogin(
 				document.getElementById('email').value,
-				document.getElementById('password').value,
-				(result) => {
-					if (result === true) {
-						this.props.handleUserAuthentication(false);
-					} else {
-						alert('Credenciais inválidas!');
-					}
-				}
-			);
+				document.getElementById('password').value);
+
+			// Se a autenticação deu certa...
+			// Verificaremos se o usuário tem perfil administrativo
+			if (cargo > 1) {
+				this.props.handleUserAuthentication(true, cargo);
+			}
+			else if (cargo == 0 || cargo == 1) {
+				this.props.handleUserAuthentication(false, cargo);
+			}
+			else {
+				alert('Credenciais inválidas!');
+			}
 		} else {
 			alert('Insira os campos!');
 		}
 	};
 
 	/**
-     * Método padrão de renderização.
-     */
+	 * Método padrão de renderização.
+	 */
 	render() {
 		return (
 			<div className="col-sm-3 bg-light custom-border">

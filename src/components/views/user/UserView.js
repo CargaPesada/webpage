@@ -10,10 +10,10 @@ class UserView extends React.Component {
 
 		this.state = {
 			// DEBUG
-			mustHideCards: true,
+			mustHideCards: false,
 			mustShowDriverInfo: false,
-			mustShowRegisterView: true,
-			infosToShow: [ [ 'Nome', 'Teste' ], [ 'Sobrenome', 'Higa' ] ] // Deixar vazio
+			mustShowRegisterView: false,
+			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
 
@@ -98,7 +98,7 @@ class UserView extends React.Component {
 			} else {
 				if (this.state.mustShowRegisterView) {
 					toRender.push(
-						<RegisterView description="Registrar Usuário" handleCard={this.handleRegisterCard} />
+						<RegisterView description="Registrar Usuário" handleCard={this.handleRegisterCard} cargo={this.props.cargo} />
 					);
 				}
 			}

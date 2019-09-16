@@ -9,22 +9,23 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isUserAuthenticated: true,
-			isAdmin: true
+			isUserAuthenticated: false,
+			isAdmin: false,
+			cargo: -1
 		};
 	}
 
 	/**
    * Método para alterar o estado se o usuário está autenticado.
    */
-	handleUserAuthentication = (isAdmin) => {
+	handleUserAuthentication = (isAdmin, cargo) => {
 		if (this.state.isUserAuthenticated) {
-			this.setState({ isUserAuthenticated: false, isAdmin: false });
+			this.setState({ isUserAuthenticated: false, isAdmin: false, cargo: cargo });
 		} else {
 			if (isAdmin) {
-				this.setState({ isUserAuthenticated: true, isAdmin: true });
+				this.setState({ isUserAuthenticated: true, isAdmin: true, cargo: cargo });
 			} else {
-				this.setState({ isUserAuthenticated: true, isAdmin: false });
+				this.setState({ isUserAuthenticated: true, isAdmin: false, cargo: cargo });
 			}
 		}
 	};
@@ -44,7 +45,7 @@ class App extends React.Component {
 				</div>
 			);
 		} else {
-			toRender.push(<UserView isAdmin={this.state.isAdmin} />);
+			toRender.push(<UserView isAdmin={this.state.isAdmin} cargo={this.state.cargo} />);
 		}
 
 		return (
