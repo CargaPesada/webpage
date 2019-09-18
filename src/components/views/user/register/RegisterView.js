@@ -104,7 +104,7 @@ class RegisterView extends React.Component {
             }
 
             // Validando os campos de endereço
-            if (endereco['cep'].length < 8 || endereco['cep'].length > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+            if (endereco['cep'].length < 9) { // Aceitando 2 casos: 13085-000 ou 13085000
                 errorMessages += "\n* CEP inválido";
             }
 
