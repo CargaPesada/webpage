@@ -41,7 +41,7 @@ class Login extends React.Component {
 				{/* <img src="http://giphygifs.s3.amazonaws.com/media/oEHdCCXMsgoj6/giphy.gif" style={{ marginTop: "5%"}} class="img-fluid" alt="Logo"></img> */}
 				<form>
 					<div className="form-group">
-						<img src="https://i.imgur.com/WSMLJBz.png" style={{ marginTop: "5%"}} class="img-fluid" alt="Logo"></img>
+						<img src="https://i.imgur.com/WSMLJBz.png" style={{ marginTop: "5%" }} class="img-fluid" alt="Logo"></img>
 						<h1 className="display-5" style={{ marginTop: '5%' }}>
 							LOGIN
 						</h1>
