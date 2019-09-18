@@ -16,6 +16,33 @@ class RegisterView extends React.Component {
         };
     }
 
+    /**
+     * Método para limpar os campos do formulário.
+     */
+    clearForm = () => {
+        document.getElementById('email').value = "";
+        document.getElementById('senha').value = "";
+        document.getElementById('nome').value = "";
+        document.getElementById('cpf').value = "";
+        if (document.getElementById('tipocnh') != null) {
+            document.getElementById('tipocnh').value = "";
+        }
+        //this.state.userSexRadioValue;
+        document.getElementById('ddn').value = "";
+        document.getElementById('nomepai').value = "";
+        document.getElementById('nomemae').value = "";
+        //this.state.areThereDependents;
+        document.getElementById('cep').value = "";
+        document.getElementById('cidade').value = "";
+        document.getElementById('estado').value = "";
+        document.getElementById('rua').value = "";
+        document.getElementById('complemento').value = "";
+        document.getElementById('numero').value = "";
+        document.getElementById('bairro').value = "";
+
+        //this.state.newUserCategory;
+    }
+
 	/**
      * Método para registrar um novo motorista.
      */
@@ -137,6 +164,7 @@ class RegisterView extends React.Component {
                 let httpHandler = new FirebaseHandler();
                 await httpHandler.tryToRegister(newUser, (error) => {
                     if (!error) {
+                        this.clearForm();
                         alert('Registrado com sucesso!');
                     } else {
                         alert(error.message);
@@ -301,18 +329,17 @@ class RegisterView extends React.Component {
                                         <label>
                                             <input
                                                 type="radio"
-                                                value="masculino"
+                                                name="sexo"
                                                 onClick={() => this.handleSexoDoUsuarioRadioButton('masculino')}
-                                                checked={this.state.userSexRadioValue === 'masculino'}
+                                                defaultChecked
                                             />
                                             Masculino
 										</label>
                                         <label>
                                             <input
                                                 type="radio"
-                                                value="feminino"
+                                                name="sexo"
                                                 onClick={() => this.handleSexoDoUsuarioRadioButton('feminino')}
-                                                checked={this.state.userSexRadioValue === 'feminino'}
                                             />
                                             Feminino
 										</label>
@@ -360,18 +387,17 @@ class RegisterView extends React.Component {
                                         <label>
                                             <input
                                                 type="radio"
-                                                value="sim"
+                                                name="dependentes"
                                                 onClick={() => this.handleDependentsRadioButton(true)}
-                                                checked={this.state.areThereDependents === true}
                                             />
                                             Sim
 										</label>
                                         <label>
                                             <input
                                                 type="radio"
-                                                value="nao"
+                                                name="dependentes"
                                                 onClick={() => this.handleDependentsRadioButton(false)}
-                                                checked={this.state.areThereDependents === false}
+                                                defaultChecked
                                             />
                                             Não
 										</label>
