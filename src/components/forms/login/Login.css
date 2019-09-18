@@ -1,3 +1,10 @@
+body {
+    background-image: url("https://i.imgur.com/J4DAhNH.png");
+    background-color: #5E7BAD;
+    background-position: center center;
+    background-size: cover;
+}
+
 .custom-border {
     border-radius: 5px;
 }

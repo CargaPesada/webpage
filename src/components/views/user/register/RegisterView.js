@@ -1,4 +1,5 @@
 import React from 'react';
+import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../../utils/firebase/FirebaseHandler';
 import User from '../../../../models/User';
 import { error } from 'util';
@@ -64,11 +65,38 @@ class RegisterView extends React.Component {
                 errorMessages += "\n* Nome não preenchido";
             }
 
-            // TODO: Validar CPF
+            // Validando o campo CPF
+            if (cpf.length === 0) {
+                errorMessages += "\n* CPF não preenchido";
+            }
 
-            // TODO: Validar CNH (Tratar caso não seja motorista)
+            // Validando o campo CNH
+            if (this.state.newUserCategory == 0) {
+                if (tipocnh.length === 0) {
+                    errorMessages += "\n* CNH não preenchido";
+                }
+                else {
+                    // valida_cnh(tipocnh);
+                    // <script>
+                    //     function valida_cnh(tipocnh) {
+                    //         var dv = substring (tipocnh, 9, 2);
+                    //         var dvr = ( (2 * substring (tipocnh, 1, 1) ) + (3 * substring (tipocnh, 2, 1) ) + (4 * substring (tipocnh, 3, 1) )
+                    //                   + (5 * substring (tipocnh, 4, 1) ) + (6 * substring (tipocnh, 5, 1) ) + (7 * substring (tipocnh, 6, 1) )
+                    //                   + (8 * substring (tipocnh, 7, 1) ) + (9 * substring (tipocnh, 8, 1) ) )
+                    //                   % (11);
+                    //         if (dv == dvr)
+                    //             return true;
+                    //         else
+                    //             return false;
+                    //     }
+                    // </script>
+                }
+            }
 
-            // TODO: Validar DDN
+            // Validando o campo DDN
+            if (ddn.length === 0) {
+                errorMessages += "\n* DDN não preenchido";
+            }
 
             // Validando o campo nome da mãe
             if (nomemae.length === 0) {
@@ -76,7 +104,7 @@ class RegisterView extends React.Component {
             }
 
             // Validando os campos de endereço
-            if (endereco['cep'].length < 8 || endereco['cep'].length > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+            if (endereco['cep'].length < 9) { // Aceitando 2 casos: 13085-000 ou 13085000
                 errorMessages += "\n* CEP inválido";
             }
 
@@ -189,7 +217,8 @@ class RegisterView extends React.Component {
             toRender.push(
                 <div className="mt-4 form-group">
                     <label>Tipo de CNH *</label>
-                    <input
+                    <InputMask
+                        mask="99999999999"
                         type="text"
                         name="tipocnh"
                         id="tipocnh"
@@ -255,7 +284,8 @@ class RegisterView extends React.Component {
 
                                 <div className="mt-4 form-group">
                                     <label>CPF *</label>
-                                    <input
+                                    <InputMask
+                                        mask="999.999.999-99"
                                         type="text"
                                         name="cpf"
                                         id="cpf"
@@ -291,11 +321,12 @@ class RegisterView extends React.Component {
 
                                 <div className="mt-4 form-group">
                                     <label>Data de Nascimento *</label>
-                                    <input
+                                    <InputMask
+                                        mask="99/99/9999"
                                         type="text"
                                         name="ddn"
                                         id="ddn"
-                                        placeholder="Data de Nascimento (AAAA-MM-DD)"
+                                        placeholder="Data de Nascimento"
                                         style={{ width: '100%' }}
                                     />
                                 </div>
@@ -350,7 +381,8 @@ class RegisterView extends React.Component {
                                 <div className="form-group mt-1">
                                     <label>Endereço de Moradia *</label>
                                     <p />
-                                    <input
+                                    <InputMask
+                                        mask="99.999-999"
                                         type="text"
                                         name="cep"
                                         id="cep"

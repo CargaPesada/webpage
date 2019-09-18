@@ -54,6 +54,7 @@ class UserView extends React.Component {
 						className="row justify-content-between"
 						style={{ marginTop: '17%', marginLeft: '10%', marginRight: '10%' }}
 					>
+						{/* <img src="https://i.imgur.com/WSMLJBz.png" class="img-fluid" alt="Logo"></img> */}
 						{/* Dados do Caminhão */}
 						<CustomCard name="fa-truck" description="Dados do Caminhão" />
 

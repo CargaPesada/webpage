@@ -17,7 +17,7 @@ class Navbar extends React.Component {
 		return (
 			<nav className="navbar navbar-light bg-dark">
 				<a className="navbar-brand text-light" href="#">
-					Nome
+					EstradaApp
 				</a>
 				{toRender}
 			</nav>
