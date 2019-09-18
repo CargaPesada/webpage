@@ -58,7 +58,10 @@ class FirebaseHandler {
 
 		await axios.get(ENDPOINT_ADDRESS + '/users/' + email).then((res) => {
 
-			cargo = res.data.data.cargo;
+			try {
+				cargo = res.data.data.cargo;
+			}
+			catch (e) { }
 
 		});
 
