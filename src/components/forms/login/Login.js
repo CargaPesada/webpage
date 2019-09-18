@@ -38,9 +38,11 @@ class Login extends React.Component {
 	render() {
 		return (
 			<div className="col-sm-3 bg-light custom-border">
+				{/* <img src="http://giphygifs.s3.amazonaws.com/media/oEHdCCXMsgoj6/giphy.gif" style={{ marginTop: "5%"}} class="img-fluid" alt="Logo"></img> */}
 				<form>
 					<div className="form-group">
-						<h1 className="display-4" style={{ marginTop: '5%' }}>
+						<img src="https://i.imgur.com/WSMLJBz.png" style={{ marginTop: "5%"}} class="img-fluid" alt="Logo"></img>
+						<h1 className="display-5" style={{ marginTop: '5%' }}>
 							LOGIN
 						</h1>
 					</div>
