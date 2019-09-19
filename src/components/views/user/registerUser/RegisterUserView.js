@@ -2,10 +2,8 @@ import React from 'react';
 import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../../utils/firebase/FirebaseHandler';
 import User from '../../../../models/User';
-import { error } from 'util';
-import { throwStatement } from '@babel/types';
 
-class RegisterView extends React.Component {
+class RegisterUserView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -215,7 +213,7 @@ class RegisterView extends React.Component {
      * Método para gerenciar o CEP.
      */
     handleCepInputMask = (event) => {
-        this.setState({cep: event.target.value});
+        this.setState({ cep: event.target.value });
     }
 
     /**
@@ -517,4 +515,4 @@ class RegisterView extends React.Component {
     }
 }
 
-export default RegisterView;
+export default RegisterUserView;

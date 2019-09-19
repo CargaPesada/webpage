@@ -2,7 +2,8 @@ import React from 'react';
 import CustomCard from '../../cards/CustomCard';
 import './UserView.css';
 import InfoView from './info/InfoView';
-import RegisterView from './register/RegisterView';
+import RegisterUserView from './registerUser/RegisterUserView';
+import RegisterWorkshopView from './registerWorkshop/RegisterWorkshopView';
 
 class UserView extends React.Component {
 	constructor(props) {
@@ -10,32 +11,45 @@ class UserView extends React.Component {
 
 		this.state = {
 			// DEBUG
-			mustHideCards: true,
+			mustHideCards: false,
 			mustShowDriverInfo: false,
-			mustShowRegisterView: true,
+			mustShowUserRegisterView: false,
+			mustShowWorkshopRegisterView: false,
+			mustShowWorkshopDeleterView: false,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
 
 	/**
-     * Método para esconder os cards e demonstrar a view de info do Motorista.
+     * Método para esconder os cards e demonstrar a view de registro do Usuário.
      */
-	handleDriverCard = (mustHide) => {
+	handleUserRegisterCard = (mustHide) => {
 		if (mustHide === true) {
-			this.setState({ mustHideCards: true, mustShowDriverInfo: true });
+			this.setState({ mustHideCards: true, mustShowUserRegisterView: true });
 		} else {
-			this.setState({ mustHideCards: false, mustShowDriverInfo: false });
+			this.setState({ mustHideCards: false, mustShowUserRegisterView: false });
 		}
 	};
 
 	/**
-     * Método para esconder os cards e demonstrar a view de info do Motorista.
+     * Método para esconder os cards e demonstrar a view de registro de Oficina.
      */
-	handleRegisterCard = (mustHide) => {
+	handleWorkshopRegisterCard = (mustHide) => {
 		if (mustHide === true) {
-			this.setState({ mustHideCards: true, mustShowRegisterView: true });
+			this.setState({ mustHideCards: true, mustShowWorkshopRegisterView: true });
 		} else {
-			this.setState({ mustHideCards: false, mustShowRegisterView: false });
+			this.setState({ mustHideCards: false, mustShowWorkshopRegisterView: false });
+		}
+	};
+
+	/**
+     * Método para esconder os cards e demonstrar a view de deletar Oficina.
+     */
+	handleWorkshopDeleterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowWorkshopDeleterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowWorkshopDeleterView: false });
 		}
 	};
 
@@ -62,7 +76,7 @@ class UserView extends React.Component {
 						<CustomCard
 							name="fa-user-slash"
 							description="Dados do Motorista"
-							customOnClick={() => this.handleDriverCard(true)}
+
 						/>
 
 						{/* Alerta */}
@@ -74,7 +88,7 @@ class UserView extends React.Component {
 					toRender.push(
 						<InfoView
 							description="Dados do Motorista"
-							handleCard={this.handleDriverCard}
+							handleCard={this.handleUserRegisterCard}
 							infosToShow={this.state.infosToShow}
 						/>
 					);
@@ -85,21 +99,40 @@ class UserView extends React.Component {
 			if (!this.state.mustHideCards) {
 				toRender.push(
 					<div
-						className="row d-flex justify-content-center"
+						className="row d-flex justify-content-between"
 						style={{ marginTop: '17%', marginLeft: '10%', marginRight: '10%' }}
 					>
 						{/* Gerenciar Dados dos Usuários */}
 						<CustomCard
 							name="fa-users"
 							description="Registrar Usuário"
+							customOnClick={() => this.handleUserRegisterCard(true)}
+						/>
+
+						{/* Registrar Oficina */}
+						<CustomCard
+							name="fa-warehouse"
+							description="Registrar Oficina"
+							customOnClick={() => this.handleWorkshopRegisterCard(true)}
+						/>
+
+						{/* Deletar Oficina */}
+						<CustomCard
+							name="fa-ban"
+							description="Deletar Oficina"
 							customOnClick={() => this.handleRegisterCard(true)}
 						/>
 					</div>
 				);
 			} else {
-				if (this.state.mustShowRegisterView) {
+				if (this.state.mustShowUserRegisterView) {
 					toRender.push(
-						<RegisterView description="Registrar Usuário" handleCard={this.handleRegisterCard} cargo={this.props.cargo} />
+						<RegisterUserView description="Registrar Usuário" handleCard={this.handleUserRegisterCard} cargo={this.props.cargo} />
+					);
+				}
+				else if (this.state.mustShowWorkshopRegisterView) {
+					toRender.push(
+						<RegisterWorkshopView description="Registrar Oficina" handleCard={this.handleWorkshopRegisterCard} cargo={this.props.cargo} />
 					);
 				}
 			}
