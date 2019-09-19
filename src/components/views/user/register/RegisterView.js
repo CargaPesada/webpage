@@ -3,16 +3,24 @@ import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../../utils/firebase/FirebaseHandler';
 import User from '../../../../models/User';
 import { error } from 'util';
+import { throwStatement } from '@babel/types';
 
 class RegisterView extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+
+            // General states
             userSexRadioValue: 'masculino',
             areThereDependents: false,
+
+            // User's categories states
             curUserCategory: 4, // 0 - Motorista; 1 - Mecânico; 2 - Supervisor; 3 - Gerente; 4 - Diretor
-            newUserCategory: -1
+            newUserCategory: -1,
+
+            // Address related states
+            cep: ""
         };
     }
 
@@ -64,7 +72,7 @@ class RegisterView extends React.Component {
         let nomemae = document.getElementById('nomemae').value;
         let dependentes = this.state.areThereDependents;
         let endereco = {
-            cep: document.getElementById('cep').value,
+            cep: this.state.cep,
             cidade: document.getElementById('cidade').value,
             estado: document.getElementById('estado').value,
             rua: document.getElementById('rua').value,
@@ -201,6 +209,13 @@ class RegisterView extends React.Component {
      */
     handleCargoDropdown = (cargo) => {
         this.setState({ newUserCategory: cargo });
+    }
+
+    /**
+     * Método para gerenciar o CEP.
+     */
+    handleCepInputMask = (event) => {
+        this.setState({cep: event.target.value});
     }
 
     /**
@@ -412,6 +427,7 @@ class RegisterView extends React.Component {
                                         name="cep"
                                         id="cep"
                                         placeholder="CEP"
+                                        onChange={this.handleCepInputMask}
                                         style={{ width: '40%' }}
                                     />
                                     <p />

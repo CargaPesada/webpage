@@ -20,7 +20,7 @@ class FirebaseHandler {
 			senha: user.senha,
 			//rg: "38.733.798-x",
 			cpf: user.cpf,
-			endereco: [{ cidade: user.cidade, estado: user.estado }],
+			endereco: user.endereco,
 			tipocnh: user.tipocnh,
 			ddn: user.ddn,
 			sexo: user.sexo,
