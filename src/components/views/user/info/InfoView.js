@@ -20,7 +20,7 @@ class InfoView extends React.Component {
 		return (
 			<div
 				className="card bg-white "
-				style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%', height: '80vh' }}
+				style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%', width: '100vw', height: '80vh' }}
 			>
 				<a href="#" className="text-dark text-right" onClick={() => this.props.handleCard(false)}>
 					<i class="fas fa-2x fa-times-circle" />

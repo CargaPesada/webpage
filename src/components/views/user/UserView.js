@@ -2,8 +2,8 @@ import React from 'react';
 import CustomCard from '../../cards/CustomCard';
 import './UserView.css';
 import InfoView from './info/InfoView';
-import RegisterUserView from './registerUser/RegisterUserView';
-import RegisterWorkshopView from './registerWorkshop/RegisterWorkshopView';
+import RegisterUserView from '../../forms/registerUser/RegisterUserView';
+import RegisterOfficeView from '../../forms/registerOffice/RegisterOfficeView';
 
 class UserView extends React.Component {
 	constructor(props) {
@@ -97,33 +97,50 @@ class UserView extends React.Component {
 		} else {
 			// Nesse caso o usuário é ADMIN.
 			if (!this.state.mustHideCards) {
-				toRender.push(
-					<div
-						className="row d-flex justify-content-between"
-						style={{ marginTop: '17%', marginLeft: '10%', marginRight: '10%' }}
-					>
-						{/* Gerenciar Dados dos Usuários */}
-						<CustomCard
-							name="fa-users"
-							description="Registrar Usuário"
-							customOnClick={() => this.handleUserRegisterCard(true)}
-						/>
+				if (this.props.cargo >= 3) {
+					toRender.push(
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '17%', marginLeft: '10%', marginRight: '10%' }}
+						>
+							{/* Gerenciar Dados dos Usuários */}
+							<CustomCard
+								name="fa-users"
+								description="Registrar Usuário"
+								customOnClick={() => this.handleUserRegisterCard(true)}
+							/>
 
-						{/* Registrar Oficina */}
-						<CustomCard
-							name="fa-warehouse"
-							description="Registrar Oficina"
-							customOnClick={() => this.handleWorkshopRegisterCard(true)}
-						/>
+							{/* Registrar Oficina */}
+							<CustomCard
+								name="fa-warehouse"
+								description="Registrar Oficina"
+								customOnClick={() => this.handleWorkshopRegisterCard(true)}
+							/>
 
-						{/* Deletar Oficina */}
-						<CustomCard
-							name="fa-ban"
-							description="Deletar Oficina"
-							customOnClick={() => this.handleRegisterCard(true)}
-						/>
-					</div>
-				);
+							{/* Deletar Oficina */}
+							<CustomCard
+								name="fa-ban"
+								description="Deletar Oficina"
+								customOnClick={() => this.handleRegisterCard(true)}
+							/>
+						</div>
+					);
+				}
+				else {
+					toRender.push(
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '17%', marginLeft: '10%', marginRight: '10%' }}
+						>
+							{/* Gerenciar Dados dos Usuários */}
+							<CustomCard
+								name="fa-users"
+								description="Registrar Usuário"
+								customOnClick={() => this.handleUserRegisterCard(true)}
+							/>
+						</div>
+					);
+				}
 			} else {
 				if (this.state.mustShowUserRegisterView) {
 					toRender.push(
@@ -132,13 +149,16 @@ class UserView extends React.Component {
 				}
 				else if (this.state.mustShowWorkshopRegisterView) {
 					toRender.push(
-						<RegisterWorkshopView description="Registrar Oficina" handleCard={this.handleWorkshopRegisterCard} cargo={this.props.cargo} />
+						<RegisterOfficeView description="Registrar Oficina" handleCard={this.handleWorkshopRegisterCard} cargo={this.props.cargo} />
 					);
 				}
 			}
 		}
 
+
+		// Retornando para a tela do usuário as interfaces
 		return <div>{toRender}</div>;
+		
 	}
 }
 

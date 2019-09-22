@@ -12,7 +12,7 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de usuário.
      */
-	tryToRegister = async (user, callback) => {
+	tryToRegisterUser = async (user, callback) => {
 		let jsonToSend = {
 			nome: user.nome,
 			cargo: 1,
@@ -43,6 +43,28 @@ class FirebaseHandler {
 				console.log(error);
 			}
 		);
+	};
+
+	/**
+     * Método para tentar realizar um novo registro de usuário.
+     */
+	tryToRegisterOffice = async (office, callback) => {
+		let jsonToSend = {
+			nome: office.nome,
+			cpf: office.cpf,
+			telefone: office.telefone,
+			endereco: office.endereco,
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+			await axios.post(ENDPOINT_ADDRESS + '/office/register', jsonToSend).then((res) => {
+				return true;
+			});
+		}
+		catch (e) {
+			return false;
+		}
 	};
 
 	/**

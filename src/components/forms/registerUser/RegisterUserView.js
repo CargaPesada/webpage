@@ -1,7 +1,7 @@
 import React from 'react';
 import InputMask from 'react-input-mask';
-import FirebaseHandler from '../../../../utils/firebase/FirebaseHandler';
-import User from '../../../../models/User';
+import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
+import User from '../../../models/User';
 
 class RegisterUserView extends React.Component {
     constructor(props) {
@@ -167,7 +167,7 @@ class RegisterUserView extends React.Component {
                     dependentes, endereco, nivelacesso);
 
                 let httpHandler = new FirebaseHandler();
-                await httpHandler.tryToRegister(newUser, (error) => {
+                await httpHandler.tryToRegisterUser(newUser, (error) => {
                     if (!error) {
                         this.clearForm();
                         alert('Registrado com sucesso!');
@@ -243,6 +243,8 @@ class RegisterUserView extends React.Component {
 
         let toRender = [];
         let cargosToShow = [];
+
+        console.log(this.props.cargo)
 
         if (this.props.cargo >= 3) {
             cargosToShow.push(<a class="dropdown-item" onClick={() => this.handleCargoDropdown(2)} href="#">Supervisor</a>);
