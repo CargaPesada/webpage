@@ -12,9 +12,6 @@ class RegisterUserView extends React.Component {
             // General states
             userSexRadioValue: 'masculino',
             areThereDependents: false,
-
-            // User's categories states
-            curUserCategory: 4, // 0 - Motorista; 1 - Mecânico; 2 - Supervisor; 3 - Gerente; 4 - Diretor
             newUserCategory: -1,
 
             // Address related states

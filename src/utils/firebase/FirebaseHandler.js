@@ -48,7 +48,7 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de usuário.
      */
-	tryToRegisterOffice = async (office, callback) => {
+	tryToRegisterOffice = async (office) => {
 		let jsonToSend = {
 			nome: office.nome,
 			cpf: office.cpf,
@@ -62,10 +62,32 @@ class FirebaseHandler {
 				return true;
 			});
 		}
-		catch (e) {
-			return false;
-		}
+		catch (e) {}
+
+		return false;
 	};
+
+	/**
+	 * Método para retornar todas oficinas.
+	 */
+	getAllOffices = async () => {
+		try {
+			await axios.get(ENDPOINT_ADDRESS + '/office/all').then((res) => {
+
+				let listOfOffices = [];
+
+				for (let index in res.data) {
+					listOfOffices.push([res[index].id, res[index].nome]);
+				}
+
+				return listOfOffices;
+
+			})
+		}
+		catch (e) {}
+
+		return [];
+	}
 
 	/**
      * Método para tentar realizar login.

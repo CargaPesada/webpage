@@ -6,13 +6,6 @@ import Office from '../../../models/Office';
 class RegisterOfficeView extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-
-            // User's categories states
-            curUserCategory: 4, // 0 - Motorista; 1 - Mecânico; 2 - Supervisor; 3 - Gerente; 4 - Diretor
-
-        };
     }
 
     /**
@@ -99,14 +92,14 @@ class RegisterOfficeView extends React.Component {
             let newOffice = new Office(nome, cpf, telefone, endereco);
 
             let httpHandler = new FirebaseHandler();
-            await httpHandler.tryToRegisterOffice(newOffice, (registered) => {
-                if (registered) {
-                    this.clearForm();
-                    alert('Registrado com sucesso!');
-                } else {
-                    alert('Erro interno no servidor, contacte um administrador!');
-                }
-            });
+            let registered = await httpHandler.tryToRegisterOffice(newOffice);
+
+            if (registered) {
+                this.clearForm();
+                alert('Registrado com sucesso!');
+            } else {
+                alert('Erro interno no servidor, contacte um administrador!');
+            }
         
         }
         else {

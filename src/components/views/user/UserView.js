@@ -4,6 +4,7 @@ import './UserView.css';
 import InfoView from './info/InfoView';
 import RegisterUserView from '../../forms/registerUser/RegisterUserView';
 import RegisterOfficeView from '../../forms/registerOffice/RegisterOfficeView';
+import DeleteOfficeView from '../../forms/deleteOffice/DeleteOfficeView';
 
 class UserView extends React.Component {
 	constructor(props) {
@@ -121,7 +122,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-ban"
 								description="Deletar Oficina"
-								customOnClick={() => this.handleRegisterCard(true)}
+								customOnClick={() => this.handleWorkshopDeleterCard(true)}
 							/>
 						</div>
 					);
@@ -150,6 +151,11 @@ class UserView extends React.Component {
 				else if (this.state.mustShowWorkshopRegisterView) {
 					toRender.push(
 						<RegisterOfficeView description="Registrar Oficina" handleCard={this.handleWorkshopRegisterCard} cargo={this.props.cargo} />
+					);
+				}
+				else if (this.state.mustShowWorkshopDeleterView) {
+					toRender.push(
+						<DeleteOfficeView description="Deletar Oficina" handleCard={this.handleWorkshopDeleterCard} cargo={this.props.cargo}/>
 					);
 				}
 			}
