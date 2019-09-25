@@ -76,17 +76,19 @@ class FirebaseHandler {
 	 */
 	getAllOffices = async () => {
 		try {
-			await axios.get(ENDPOINT_ADDRESS + '/office/all').then((res) => {
+			let res = await axios.get(ENDPOINT_ADDRESS + '/office/all');
 
+			if (res != null) {
 				let listOfOffices = [];
 
-				for (let index in res.data) {
-					listOfOffices.push([res[index].id, res[index].nome]);
+				for (let index = 0; index < res.data.data.length; index++) {
+					if (res.data.data[index].id != null && res.data.data[index].nome != null) {
+						listOfOffices.push([res.data.data[index].id, res.data.data[index].nome]);
+					}
 				}
 
 				return listOfOffices;
-
-			})
+			}
 		}
 		catch (e) {}
 

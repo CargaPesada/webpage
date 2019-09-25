@@ -128,6 +128,7 @@ class UserView extends React.Component {
 					);
 				}
 				else {
+					// Então se o cara não tem cargo >= que 3 ...
 					toRender.push(
 						<div
 							className="row d-flex justify-content-between"

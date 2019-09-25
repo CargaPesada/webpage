@@ -9,17 +9,27 @@ class DeleteOfficeView extends React.Component {
 
         this.state = {
             selectedOfficeID: -1,
-            selectedOfficeName: ""
+            selectedOfficeName: "",
+            offices: []
         }
 
     }
 
-    
+    async componentWillMount() {
+
+        let availableOffices = await this.loadAvailableOffices();
+
+        this.setState({
+            offices: availableOffices
+        });
+
+        console.log(this.state.offices)
+    }
 
     /**
      * Método para carregar todas as oficinas em uma lista.
      */
-    loadAvailableOffices = async () => {
+    loadAvailableOffices = async  () => {
         return await new FirebaseHandler().getAllOffices();
     }
 
@@ -31,7 +41,10 @@ class DeleteOfficeView extends React.Component {
         let offices = this.loadAvailableOffices();
         let officesItems = [];
 
-        for (let index in offices) {
+        for (let index = 0; index < this.state.offices.length; index++) {
+
+            console.log(offices[index])
+
             officesItems.push(
                 <a class="dropdown-item" href="#">{offices[index][1]}</a>
             );
