@@ -58,9 +58,13 @@ class FirebaseHandler {
 
 		// Acionando promisses para o endpoint
 		try {
-			await axios.post(ENDPOINT_ADDRESS + '/office/register', jsonToSend).then((res) => {
-				return true;
-			});
+			let res = await axios.post(ENDPOINT_ADDRESS + '/office/register', jsonToSend).then();
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
 		}
 		catch (e) {}
 

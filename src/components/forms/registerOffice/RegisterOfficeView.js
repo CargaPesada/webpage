@@ -33,11 +33,11 @@ class RegisterOfficeView extends React.Component {
 
         let errorMessages = "";
 
-        let nome = document.getElementById('email').value;
+        let nome = document.getElementById('nome').value;
         let cpf = document.getElementById('cpf').value;
         let telefone = document.getElementById('telefone').value;
         let endereco = {
-            cep: this.state.cep,
+            cep: document.getElementById('cep').value,
             cidade: document.getElementById('cidade').value,
             estado: document.getElementById('estado').value,
             rua: document.getElementById('rua').value,
@@ -228,6 +228,7 @@ class RegisterOfficeView extends React.Component {
                                     type="button"
                                     className="btn btn-primary mt-5"
                                     style={{ width: '100%' }}
+                                    onClick={() => this.registerNewOffice()}
                                 >
                                     Cadastrar
 								</button>
