@@ -9,7 +9,6 @@ class DeleteOfficeView extends React.Component {
 
         this.state = {
             selectedOfficeID: -1,
-            selectedOfficeName: "",
             offices: []
         }
 
@@ -34,24 +33,30 @@ class DeleteOfficeView extends React.Component {
     }
 
     /**
+     * Método para gerenciar os tipos de oficinas disponíveis para deleção.
+     * 
+     * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
+     */
+    handleOfficeDropdown = (id) => {
+        this.setState({ selectedOfficeID: id });
+    }
+
+    /**
      * Método padrão para renderização.
      */
     render() {
 
-        let offices = this.loadAvailableOffices();
         let officesItems = [];
 
         for (let index = 0; index < this.state.offices.length; index++) {
 
-            console.log(offices[index])
-
             officesItems.push(
-                <a class="dropdown-item" href="#">{offices[index][1]}</a>
+                <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index][1]}</a>
             );
         }
 
 
-        let selectedOffice = this.state.selectedOfficeID == -1? "Selecione uma Oficina" : this.state.selectedOfficeName
+        let selectedOffice = this.state.selectedOfficeID == -1? "Selecione uma Oficina" : this.state.offices[this.state.selectedOfficeID][1]
 
         return (
             <div

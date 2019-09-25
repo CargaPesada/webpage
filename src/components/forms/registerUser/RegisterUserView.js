@@ -241,8 +241,6 @@ class RegisterUserView extends React.Component {
         let toRender = [];
         let cargosToShow = [];
 
-        console.log(this.props.cargo)
-
         if (this.props.cargo >= 3) {
             cargosToShow.push(<a class="dropdown-item" onClick={() => this.handleCargoDropdown(2)} href="#">Supervisor</a>);
         }
