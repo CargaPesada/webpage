@@ -29,9 +29,9 @@ class RegisterView extends React.Component {
             let senha = document.getElementById('senha').value;
             let nome = document.getElementById('nome').value;
             let cpf = document.getElementById('cpf').value;
-            let tipocnh = "";
-            if (document.getElementById('tipocnh') != null) {
-                tipocnh = document.getElementById('tipocnh').value;
+            let numcnh = "";
+            if (document.getElementById('numcnh') != null) {
+                numcnh = document.getElementById('numcnh').value;
             }
             let sexo = this.state.userSexRadioValue;
             let ddn = document.getElementById('ddn').value;
@@ -104,7 +104,7 @@ class RegisterView extends React.Component {
             }
 
             // Validando os campos de endereço
-            if (endereco['cep'].length < 8 || endereco['cep'].length > 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+            if (endereco['cep'].length === 0) {
                 errorMessages += "\n* CEP inválido";
             }
 
@@ -131,13 +131,14 @@ class RegisterView extends React.Component {
             // Verificando se existe mensagens de erros a serem exibidas...
             if (errorMessages === "") {
 
-                let newUser = new User(email, senha, nome, cpf, tipocnh, sexo, ddn, nomepai, nomemae,
+                let newUser = new User(email, senha, nome, cpf, numcnh, sexo, ddn, nomepai, nomemae,
                     dependentes, endereco, nivelacesso);
 
                 let httpHandler = new FirebaseHandler();
                 await httpHandler.tryToRegister(newUser, (error) => {
                     if (!error) {
                         alert('Registrado com sucesso!');
+                        document.getElementById("form_new_user").reset();
                     } else {
                         alert(error.message);
                     }
@@ -216,13 +217,13 @@ class RegisterView extends React.Component {
         if (this.state.newUserCategory == 0) {
             toRender.push(
                 <div className="mt-4 form-group">
-                    <label>Tipo de CNH *</label>
+                    <label>Número CNH *</label>
                     <InputMask
                         mask="99999999999"
                         type="text"
-                        name="tipocnh"
-                        id="tipocnh"
-                        placeholder="Tipo da CNH"
+                        name="numcnh"
+                        id="numcnh"
+                        placeholder="Número CNH"
                         style={{ width: '100%' }}
                     />
                 </div>
@@ -243,7 +244,7 @@ class RegisterView extends React.Component {
                     <div className="col-sm-5">
                         <h1 className="display-4 text-center">{this.props.description}</h1>
                         <div className="mt-3 justify-content-center" style={{ width: '100%' }}>
-                            <form>
+                            <form id="form_new_user">
                                 <div className="form-group">
                                     <p>
                                         <label>Olá! Para cadastrar um novo usuário, você deverá preencher todos os campos obrigatórios (*)!</label>
