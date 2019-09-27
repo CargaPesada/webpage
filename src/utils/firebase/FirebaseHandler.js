@@ -14,19 +14,19 @@ class FirebaseHandler {
      */
 	tryToRegisterUser = async (user, callback) => {
 		let jsonToSend = {
-			nome: user.nome,
-			cargo: user.cargo,
-			email: user.email,
-			senha: user.senha,
+			nome: user.data.nome,
+			cargo: user.data.cargo,
+			email: user.data.email,
+			senha: user.data.senha,
 			//rg: "38.733.798-x",
-			cpf: user.cpf,
-			endereco: user.endereco,
-			tipocnh: user.tipocnh,
-			ddn: user.ddn,
-			sexo: user.sexo,
-			nomepai: user.nomepai,
-			nomemae: user.nomemae,
-			dependentes: user.dependentes,
+			cpf: user.data.cpf,
+			endereco: user.data.endereco,
+			tipocnh: user.data.tipocnh,
+			ddn: user.data.ddn,
+			sexo: user.data.sexo,
+			nomepai: user.data.nomepai,
+			nomemae: user.data.nomemae,
+			dependentes: user.data.dependentes,
 			ocorrencias: []
 		};
 
@@ -53,7 +53,7 @@ class FirebaseHandler {
 			nome: office.nome,
 			cpf: office.cpf,
 			telefone: office.telefone,
-			endereco: office.endereco,
+			endereco: office.endereco
 		};
 
 		// Acionando promisses para o endpoint
@@ -65,8 +65,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		}
-		catch (e) {}
+		} catch (e) {}
 
 		return false;
 	};
@@ -83,17 +82,16 @@ class FirebaseHandler {
 
 				for (let index = 0; index < res.data.data.length; index++) {
 					if (res.data.data[index].id != null && res.data.data[index].nome != null) {
-						listOfOffices.push([res.data.data[index].id, res.data.data[index].nome]);
+						listOfOffices.push([ res.data.data[index].id, res.data.data[index].nome ]);
 					}
 				}
 
 				return listOfOffices;
 			}
-		}
-		catch (e) {}
+		} catch (e) {}
 
 		return [];
-	}
+	};
 
 	/**
 	 * Método para deletar uma certa oficina.
@@ -107,40 +105,35 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		}
-		catch (e) {}
+		} catch (e) {}
 
 		return false;
-	}
+	};
 
 	/**
      * Método para tentar realizar login.
      */
 	tryToLogin = async (email, password, callback) => {
 		await firebase.auth().signInWithEmailAndPassword(email, password).catch((err) => {
-			console.log("ERRO NO FIREBASE!");
+			console.log('ERRO NO FIREBASE!');
 			return -1;
 		});
 
 		let cargo = -1;
 
 		await axios.get(ENDPOINT_ADDRESS + '/users/' + email).then((res) => {
-
 			try {
 				cargo = res.data.data.cargo;
-			}
-			catch (e) { }
-
+			} catch (e) {}
 		});
 
 		return cargo;
-	}
+	};
 
 	/**
 	 * Método para checar o nível de acesso do usuário.
 	 */
 	// checkAccessLevel = async (email, callback) => {
-
 
 	// 	await axios.get(ENDPOINT_ADDRESS + '/users/' + email).then((res) => {
 	// 		return res.data.cargo;
