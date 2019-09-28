@@ -150,7 +150,7 @@ class UserView extends React.Component {
 							/>
 
 
-							{/* Dados do Caminhão */}
+							{/* Registrar o Caminhão */}
 							<CustomCard
 								name="fa-truck"
 								description="Registrar Caminhão"
@@ -165,6 +165,12 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-truck"
 								description="Dados do Caminhão"
+							/>
+
+							{/* Excluir Caminhão */}
+							<CustomCard
+								name="fa-ban"
+								description="Excluir Caminhão"
 							/>
 						</div>
 					</div>
@@ -221,6 +227,16 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-truck"
 								description="Dados do Caminhão"
+							/>
+						</div>
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%' }}
+						>
+							{/* Excluir Caminhão */}
+							<CustomCard
+								name="fa-ban"
+								description="Excluir Caminhão"
 							/>
 						</div>
 					</div>
