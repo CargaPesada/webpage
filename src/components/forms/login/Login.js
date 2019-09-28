@@ -11,10 +11,11 @@ class Login extends React.Component {
 			let httpHandler = new FirebaseHandler();
 
 			// Tentando realizar autenticação...
-			let cargo = await httpHandler.tryToLogin(
-				document.getElementById('email').value,
-				document.getElementById('password').value
-			);
+			let cargo = 2;
+			// let cargo = await httpHandler.tryToLogin(
+			// 	document.getElementById('email').value,
+			// 	document.getElementById('password').value
+			// );
 
 			// Se a autenticação deu certa...
 			// Verificaremos se o usuário tem perfil administrativo

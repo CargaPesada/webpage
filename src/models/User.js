@@ -1,78 +1,72 @@
 import FirebaseHandler from '../utils/firebase/FirebaseHandler';
+import EmailValidator from 'email-validator';
+
+//Retorna todas as propriedades obrigatorias do usuario
+function userProps() {
+	return {
+		email: '',
+		senha: '',
+		nome: '',
+		cpf: '',
+		sexo: '',
+		ddn: '',
+		nomepai: '',
+		nomemae: '',
+		dependentes: '',
+		cep: '',
+		cidade: '',
+		estado: '',
+		rua: '',
+		complemento: '',
+		numero: '',
+		bairro: '',
+		cargo: '',
+		numcnh: ''
+	};
+}
+
+// Verifica se dois objetos possuem as mesmas chaves
+function hasSameKeys(a, b) {
+	return Object.keys(a).length === Object.keys(b).length && Object.keys(a).every((k) => b.hasOwnProperty(k));
+}
+
+function hasEmptyString(obj) {
+	for (let [ key, value ] of Object.entries(obj)) {
+		if (value === '') {
+			console.log(key);
+			return true;
+		}
+	}
+
+	return false;
+}
 
 class User {
 	constructor(data) {
 		this.data = data;
-		this.isUserValid();
+		this.validateUser();
 	}
 
-	isUserValid() {
+	// Valida os dados do usuario
+	validateUser() {
 		let errorMessages = '';
 
-		// Validando o campo de e-mail
-		if (this.data.email === '' || /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.data.email) === false) {
-			errorMessages += '\n* E-Mail não está no padrão';
+		// Verifica se existem dados ausentes
+		if (!hasSameKeys(this.data, userProps()) || hasEmptyString(this.data)) {
+			console.log(hasSameKeys(this.data, userProps()));
+			console.log(hasEmptyString(this.data));
+			errorMessages += '\n-> Você deixou campos em branco\n';
+		} else if (!EmailValidator.validate(this.data.email)) {
+			errorMessages += '-> Email inválido\n';
 		}
 
-		// Validando o campo de senha
-		if (this.data.senha.length < 6) {
-			errorMessages += '\n* Senha menor que 6 caracteres';
-		}
-
-		// Validando o campo nome
-		if (this.data.nome.length === 0) {
-			errorMessages += '\n* Nome não preenchido';
-		}
-
-		// Validando o campo CPF
-		if (this.data.cpf.length === 0) {
-			errorMessages += '\n* CPF não preenchido';
-		}
-
-		// Validando o campo DDN
-		if (this.data.ddn.length === 0) {
-			errorMessages += '\n* DDN não preenchido';
-		}
-
-		// Validando o campo nome da mãe
-		if (this.data.nomemae.length === 0) {
-			errorMessages += '\n* Nome da mãe não preenchido';
-		}
-
-		// Validando os campos de endereço
-		if (this.data.cep.length < 9) {
-			// Aceitando 2 casos: 13085-000 ou 13085000
-			errorMessages += '\n* CEP inválido';
-		}
-
-		if (this.data.cidade.length === 0) {
-			errorMessages += '\n* Cidade não preenchida';
-		}
-
-		if (this.data.estado.length === 0) {
-			errorMessages += '\n* Estado não preenchido';
-		}
-
-		if (this.data.rua.length === 0) {
-			errorMessages += '\n* Rua não preenchida';
-		}
-
-		if (this.data.numero.length === 0) {
-			errorMessages += '\n* Número não preenchido';
-		}
-
-		if (this.data.bairro.length === 0) {
-			errorMessages += '\n* Bairro não preenchido';
-		}
-
-		// Verificando se existe mensagens de erros a serem exibidas...
 		if (errorMessages) {
 			throw new Error(errorMessages);
 		}
 	}
 
 	async sendUserToFirebase() {
-		this.isUserValid();
+		this.validateUser();
 		let httpHandler = new FirebaseHandler();
 		await httpHandler.tryToRegisterUser(this, (error) => {
 			if (error) {
@@ -82,4 +76,4 @@ class User {
 	}
 }
 
-export default User;
+export { User, userProps };

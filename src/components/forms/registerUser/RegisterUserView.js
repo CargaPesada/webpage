@@ -1,31 +1,12 @@
 import React from 'react';
 import InputMask from 'react-input-mask';
-import User from '../../../models/User';
+import { User, userProps } from '../../../models/User';
 
 class RegisterUserView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            email: "",
-            senha: "",
-            nome: "",
-            cpf: "",
-            sexo: "",
-            ddn: "",
-            nomepai: "",
-            nomemae: "",
-            dependentes: "",
-            cep: "",
-            cidade: "",
-            estado: "",
-            rua: "",
-            complemento: "",
-            numero: "",
-            bairro: "",
-            cargo: "",
-            numcnh: ""
-        };
+        this.state = userProps();
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -40,6 +21,7 @@ class RegisterUserView extends React.Component {
      * Método para registrar um novo motorista.
      */
     registerNewUser = () => {
+        this.setState({cargo: 'motorista'});
         if (this.state.newUserCategory !== -1) {
             try {
                 let user = new User(this.state);
@@ -342,7 +324,7 @@ class RegisterUserView extends React.Component {
                                         {cargoName}
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" onChange={this.handleChange} href="#">Motorista</a>
+                                        <a class="dropdown-item" href="#">Motorista</a>
                                         {cargosToShow}
                                     </div>
                                 </div>
