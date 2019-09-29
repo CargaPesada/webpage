@@ -6,6 +6,7 @@ import RegisterUserView from '../../forms/registerUser/RegisterUserView';
 import RegisterOfficeView from '../../forms/registerOffice/RegisterOfficeView';
 import DeleteOfficeView from '../../forms/deleteOffice/DeleteOfficeView';
 import ReadOfficeData from '../../forms/readOfficeData/ReadOfficeData';
+import RegisterTruckView from '../../forms/registerTruck/RegisterTruckView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -15,14 +16,14 @@ class UserView extends React.Component {
 
 		this.state = {
 			// DEBUG
-			mustHideCards: false,
+			mustHideCards: true,
 			mustShowDriverInfo: false,
 			mustShowUserRegisterView: false,
 			mustShowWorkshopRegisterView: false,
 			mustShowWorkshopDeleterView: false,
 			mustShowWorkshopDataReaderView: false,
 			mustShowTruckDataView: false,
-			mustShowTruckRegisterView: false,
+			mustShowTruckRegisterView: true,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
@@ -221,6 +222,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-truck"
 								description="Registrar Caminhão"
+								customOnClick={() => this.handleTruckRegisterCard(true)}
 							/>
 
 							{/* Dados do Caminhão */}
@@ -269,6 +271,11 @@ class UserView extends React.Component {
 			else if (this.state.mustShowWorkshopDataReaderView) {
 				toRender.push(
 					<ReadOfficeData description="Ver Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowTruckRegisterView) {
+				toRender.push(
+					<RegisterTruckView description="Registrar Caminhão" handleCard={this.handleTruckRegisterCard} cargo={this.props.cargo} />
 				);
 			}
 		}

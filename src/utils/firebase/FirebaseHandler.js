@@ -46,6 +46,36 @@ class FirebaseHandler {
 	};
 
 	/**
+     * Método para tentar realizar um novo registro de caminhão.
+     */
+	tryToRegisterTruck = async (truck) => {
+		let jsonToSend = {
+			marca: truck.marca,
+			modelo: truck.modelo,
+			placa: truck.placa,
+			
+			comprimento: truck.comprimento,
+			largura: truck.largura,
+			altura: truck.altura,
+			cargaMaxima: truck.cargaMaxima,
+			pais: truck.pais
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+			let res = await axios.post(ENDPOINT_ADDRESS + '/truck/register', jsonToSend).then();
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) {}
+
+		return false;
+	};
+
+	/**
      * Método para tentar realizar um novo registro de usuário.
      */
 	tryToRegisterOffice = async (office) => {

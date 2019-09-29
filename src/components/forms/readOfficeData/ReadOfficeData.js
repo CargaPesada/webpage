@@ -6,6 +6,55 @@ import Office from '../../../models/Office';
 class ReadOfficeData extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            selectedOfficeID: -1,
+            offices: [],
+            nome: "",
+            cpf: "",
+            telefone: "",
+
+            // Endereços
+            cep: "",
+            cidade: "",
+            estado: "",
+            rua: "",
+            complemento: "",
+            numero: "",
+            bairro: ""
+
+        }
+    }
+
+    async componentWillMount() {
+        let availableOffices = await new FirebaseHandler().getAllOffices();
+
+        this.setState({
+            offices: availableOffices
+        });
+    }
+
+    /**
+     * Método para gerenciar os tipos de oficinas disponíveis para deleção.
+     * 
+     * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
+     */
+    handleOfficeDropdown = (id) => {
+        this.setState(
+            { 
+                selectedOfficeID: id,
+                nome: this.state.offices[id].nome,
+                cpf: this.state.offices[id].cpf,
+                telefone: this.state.offices[id].telefone,
+                cep: this.state.offices[id].cep,
+                cidade: this.state.offices[id].cidade,
+                estado: this.state.offices[id].estado,
+                rua: this.state.offices[id].rua,
+                numero: this.state.offices[id].numero,
+                complemento: this.state.offices[id].complemento,
+                bairro: this.state.offices[id].bairro
+            }
+        );
     }
 
     /**
@@ -13,25 +62,41 @@ class ReadOfficeData extends React.Component {
      */
     render() {
 
+        // Setando os componentes que precisam ser renderizados de acordo com o cargo
         let toRender = []
 
         if (this.props.cargo >= 3) {
+
+            // Carregando info de oficinas
+            let officesItems = [];
+
+            for (let index = 0; index < this.state.offices.length; index++) {
+
+                officesItems.push(
+                    <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index][1]}</a>
+                );
+            }
+
+
+            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : this.state.offices[this.state.selectedOfficeID][1]
+
             toRender.push(
 
                 <div className="form-group">
                     <label>Selecione a Oficina</label>
                     <p />
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {/* {cargoName} */}
+                        {selectedOffice}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {/* <a class="dropdown-item" onChange={this.handleChange} href="#">Nome de Teste</a> */}
+                        {officesItems}
                     </div>
                 </div>
 
 
             )
         }
+
 
         // Renderizando agora!!!
         return (
@@ -51,9 +116,10 @@ class ReadOfficeData extends React.Component {
 
 
                                 {toRender}
+
                                 <div className="form-group">
                                     <label>Nome</label>
-                                    <input type="text" id="nome" name="nome" style={{ width: "100%" }} placeholder="Nome" readOnly></input>
+                                    <input type="text" value={this.state.nome} id="nome" name="nome" style={{ width: "100%" }} placeholder="Nome" readOnly />
 
                                 </div>
 
@@ -61,6 +127,7 @@ class ReadOfficeData extends React.Component {
                                     <label>CPF do Supervisor</label>
                                     <input
                                         type="text"
+                                        value={this.state.cpf}
                                         name="cpf"
                                         id="cpf"
                                         placeholder="CPF do Supervisor"
@@ -73,6 +140,7 @@ class ReadOfficeData extends React.Component {
                                     <label>Telefone</label>
                                     <input
                                         type="text"
+                                        value={this.state.telefone}
                                         name="telefone"
                                         id="telefone"
                                         placeholder="Telefone"
@@ -86,6 +154,7 @@ class ReadOfficeData extends React.Component {
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.cep}
                                         name="cep"
                                         id="cep"
                                         placeholder="CEP"
@@ -95,6 +164,7 @@ class ReadOfficeData extends React.Component {
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.cidade}
                                         name="cidade"
                                         id="cidade"
                                         placeholder="Cidade"
@@ -103,6 +173,7 @@ class ReadOfficeData extends React.Component {
                                     />
                                     <input
                                         type="text"
+                                        value={this.state.estado}
                                         name="estado"
                                         id="estado"
                                         className="ml-3"
@@ -113,6 +184,7 @@ class ReadOfficeData extends React.Component {
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.rua}
                                         name="rua"
                                         id="rua"
                                         placeholder="Rua / Estrada / Avenida"
@@ -121,6 +193,7 @@ class ReadOfficeData extends React.Component {
                                     />
                                     <input
                                         type="text"
+                                        value={this.state.numero}
                                         name="numero"
                                         id="numero"
                                         className="ml-3"
@@ -131,6 +204,7 @@ class ReadOfficeData extends React.Component {
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.complemento}
                                         name="complemento"
                                         id="complemento"
                                         placeholder="Complemento"
@@ -140,6 +214,7 @@ class ReadOfficeData extends React.Component {
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.bairro}
                                         name="bairro"
                                         id="bairro"
                                         placeholder="Bairro"
