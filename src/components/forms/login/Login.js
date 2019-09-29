@@ -7,21 +7,20 @@ class Login extends React.Component {
      * Método para lidar com login.
      */
 	handleLoginButton = async () => {
-		if (document.getElementById('email').value !== '' && document.getElementById('password').value != '') {
+		if (document.getElementById('email').value !== '' && document.getElementById('password').value !== '') {
 			let httpHandler = new FirebaseHandler();
 
 			// Tentando realizar autenticação...
-			let cargo = 2;
-			// let cargo = await httpHandler.tryToLogin(
-			// 	document.getElementById('email').value,
-			// 	document.getElementById('password').value
-			// );
+			let cargo = await httpHandler.tryToLogin(
+				document.getElementById('email').value,
+				document.getElementById('password').value
+			);
 
 			// Se a autenticação deu certa...
 			// Verificaremos se o usuário tem perfil administrativo
 			if (cargo > 1) {
 				this.props.handleUserAuthentication(true, cargo);
-			} else if (cargo == 0 || cargo == 1) {
+			} else if (cargo === 0 || cargo === 1) {
 				this.props.handleUserAuthentication(false, cargo);
 			} else {
 				alert('Credenciais inválidas!');

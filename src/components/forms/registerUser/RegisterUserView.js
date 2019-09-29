@@ -1,6 +1,7 @@
 import React from 'react';
 import InputMask from 'react-input-mask';
 import { User, userProps } from '../../../models/User';
+import cep from 'cep-promise';
 
 class RegisterUserView extends React.Component {
     constructor(props) {
@@ -25,14 +26,31 @@ class RegisterUserView extends React.Component {
         if (this.state.newUserCategory !== -1) {
             try {
                 let user = new User(this.state);
-                user.sendUserToFirebase()
-                this.clearForm();
-                alert('Registrado com sucesso!');
+                user.validateAndSaveUser().then((message) => {
+                     alert(message);
+                     this.clearForm();
+                 }).catch((message) => {
+                     alert(message);
+                 });
             } catch (err) {
                 alert(err)
             }
         }
     };
+
+    handleCEPChange(evt) {
+        cep(evt.target.value)
+            .then((data) => {
+                return data;
+            })
+            .then((data) => {
+                this.setState({cep: data.cep});
+                this.setState({cidade: data.city});
+                this.setState({estado: data.state});
+                this.setState({bairro: data.neighborhood});
+                this.setState({rua: data.street});
+            });
+    }
 
     handleChange(evt) {
         this.setState({ [evt.target.name]: evt.target.value });
@@ -67,17 +85,17 @@ class RegisterUserView extends React.Component {
 
         let toRender = [];
         let cargosToShow = [];
-
+        
+        cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value = "Motorista"/>)
         if (this.props.cargo >= 3) {
-            cargosToShow.push(<a class="dropdown-item" onClick={() => this.handleCargoDropdown(2)} href="#">Supervisor</a>);
+            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value = "Supervisor"/>);
+        }
+        if (this.props.cargo === 4) {
+            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value = "Gerente Regional"/>);
         }
 
-        if (this.props.cargo == 4) {
-            cargosToShow.push(<a class="dropdown-item" onClick={() => this.handleCargoDropdown(4)} href="#">Diretor Global</a>);
-        }
 
-
-        if (this.state.newUserCategory == 0) {
+        if (this.state.newUserCategory === 0) {
             toRender.push(
                 <div className="mt-4 form-group">
                     <label>Tipo de CNH *</label>
@@ -169,7 +187,8 @@ class RegisterUserView extends React.Component {
                                         <label>
                                             <input
                                                 type="radio"
-                                                name="sexo"                                                
+                                                name="sexo"
+                                                value="m"                                                
                                                 onChange={this.handleChange}
                                             />
                                             Masculino
@@ -177,7 +196,8 @@ class RegisterUserView extends React.Component {
                                         <label>
                                             <input
                                                 type="radio"
-                                                name="sexo"                                                
+                                                name="sexo"      
+                                                value="f"                                          
                                                 onChange={this.handleChange}
                                             />
                                             Feminino
@@ -188,7 +208,7 @@ class RegisterUserView extends React.Component {
                                 <div className="mt-4 form-group">
                                     <label>Data de Nascimento *</label>
                                     <InputMask
-                                        mask="99/99/9999"
+                                        mask="9999-99-99"
                                         type="text"
                                         name="ddn"
                                         id="ddn"
@@ -254,8 +274,9 @@ class RegisterUserView extends React.Component {
                                         name="cep"
                                         id="cep"
                                         placeholder="CEP"
-                                        style={{ width: '40%' }}                                                
-                                        onChange={this.handleChange}
+                                        style={{ width: '40%' }}
+                                        onChange={this.handleChange}                                           
+                                        onBlur={this.handleCEPChange.bind(this)}
                                     />
                                     <p />
                                     <input
@@ -263,8 +284,9 @@ class RegisterUserView extends React.Component {
                                         name="cidade"
                                         id="cidade"
                                         placeholder="Cidade"
-                                        style={{ width: '40%' }}                                                
-                                        onChange={this.handleChange}
+                                        value={this.state.cidade}
+                                        style={{ width: '40%' }}
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -272,17 +294,19 @@ class RegisterUserView extends React.Component {
                                         id="estado"
                                         className="ml-3"
                                         placeholder="Estado"
-                                        style={{ width: '50%' }}                                                
-                                        onChange={this.handleChange}
+                                        style={{ width: '50%' }}
+                                        value={this.state.estado}
+                                        disabled
                                     />
                                     <p />
                                     <input
                                         type="text"
                                         name="rua"
                                         id="rua"
-                                        placeholder="Rua / Estrada / Avenida"
-                                        style={{ width: '40%' }}                                                
-                                        onChange={this.handleChange}
+                                        placeholder="Rua"
+                                        style={{ width: '40%' }}
+                                        value={this.state.rua}
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -308,8 +332,9 @@ class RegisterUserView extends React.Component {
                                         name="bairro"
                                         id="bairro"
                                         placeholder="Bairro"
-                                        style={{ width: '40%' }}                                                
-                                        onChange={this.handleChange}
+                                        style={{ width: '40%' }}
+                                        value={this.state.bairro}
+                                        disabled
                                     />
                                 </div>
 
@@ -324,7 +349,6 @@ class RegisterUserView extends React.Component {
                                         {cargoName}
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Motorista</a>
                                         {cargosToShow}
                                     </div>
                                 </div>
