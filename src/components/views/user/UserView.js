@@ -157,6 +157,12 @@ class UserView extends React.Component {
 								description="Registrar Usuário"
 								customOnClick={() => this.handleUserRegisterCard(true)}
 							/>
+
+						</div>
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
 							{/* Ver Oficina */}
 							<CustomCard
 								name="fa-warehouse"
@@ -164,6 +170,11 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
 							/>
 
+						</div>
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
 
 							{/* Registrar o Caminhão */}
 							<CustomCard
@@ -172,11 +183,6 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleTruckRegisterCard(true)}
 							/>
 
-						</div>
-						<div
-							className="row d-flex justify-content-between"
-							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
-						>
 							{/* Dados do Caminhão */}
 							<CustomCard
 								name="fa-truck"
@@ -191,7 +197,13 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
 						</div>
+						{/* GAMBI de Espaçamento */}
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						></div>
 					</div>
+
 				);
 			}
 
@@ -209,12 +221,24 @@ class UserView extends React.Component {
 								description="Registrar Usuário"
 								customOnClick={() => this.handleUserRegisterCard(true)}
 							/>
+						</div>
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
 
 							{/* Registrar Oficina */}
 							<CustomCard
 								name="fa-warehouse"
 								description="Registrar Oficina"
 								customOnClick={() => this.handleWorkshopRegisterCard(true)}
+							/>
+
+							{/* Ver Oficina */}
+							<CustomCard
+								name="fa-warehouse"
+								description="Ver Oficina"
+								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
 							/>
 
 							{/* Deletar Oficina */}
@@ -226,14 +250,8 @@ class UserView extends React.Component {
 						</div>
 						<div
 							className="row d-flex justify-content-between"
-							style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%' }}
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
 						>
-							{/* Ver Oficina */}
-							<CustomCard
-								name="fa-warehouse"
-								description="Ver Oficina"
-								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
-							/>
 
 							{/* Registrar o Caminhão */}
 							<CustomCard
@@ -248,17 +266,18 @@ class UserView extends React.Component {
 								description="Dados do Caminhão"
 								customOnClick={() => this.handleTruckDataCard(true)}
 							/>
-						</div>
-						<div
-							className="row d-flex justify-content-between"
-							style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%' }}
-						>
+
 							{/* Excluir Caminhão */}
 							<CustomCard
 								name="fa-ban"
 								description="Excluir Caminhão"
 								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
+						</div>
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%' }}
+						>
 						</div>
 					</div>
 				);
