@@ -7,6 +7,7 @@ import RegisterOfficeView from '../../forms/registerOffice/RegisterOfficeView';
 import DeleteOfficeView from '../../forms/deleteOffice/DeleteOfficeView';
 import ReadOfficeData from '../../forms/readOfficeData/ReadOfficeData';
 import RegisterTruckView from '../../forms/registerTruck/RegisterTruckView';
+import ReadTruckData from '../../forms/readTruckData/ReadTruckData';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -22,8 +23,8 @@ class UserView extends React.Component {
 			mustShowWorkshopRegisterView: false,
 			mustShowWorkshopDeleterView: false,
 			mustShowWorkshopDataReaderView: false,
-			mustShowTruckDataView: false,
-			mustShowTruckRegisterView: true,
+			mustShowTruckDataView: true,
+			mustShowTruckRegisterView: false,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
@@ -155,6 +156,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-truck"
 								description="Registrar Caminhão"
+								customOnClick={() => this.handleTruckRegisterCard(true)}
 							/>
 
 						</div>
@@ -166,6 +168,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-truck"
 								description="Dados do Caminhão"
+								customOnClick={() => this.handleTruckDataCard(true)}
 							/>
 
 							{/* Excluir Caminhão */}
@@ -218,7 +221,7 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
 							/>
 
-							{/* Dados do Caminhão */}
+							{/* Registrar o Caminhão */}
 							<CustomCard
 								name="fa-truck"
 								description="Registrar Caminhão"
@@ -229,6 +232,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-truck"
 								description="Dados do Caminhão"
+								customOnClick={() => this.handleTruckDataCard(true)}
 							/>
 						</div>
 						<div
@@ -276,6 +280,11 @@ class UserView extends React.Component {
 			else if (this.state.mustShowTruckRegisterView) {
 				toRender.push(
 					<RegisterTruckView description="Registrar Caminhão" handleCard={this.handleTruckRegisterCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowTruckDataView) {
+				toRender.push(
+					<ReadTruckData description="Ver Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
 				);
 			}
 		}
