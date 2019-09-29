@@ -46,7 +46,37 @@ class FirebaseHandler {
 	};
 
 	/**
-     * Método para tentar realizar um novo registro de usuário.
+     * Método para tentar realizar um novo registro de caminhão.
+     */
+	tryToRegisterTruck = async (truck) => {
+		let jsonToSend = {
+			marca: truck.marca,
+			modelo: truck.modelo,
+			placa: truck.placa,
+			
+			comprimento: truck.comprimento,
+			largura: truck.largura,
+			altura: truck.altura,
+			cargaMaxima: truck.cargaMaxima,
+			pais: truck.pais
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+			let res = await axios.post(ENDPOINT_ADDRESS + '/truck/register', jsonToSend).then();
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) {}
+
+		return false;
+	};
+
+	/**
+     * Método para tentar realizar um novo registro de oficina.
      */
 	tryToRegisterOffice = async (office) => {
 		let jsonToSend = {
@@ -94,11 +124,49 @@ class FirebaseHandler {
 	};
 
 	/**
+	 * Método para retornar todos caminhões.
+	 */
+	getAllTrucks = async () => {
+		try {
+			let res = await axios.get(ENDPOINT_ADDRESS + '/truck/all');
+
+			if (res != null) {
+				let listOfTrucks = [];
+
+				for (let index = 0; index < res.data.data.length; index++) {
+					listOfTrucks.push(res.data.data[index]);
+				}
+
+				return listOfTrucks;
+			}
+		} catch (e) {}
+
+		return [];
+	};
+
+	/**
 	 * Método para deletar uma certa oficina.
 	 */
 	deleteCertainOffice = async (id) => {
 		try {
 			let res = await axios.delete(ENDPOINT_ADDRESS + '/office/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) {}
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar um certo caminhão.
+	 */
+	deleteCertainTruck = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/truck/delete/' + id);
 
 			if (res != null) {
 				if (res.status === 200) {

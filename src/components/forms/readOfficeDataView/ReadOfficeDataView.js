@@ -3,109 +3,58 @@ import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Office from '../../../models/Office';
 
-class RegisterOfficeView extends React.Component {
+class ReadOfficeDataView extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            selectedOfficeID: -1,
+            offices: [],
+            nome: "",
+            cpf: "",
+            telefone: "",
+
+            // Endereços
+            cep: "",
+            cidade: "",
+            estado: "",
+            rua: "",
+            complemento: "",
+            numero: "",
+            bairro: ""
+
+        }
+    }
+
+    async componentWillMount() {
+        let availableOffices = await new FirebaseHandler().getAllOffices();
+
+        this.setState({
+            offices: availableOffices
+        });
     }
 
     /**
-     * Método para limpar os campos do formulário.
+     * Método para gerenciar os tipos de oficinas disponíveis para deleção.
+     * 
+     * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
      */
-    clearForm = () => {
-        document.getElementById('nome').value = "";
-        document.getElementById('cpf').value = "";
-        document.getElementById('telefone').value = "";
-        document.getElementById('cep').value = "";
-        document.getElementById('cidade').value = "";
-        document.getElementById('estado').value = "";
-        document.getElementById('rua').value = "";
-        document.getElementById('complemento').value = "";
-        document.getElementById('numero').value = "";
-        document.getElementById('bairro').value = "";
-
-        //this.state.newUserCategory;
-    }
-
-    /**
-     * Método para registrar um novo motorista.
-     */
-    registerNewOffice = async () => {
-
-        let errorMessages = "";
-
-        let nome = document.getElementById('nome').value;
-        let cpf = document.getElementById('cpf').value;
-        let telefone = document.getElementById('telefone').value;
-        let endereco = {
-            cep: document.getElementById('cep').value,
-            cidade: document.getElementById('cidade').value,
-            estado: document.getElementById('estado').value,
-            rua: document.getElementById('rua').value,
-            complemento: document.getElementById('complemento').value,
-            numero: document.getElementById('numero').value,
-            bairro: document.getElementById('bairro').value
-        };
-
-        // Validando o campo nome
-        if (nome.length === 0) {
-            errorMessages += "\n* Nome não preenchido";
-        }
-
-        // Validando o campo CPF
-        if (cpf.length === 0) {
-            errorMessages += "\n* CPF não preenchido";
-        }
-
-        // Validando o campo Telefone
-        if (telefone.length !== 14) {
-            errorMessages += "\n* Telefone não preenchido ou com formato incorreto";
-        }
-
-        // Validando os campos de endereço
-        if (endereco['cep'].length < 9) { // Aceitando 2 casos: 13085-000 ou 13085000
-            errorMessages += "\n* CEP inválido";
-        }
-
-        if (endereco['cidade'].length === 0) {
-            errorMessages += "\n* Cidade não preenchida";
-        }
-
-        if (endereco['estado'].length === 0) {
-            errorMessages += "\n* Estado não preenchido";
-        }
-
-        if (endereco['rua'].length === 0) {
-            errorMessages += "\n* Rua não preenchida";
-        }
-
-        if (endereco['numero'].length === 0) {
-            errorMessages += "\n* Número não preenchido";
-        }
-
-        if (endereco['bairro'].length === 0) {
-            errorMessages += "\n* Bairro não preenchido";
-        }
-
-        // Verificando se existe mensagens de erros a serem exibidas...
-        if (errorMessages === "") {
-
-            let newOffice = new Office(nome, cpf, telefone, endereco);
-
-            let httpHandler = new FirebaseHandler();
-            let registered = await httpHandler.tryToRegisterOffice(newOffice);
-
-            if (registered) {
-                this.clearForm();
-                alert('Registrado com sucesso!');
-            } else {
-                alert('Erro interno no servidor, contacte um administrador!');
+    handleOfficeDropdown = (id) => {
+        this.setState(
+            { 
+                selectedOfficeID: id,
+                nome: this.state.offices[id].nome,
+                cpf: this.state.offices[id].cpf,
+                telefone: this.state.offices[id].telefone,
+                cep: this.state.offices[id].cep,
+                cidade: this.state.offices[id].cidade,
+                estado: this.state.offices[id].estado,
+                rua: this.state.offices[id].rua,
+                numero: this.state.offices[id].numero,
+                complemento: this.state.offices[id].complemento,
+                bairro: this.state.offices[id].bairro
             }
-        
-        }
-        else {
-            alert('Os seguintes campos estão incorretos:\n'.concat(errorMessages));
-        }
-
+        );
     }
 
     /**
@@ -113,6 +62,43 @@ class RegisterOfficeView extends React.Component {
      */
     render() {
 
+        // Setando os componentes que precisam ser renderizados de acordo com o cargo
+        let toRender = []
+
+        if (this.props.cargo >= 3) {
+
+            // Carregando info de oficinas
+            let officesItems = [];
+
+            for (let index = 0; index < this.state.offices.length; index++) {
+
+                officesItems.push(
+                    <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index][1]}</a>
+                );
+            }
+
+
+            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : "Oficina: " + this.state.offices[this.state.selectedOfficeID][1]
+
+            toRender.push(
+
+                <div className="form-group">
+                    <label>Selecione a Oficina</label>
+                    <p />
+                    <button class="btn btn-secondary dropdown-toggle" style={{width: "100%"}} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {selectedOffice}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {officesItems}
+                    </div>
+                </div>
+
+
+            )
+        }
+
+
+        // Renderizando agora!!!
         return (
             <div
                 className="card bg-white"
@@ -127,55 +113,52 @@ class RegisterOfficeView extends React.Component {
                         <h1 className="display-4 text-center">{this.props.description}</h1>
                         <div className="mt-3 justify-content-center" style={{ width: '100%' }}>
                             <form>
-                                <div className="form-group">
-                                    <p>
-                                        <label>Olá! Para cadastrar uma nova oficina, você deverá preencher todos os campos obrigatórios (*)!</label>
-                                    </p>
-                                </div>
 
-                                <div className="form-group">
-                                    <label>Nome *</label>
-                                    <input type="text" id="nome" name="nome" style={{ width: "100%" }} placeholder="Nome"></input>
-                                </div>
+
+                                {toRender}
 
                                 <div className="mt-4 form-group">
-                                    <label>CPF do Supervisor *</label>
-                                    <InputMask
-                                        mask="999.999.999-99"
+                                    <label>CPF do Supervisor</label>
+                                    <input
                                         type="text"
+                                        value={this.state.cpf}
                                         name="cpf"
                                         id="cpf"
                                         placeholder="CPF do Supervisor"
                                         style={{ width: '100%' }}
+                                        readOnly
                                     />
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Telefone *</label>
-                                    <InputMask
-                                        mask="+999 (99) 9999-9999"
+                                    <label>Telefone</label>
+                                    <input
                                         type="text"
+                                        value={this.state.telefone}
                                         name="telefone"
                                         id="telefone"
                                         placeholder="Telefone"
                                         style={{ width: "100%" }}
+                                        readOnly
                                     />
                                 </div>
 
                                 <div className="form-group mt-1">
-                                    <label>Endereço da Oficina *</label>
+                                    <label>Endereço da Oficina</label>
                                     <p />
-                                    <InputMask
-                                        mask="99.999-999"
+                                    <input
                                         type="text"
+                                        value={this.state.cep}
                                         name="cep"
                                         id="cep"
                                         placeholder="CEP"
                                         style={{ width: '40%' }}
+                                        readOnly
                                     />
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.cidade}
                                         name="cidade"
                                         id="cidade"
                                         placeholder="Cidade"
@@ -184,6 +167,7 @@ class RegisterOfficeView extends React.Component {
                                     />
                                     <input
                                         type="text"
+                                        value={this.state.estado}
                                         name="estado"
                                         id="estado"
                                         className="ml-3"
@@ -194,6 +178,7 @@ class RegisterOfficeView extends React.Component {
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.rua}
                                         name="rua"
                                         id="rua"
                                         placeholder="Rua / Estrada / Avenida"
@@ -202,23 +187,28 @@ class RegisterOfficeView extends React.Component {
                                     />
                                     <input
                                         type="text"
+                                        value={this.state.numero}
                                         name="numero"
                                         id="numero"
                                         className="ml-3"
                                         placeholder="Número"
                                         style={{ width: '50%' }}
+                                        readOnly
                                     />
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.complemento}
                                         name="complemento"
                                         id="complemento"
                                         placeholder="Complemento"
                                         style={{ width: '40%' }}
+                                        readOnly
                                     />
                                     <p />
                                     <input
                                         type="text"
+                                        value={this.state.bairro}
                                         name="bairro"
                                         id="bairro"
                                         placeholder="Bairro"
@@ -227,15 +217,6 @@ class RegisterOfficeView extends React.Component {
                                     />
                                 </div>
 
-
-                                <button
-                                    type="button"
-                                    className="btn btn-primary mt-5"
-                                    style={{ width: '100%' }}
-                                    onClick={() => this.registerNewOffice()}
-                                >
-                                    Cadastrar
-								</button>
                             </form>
                         </div>
                     </div>
@@ -245,4 +226,4 @@ class RegisterOfficeView extends React.Component {
     }
 }
 
-export default RegisterOfficeView;
+export default ReadOfficeDataView;

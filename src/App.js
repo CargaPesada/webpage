@@ -9,9 +9,9 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isUserAuthenticated: false,
-			isAdmin: false,
-			cargo: -1
+			isUserAuthenticated: true,
+			isAdmin: true,
+			cargo: 3
 		};
 	}
 

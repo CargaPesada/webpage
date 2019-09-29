@@ -15,19 +15,12 @@ class DeleteOfficeView extends React.Component {
 
     async componentWillMount() {
 
-        let availableOffices = await this.loadAvailableOffices();
+        let availableOffices = await new FirebaseHandler().getAllOffices();
 
         this.setState({
             offices: availableOffices
         });
 
-    }
-
-    /**
-     * Método para carregar todas as oficinas em uma lista.
-     */
-    loadAvailableOffices = async () => {
-        return await new FirebaseHandler().getAllOffices();
     }
 
     /**
