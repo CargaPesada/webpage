@@ -3,7 +3,7 @@ import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Office from '../../../models/Office';
 
-class ReadOfficeData extends React.Component {
+class ReadOfficeDataView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -226,4 +226,4 @@ class ReadOfficeData extends React.Component {
     }
 }
 
-export default ReadOfficeData;
+export default ReadOfficeDataView;

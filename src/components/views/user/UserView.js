@@ -5,9 +5,10 @@ import InfoView from './info/InfoView';
 import RegisterUserView from '../../forms/registerUser/RegisterUserView';
 import RegisterOfficeView from '../../forms/registerOffice/RegisterOfficeView';
 import DeleteOfficeView from '../../forms/deleteOffice/DeleteOfficeView';
-import ReadOfficeData from '../../forms/readOfficeData/ReadOfficeData';
+import ReadOfficeDataView from '../../forms/readOfficeDataView/ReadOfficeDataView';
 import RegisterTruckView from '../../forms/registerTruck/RegisterTruckView';
-import ReadTruckData from '../../forms/readTruckData/ReadTruckData';
+import ReadTruckDataView from '../../forms/readTruckDataView/ReadTruckDataView';
+import DeleteTruckView from '../../forms/deleteTruckView/DeleteTruckView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -23,8 +24,9 @@ class UserView extends React.Component {
 			mustShowWorkshopRegisterView: false,
 			mustShowWorkshopDeleterView: false,
 			mustShowWorkshopDataReaderView: false,
-			mustShowTruckDataView: true,
+			mustShowTruckDataView: false,
 			mustShowTruckRegisterView: false,
+			mustShowTruckDeleterView: true,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
@@ -94,6 +96,17 @@ class UserView extends React.Component {
 			this.setState({ mustHideCards: false, mustShowTruckRegisterView: false });
 		}
 	};
+
+	/**
+     * Método para esconder os cards e demonstrar a view de deletar Caminhões.
+     */
+	handleTruckDeleterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowTruckDeleterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowTruckDeleterView: false });
+		}
+	}
 
 	/**
      * Método padrão de renderização do componente.
@@ -175,6 +188,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-ban"
 								description="Excluir Caminhão"
+								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
 						</div>
 					</div>
@@ -243,6 +257,7 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-ban"
 								description="Excluir Caminhão"
+								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
 						</div>
 					</div>
@@ -274,7 +289,7 @@ class UserView extends React.Component {
 			}
 			else if (this.state.mustShowWorkshopDataReaderView) {
 				toRender.push(
-					<ReadOfficeData description="Ver Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} />
+					<ReadOfficeDataView description="Ver Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} />
 				);
 			}
 			else if (this.state.mustShowTruckRegisterView) {
@@ -284,7 +299,12 @@ class UserView extends React.Component {
 			}
 			else if (this.state.mustShowTruckDataView) {
 				toRender.push(
-					<ReadTruckData description="Ver Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
+					<ReadTruckDataView description="Ver Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowTruckDeleterView) {
+				toRender.push(
+					<DeleteTruckView description="Excluir Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
 				);
 			}
 		}

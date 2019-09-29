@@ -76,7 +76,7 @@ class FirebaseHandler {
 	};
 
 	/**
-     * Método para tentar realizar um novo registro de usuário.
+     * Método para tentar realizar um novo registro de oficina.
      */
 	tryToRegisterOffice = async (office) => {
 		let jsonToSend = {
@@ -150,6 +150,23 @@ class FirebaseHandler {
 	deleteCertainOffice = async (id) => {
 		try {
 			let res = await axios.delete(ENDPOINT_ADDRESS + '/office/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) {}
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar um certo caminhão.
+	 */
+	deleteCertainTruck = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/truck/delete/' + id);
 
 			if (res != null) {
 				if (res.status === 200) {
