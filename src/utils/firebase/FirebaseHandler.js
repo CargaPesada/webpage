@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import * as credentials from './credential';
+import JOB_TITLE_IDS from '../../models/JobTitle';
 const axios = require('axios');
 const ENDPOINT_ADDRESS = 'https://carga-pesada-d933f.appspot.com';
 
@@ -14,19 +15,19 @@ class FirebaseHandler {
      */
 	tryToRegisterUser = async (user, callback) => {
 		let jsonToSend = {
-			nome: user.data.nome,
-			cargo: user.data.cargo,
-			email: user.data.email,
-			senha: user.data.senha,
+			nome: user.nome,
+			cargo: user.cargo,
+			email: user.email,
+			senha: user.senha,
 			//rg: "38.733.798-x",
-			cpf: user.data.cpf,
-			endereco: user.data.endereco,
-			tipocnh: user.data.tipocnh,
-			ddn: user.data.ddn,
-			sexo: user.data.sexo,
-			nomepai: user.data.nomepai,
-			nomemae: user.data.nomemae,
-			dependentes: user.data.dependentes,
+			cpf: user.cpf,
+			endereco: user.rua,
+			tipocnh: user.cnh,
+			ddn: user.ddn,
+			sexo: user.sexo,
+			nomepai: user.nomepai,
+			nomemae: user.nomemae,
+			dependentes: user.dependentes,
 			ocorrencias: []
 		};
 
@@ -34,13 +35,12 @@ class FirebaseHandler {
 		firebase.auth().createUserWithEmailAndPassword(jsonToSend.email, jsonToSend.senha).then(
 			async (user) => {
 				// Acionando promisses para o endpoint
-				await axios.post(ENDPOINT_ADDRESS + '/users/register', jsonToSend).then((res) => {
+				await axios.post(ENDPOINT_ADDRESS + '/user/register', jsonToSend).then((res) => {
 					callback();
 				});
 			},
 			(error) => {
 				callback(error);
-				console.log(error);
 			}
 		);
 	};
@@ -119,15 +119,15 @@ class FirebaseHandler {
 			return -1;
 		});
 
-		let cargo = -1;
-
-		await axios.get(ENDPOINT_ADDRESS + '/users/' + email).then((res) => {
+		let cargo = 'nao_autorizado';
+		await axios.get(ENDPOINT_ADDRESS + '/user/' + email).then((res) => {
 			try {
+				console.log(res);
 				cargo = res.data.data.cargo;
 			} catch (e) {}
 		});
 
-		return cargo;
+		return JOB_TITLE_IDS[cargo];
 	};
 
 	/**
