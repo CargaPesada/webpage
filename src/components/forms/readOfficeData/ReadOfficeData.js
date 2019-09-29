@@ -78,14 +78,14 @@ class ReadOfficeData extends React.Component {
             }
 
 
-            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : this.state.offices[this.state.selectedOfficeID][1]
+            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : "Oficina: " + this.state.offices[this.state.selectedOfficeID][1]
 
             toRender.push(
 
                 <div className="form-group">
                     <label>Selecione a Oficina</label>
                     <p />
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-secondary dropdown-toggle" style={{width: "100%"}} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {selectedOffice}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -116,12 +116,6 @@ class ReadOfficeData extends React.Component {
 
 
                                 {toRender}
-
-                                <div className="form-group">
-                                    <label>Nome</label>
-                                    <input type="text" value={this.state.nome} id="nome" name="nome" style={{ width: "100%" }} placeholder="Nome" readOnly />
-
-                                </div>
 
                                 <div className="mt-4 form-group">
                                     <label>CPF do Supervisor</label>
