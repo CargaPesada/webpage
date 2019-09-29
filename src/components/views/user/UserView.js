@@ -18,7 +18,7 @@ class UserView extends React.Component {
 
 		this.state = {
 			// DEBUG
-			mustHideCards: true,
+			mustHideCards: false,
 			mustShowDriverInfo: false,
 			mustShowUserRegisterView: false,
 			mustShowWorkshopRegisterView: false,
@@ -26,7 +26,7 @@ class UserView extends React.Component {
 			mustShowWorkshopDataReaderView: false,
 			mustShowTruckDataView: false,
 			mustShowTruckRegisterView: false,
-			mustShowTruckDeleterView: true,
+			mustShowTruckDeleterView: false,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
