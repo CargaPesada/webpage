@@ -8,30 +8,38 @@ class ReadTruckData extends React.Component {
         super(props);
 
         this.state = {
-            selectedOfficeID: -1,
-            offices: [],
-            nome: "",
-            cpf: "",
-            telefone: "",
-
-            // Endereços
-            cep: "",
-            cidade: "",
-            estado: "",
-            rua: "",
-            complemento: "",
-            numero: "",
-            bairro: ""
+            selectedTruckID: -1,
+            trucks: [],
+            marca: "",
+            modelo: "",
+            comprimento: "",
+            largura: "",
+            altura: "",
+            cargaMaxima: "",
+            pais: ""
 
         }
     }
 
     async componentWillMount() {
-        let availableOffices = await new FirebaseHandler().getAllOffices();
+        let availableTrucks = await new FirebaseHandler().getAllTrucks();
 
         this.setState({
-            offices: availableOffices
+            trucks: availableTrucks
         });
+    }
+
+    /**
+     * Método para limpar o formulário.
+     */
+    clearForm = () => {
+        document.getElementById('marca').value = "";
+        document.getElementById('modelo').value = "";
+        document.getElementById('comprimento').value = "";
+        document.getElementById('largura').value = "";
+        document.getElementById('altura').value = "";
+        document.getElementById('cargaMaxima').value = "";
+        document.getElementById('pais').value = "";
     }
 
     /**
@@ -39,22 +47,29 @@ class ReadTruckData extends React.Component {
      * 
      * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
      */
-    handleOfficeDropdown = (id) => {
-        this.setState(
-            { 
-                selectedOfficeID: id,
-                nome: this.state.offices[id].nome,
-                cpf: this.state.offices[id].cpf,
-                telefone: this.state.offices[id].telefone,
-                cep: this.state.offices[id].cep,
-                cidade: this.state.offices[id].cidade,
-                estado: this.state.offices[id].estado,
-                rua: this.state.offices[id].rua,
-                numero: this.state.offices[id].numero,
-                complemento: this.state.offices[id].complemento,
-                bairro: this.state.offices[id].bairro
-            }
-        );
+    handleTruckDropdown = (id) => {
+
+        this.clearForm();
+
+        try {
+            this.setState(
+                {
+                    selectedTruckID: id,
+                    marca: this.state.trucks[id].marca,
+                    modelo: this.state.trucks[id].modelo,
+                    comprimento: this.state.trucks[id].comprimento,
+                    largura: this.state.trucks[id].largura,
+                    altura: this.state.trucks[id].altura,
+                    cargaMaxima: this.state.trucks[id].cargaMaxima,
+                    pais: this.state.trucks[id].pais
+
+                }
+            );
+        }
+        catch (e) {
+            alert("Erro! Foi detectado um caminhão com informação corrompida no sistema! Contacte um administrador!");
+            console.log("Aviso! Foi detectado um caminhão não dentro do padrão!");
+        }
     }
 
     /**
@@ -65,36 +80,46 @@ class ReadTruckData extends React.Component {
         // Setando os componentes que precisam ser renderizados de acordo com o cargo
         let toRender = []
 
-        if (this.props.cargo >= 3) {
+        if (this.props.cargo >= 2) {
 
             // Carregando info de oficinas
-            let officesItems = [];
+            let trucksItems = [];
 
-            for (let index = 0; index < this.state.offices.length; index++) {
+            for (let index = 0; index < this.state.trucks.length; index++) {
 
-                officesItems.push(
-                    <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index][1]}</a>
+                console.log(this.state.trucks[index])
+
+                trucksItems.push(
+                    <a class="dropdown-item" href="#" onClick={() => this.handleTruckDropdown(index)}>{this.state.trucks[index].placa}</a>
                 );
             }
 
 
-            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : this.state.offices[this.state.selectedOfficeID][1]
+            // Setando o valor default do combo box!
+            let selectedTruck = "Placa";
+            
+            try {
+                // Verificando se o combo box foi atualizado para alguma placa!
+                if (this.state.selectedTruckID != -1) {
+                    selectedTruck = "Placa: " + this.state.trucks[this.state.selectedTruckID].placa
+                }
+            } catch (e) {}
 
+            // Montando os componentes para renderizar na tela!
             toRender.push(
 
                 <div className="form-group">
-                    <label>Selecione a Oficina</label>
+                    <label>Selecione um Veículo</label>
                     <p />
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {selectedOffice}
+                    <button class="btn btn-secondary dropdown-toggle" type="button" style={{width: "100%"}} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {selectedTruck}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {officesItems}
+                        {trucksItems}
                     </div>
                 </div>
 
-
-            )
+            );
         }
 
 
@@ -119,13 +144,22 @@ class ReadTruckData extends React.Component {
 
                                 <div className="form-group">
                                     <label>Marca </label>
-                                    <input type="text" id="marca" name="marca" style={{ width: "100%" }} placeholder="Marca" readOnly />
+                                    <input 
+                                        type="text" 
+                                        value={this.state.marca}
+                                        id="marca" 
+                                        name="marca" 
+                                        style={{ width: "100%" }} 
+                                        placeholder="Marca" 
+                                        readOnly 
+                                    />
                                 </div>
 
                                 <div className="mt-4 form-group">
                                     <label>Modelo </label>
                                     <input
                                         type="text"
+                                        value={this.state.modelo}
                                         name="modelo"
                                         id="modelo"
                                         placeholder="Modelo"
@@ -135,22 +169,10 @@ class ReadTruckData extends React.Component {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Placa </label>
-                                    <input
-                                        maxLength="8"
-                                        type="text"
-                                        name="placa"
-                                        id="placa"
-                                        placeholder="Placa"
-                                        style={{ width: "100%" }}
-                                        readOnly
-                                    />
-                                </div>
-        
-                                <div className="form-group">
                                     <label>Comprimento (m)</label>
                                     <input
                                         type="number"
+                                        value={this.state.comprimento}
                                         name="comprimento"
                                         id="comprimento"
                                         placeholder="Comprimento"
@@ -163,6 +185,7 @@ class ReadTruckData extends React.Component {
                                     <label>Largura (m)</label>
                                     <input
                                         type="number"
+                                        value={this.state.largura}
                                         name="largura"
                                         id="largura"
                                         placeholder="Largura"
@@ -175,6 +198,7 @@ class ReadTruckData extends React.Component {
                                     <label>Altura (m)</label>
                                     <input
                                         type="number"
+                                        value={this.state.altura}
                                         name="altura"
                                         id="altura"
                                         placeholder="Altura"
@@ -187,6 +211,7 @@ class ReadTruckData extends React.Component {
                                     <label>Carga Máxima (kg)</label>
                                     <input
                                         type="number"
+                                        value={this.state.cargaMaxima}
                                         name="cargaMaxima"
                                         id="cargaMaxima"
                                         placeholder="Carga Máxima"
@@ -199,6 +224,7 @@ class ReadTruckData extends React.Component {
                                     <label>Sigla do País </label>
                                     <input
                                         maxLength="2"
+                                        value={this.state.pais}
                                         type="text"
                                         name="pais"
                                         id="pais"

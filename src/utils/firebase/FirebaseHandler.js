@@ -124,6 +124,27 @@ class FirebaseHandler {
 	};
 
 	/**
+	 * Método para retornar todos caminhões.
+	 */
+	getAllTrucks = async () => {
+		try {
+			let res = await axios.get(ENDPOINT_ADDRESS + '/truck/all');
+
+			if (res != null) {
+				let listOfTrucks = [];
+
+				for (let index = 0; index < res.data.data.length; index++) {
+					listOfTrucks.push(res.data.data[index]);
+				}
+
+				return listOfTrucks;
+			}
+		} catch (e) {}
+
+		return [];
+	};
+
+	/**
 	 * Método para deletar uma certa oficina.
 	 */
 	deleteCertainOffice = async (id) => {
