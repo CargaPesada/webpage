@@ -8,7 +8,21 @@ class DeleteOfficeView extends React.Component {
 
         this.state = {
             selectedOfficeID: -1,
-            offices: []
+            offices: [],
+            nome: "",
+            cpf: "",
+            telefone: "",
+
+            // Endereços
+            cep: "",
+            cidade: "",
+            estado: "",
+            rua: "",
+            complemento: "",
+            numero: "",
+            bairro: "",
+            pais: ""
+
         }
 
     }
@@ -24,12 +38,49 @@ class DeleteOfficeView extends React.Component {
     }
 
     /**
+     * Método para limpar os campos do formulário.
+     */
+    clearForm = () => {
+        document.getElementById('cpf').value = "";
+        document.getElementById('telefone').value = "";
+        document.getElementById('cep').value = "";
+        document.getElementById('cidade').value = "";
+        document.getElementById('estado').value = "";
+        document.getElementById('rua').value = "";
+        document.getElementById('complemento').value = "";
+        document.getElementById('numero').value = "";
+        document.getElementById('bairro').value = "";
+        document.getElementById('pais').value = "";
+
+        //this.state.newUserCategory;
+    }
+
+    /**
      * Método para gerenciar os tipos de oficinas disponíveis para deleção.
      * 
      * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
      */
     handleOfficeDropdown = (id) => {
-        this.setState({ selectedOfficeID: id });
+        this.clearForm();
+
+        try {
+            this.setState(
+                {
+                    selectedOfficeID: id,
+                    nome: this.state.offices[id].nome,
+                    cpf: this.state.offices[id].cpf,
+                    telefone: this.state.offices[id].telefone,
+                    cep: this.state.offices[id].endereco.CEP,
+                    cidade: this.state.offices[id].endereco.cidade,
+                    estado: this.state.offices[id].endereco.estado,
+                    rua: this.state.offices[id].endereco.rua,
+                    numero: this.state.offices[id].endereco.numero,
+                    complemento: this.state.offices[id].endereco.complemento,
+                    bairro: this.state.offices[id].endereco.bairro,
+                    pais: this.state.offices[id].pais
+                }
+            );
+        } catch (e) { }
     }
 
     /**
@@ -41,7 +92,7 @@ class DeleteOfficeView extends React.Component {
     deleteCertainOffice = async () => {
 
         if (this.state.selectedOfficeID !== -1) {
-            let res = await new FirebaseHandler().deleteCertainOffice(this.state.offices[this.state.selectedOfficeID][0]);
+            let res = await new FirebaseHandler().deleteCertainOffice(this.state.offices[this.state.selectedOfficeID].id);
 
             if (res === true) {
                 alert("Oficina deletada com sucesso!");
@@ -66,12 +117,12 @@ class DeleteOfficeView extends React.Component {
         for (let index = 0; index < this.state.offices.length; index++) {
 
             officesItems.push(
-                <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index][1]}</a>
+                <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index].nome}</a>
             );
         }
 
 
-        let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : this.state.offices[this.state.selectedOfficeID][1]
+        let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : this.state.offices[this.state.selectedOfficeID].nome
 
         return (
             <div
@@ -195,6 +246,19 @@ class DeleteOfficeView extends React.Component {
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
                                         readOnly
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>País</label>
+                                    <input
+                                        maxLength="2"
+                                        value={this.state.pais}
+                                        type="text"
+                                        name="pais"
+                                        id="pais"
+                                        placeholder="País (BR, EU, AS)"
+                                        style={{ width: "100%" }}
                                     />
                                 </div>
 

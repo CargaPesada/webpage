@@ -21,7 +21,8 @@ class ReadOfficeDataView extends React.Component {
             rua: "",
             complemento: "",
             numero: "",
-            bairro: ""
+            bairro: "",
+            pais: ""
 
         }
     }
@@ -35,26 +36,50 @@ class ReadOfficeDataView extends React.Component {
     }
 
     /**
+     * Método para limpar os campos do formulário.
+     */
+    clearForm = () => {
+        document.getElementById('cpf').value = "";
+        document.getElementById('telefone').value = "";
+        document.getElementById('cep').value = "";
+        document.getElementById('cidade').value = "";
+        document.getElementById('estado').value = "";
+        document.getElementById('rua').value = "";
+        document.getElementById('complemento').value = "";
+        document.getElementById('numero').value = "";
+        document.getElementById('bairro').value = "";
+        document.getElementById('pais').value = "";
+
+        //this.state.newUserCategory;
+    }
+
+    /**
      * Método para gerenciar os tipos de oficinas disponíveis para deleção.
      * 
      * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
      */
     handleOfficeDropdown = (id) => {
-        this.setState(
-            { 
-                selectedOfficeID: id,
-                nome: this.state.offices[id].nome,
-                cpf: this.state.offices[id].cpf,
-                telefone: this.state.offices[id].telefone,
-                cep: this.state.offices[id].cep,
-                cidade: this.state.offices[id].cidade,
-                estado: this.state.offices[id].estado,
-                rua: this.state.offices[id].rua,
-                numero: this.state.offices[id].numero,
-                complemento: this.state.offices[id].complemento,
-                bairro: this.state.offices[id].bairro
-            }
-        );
+
+        this.clearForm();
+
+        try {
+            this.setState(
+                {
+                    selectedOfficeID: id,
+                    nome: this.state.offices[id].nome,
+                    cpf: this.state.offices[id].cpf,
+                    telefone: this.state.offices[id].telefone,
+                    cep: this.state.offices[id].endereco.CEP,
+                    cidade: this.state.offices[id].endereco.cidade,
+                    estado: this.state.offices[id].endereco.estado,
+                    rua: this.state.offices[id].endereco.rua,
+                    numero: this.state.offices[id].endereco.numero,
+                    complemento: this.state.offices[id].endereco.complemento,
+                    bairro: this.state.offices[id].endereco.bairro,
+                    pais: this.state.offices[id].pais
+                }
+            );
+        } catch (e) { }
     }
 
     /**
@@ -73,19 +98,19 @@ class ReadOfficeDataView extends React.Component {
             for (let index = 0; index < this.state.offices.length; index++) {
 
                 officesItems.push(
-                    <a class="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index][1]}</a>
+                    <a className="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index].nome}</a>
                 );
             }
 
 
-            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : "Oficina: " + this.state.offices[this.state.selectedOfficeID][1]
+            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : "Oficina: " + this.state.offices[this.state.selectedOfficeID].nome
 
             toRender.push(
 
                 <div className="form-group">
                     <label>Selecione a Oficina</label>
                     <p />
-                    <button class="btn btn-secondary dropdown-toggle" style={{width: "100%"}} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-secondary dropdown-toggle" style={{ width: "100%" }} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {selectedOffice}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -113,7 +138,6 @@ class ReadOfficeDataView extends React.Component {
                         <h1 className="display-4 text-center">{this.props.description}</h1>
                         <div className="mt-3 justify-content-center" style={{ width: '100%' }}>
                             <form>
-
 
                                 {toRender}
 
@@ -213,6 +237,20 @@ class ReadOfficeDataView extends React.Component {
                                         id="bairro"
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
+                                        readOnly
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>País</label>
+                                    <input
+                                        maxLength="2"
+                                        value={this.state.pais}
+                                        type="text"
+                                        name="pais"
+                                        id="pais"
+                                        placeholder="País (BR, EU, AS)"
+                                        style={{ width: "100%" }}
                                         readOnly
                                     />
                                 </div>

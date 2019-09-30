@@ -120,9 +120,8 @@ class FirebaseHandler {
 				let listOfOffices = [];
 
 				for (let index = 0; index < res.data.data.length; index++) {
-					if (res.data.data[index].id != null && res.data.data[index].nome != null) {
-						listOfOffices.push([res.data.data[index].id, res.data.data[index].nome]);
-					}
+					listOfOffices.push(res.data.data[index]);
+
 				}
 
 				return listOfOffices;
