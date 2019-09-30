@@ -90,12 +90,112 @@ class DeleteOfficeView extends React.Component {
                                 <div className="form-group">
                                     <label>Selecione a Oficina *</label>
                                     <p />
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle" style={{ width: "100%" }} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         {selectedOffice}
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {officesItems}
                                     </div>
+                                </div>
+
+                                <div className="mt-4 form-group">
+                                    <label>CPF do Supervisor</label>
+                                    <input
+                                        type="text"
+                                        value={this.state.cpf}
+                                        name="cpf"
+                                        id="cpf"
+                                        placeholder="CPF do Supervisor"
+                                        style={{ width: '100%' }}
+                                        readOnly
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Telefone</label>
+                                    <input
+                                        type="text"
+                                        value={this.state.telefone}
+                                        name="telefone"
+                                        id="telefone"
+                                        placeholder="Telefone"
+                                        style={{ width: "100%" }}
+                                        readOnly
+                                    />
+                                </div>
+
+                                <div className="form-group mt-1">
+                                    <label>Endereço da Oficina</label>
+                                    <p />
+                                    <input
+                                        type="text"
+                                        value={this.state.cep}
+                                        name="cep"
+                                        id="cep"
+                                        placeholder="CEP"
+                                        style={{ width: '40%' }}
+                                        readOnly
+                                    />
+                                    <p />
+                                    <input
+                                        type="text"
+                                        value={this.state.cidade}
+                                        name="cidade"
+                                        id="cidade"
+                                        placeholder="Cidade"
+                                        style={{ width: '40%' }}
+                                        readOnly
+                                    />
+                                    <input
+                                        type="text"
+                                        value={this.state.estado}
+                                        name="estado"
+                                        id="estado"
+                                        className="ml-3"
+                                        placeholder="Estado"
+                                        style={{ width: '50%' }}
+                                        readOnly
+                                    />
+                                    <p />
+                                    <input
+                                        type="text"
+                                        value={this.state.rua}
+                                        name="rua"
+                                        id="rua"
+                                        placeholder="Rua / Estrada / Avenida"
+                                        style={{ width: '40%' }}
+                                        readOnly
+                                    />
+                                    <input
+                                        type="text"
+                                        value={this.state.numero}
+                                        name="numero"
+                                        id="numero"
+                                        className="ml-3"
+                                        placeholder="Número"
+                                        style={{ width: '50%' }}
+                                        readOnly
+                                    />
+                                    <p />
+                                    <input
+                                        type="text"
+                                        value={this.state.complemento}
+                                        name="complemento"
+                                        id="complemento"
+                                        placeholder="Complemento"
+                                        style={{ width: '40%' }}
+                                        readOnly
+                                    />
+                                    <p />
+                                    <input
+                                        type="text"
+                                        value={this.state.bairro}
+                                        name="bairro"
+                                        id="bairro"
+                                        placeholder="Bairro"
+                                        style={{ width: '40%' }}
+                                        readOnly
+                                    />
                                 </div>
 
 

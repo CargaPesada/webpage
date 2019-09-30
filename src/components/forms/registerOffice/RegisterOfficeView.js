@@ -22,6 +22,7 @@ class RegisterOfficeView extends React.Component {
         document.getElementById('complemento').value = "";
         document.getElementById('numero').value = "";
         document.getElementById('bairro').value = "";
+        document.getElementById('pais').value = "";
 
         //this.state.newUserCategory;
     }
@@ -36,15 +37,14 @@ class RegisterOfficeView extends React.Component {
         let nome = document.getElementById('nome').value;
         let cpf = document.getElementById('cpf').value;
         let telefone = document.getElementById('telefone').value;
-        let endereco = {
-            cep: document.getElementById('cep').value,
-            cidade: document.getElementById('cidade').value,
-            estado: document.getElementById('estado').value,
-            rua: document.getElementById('rua').value,
-            complemento: document.getElementById('complemento').value,
-            numero: document.getElementById('numero').value,
-            bairro: document.getElementById('bairro').value
-        };
+        let cep = document.getElementById('cep').value;
+        let cidade = document.getElementById('cidade').value;
+        let estado = document.getElementById('estado').value;
+        let rua = document.getElementById('rua').value;
+        let complemento = document.getElementById('complemento').value;
+        let numero = document.getElementById('numero').value;
+        let bairro = document.getElementById('bairro').value;
+        let pais = document.getElementById('pais').value;
 
         // Validando o campo nome
         if (nome.length === 0) {
@@ -62,34 +62,42 @@ class RegisterOfficeView extends React.Component {
         }
 
         // Validando os campos de endereço
-        if (endereco['cep'].length < 9) { // Aceitando 2 casos: 13085-000 ou 13085000
+        if (cep.length < 9) { // Aceitando 2 casos: 13085-000 ou 13085000
             errorMessages += "\n* CEP inválido";
         }
+        else {
+            cep = cep.replace('.', ''); // Removendo o ponto 
+        }
 
-        if (endereco['cidade'].length === 0) {
+        if (cidade.length === 0) {
             errorMessages += "\n* Cidade não preenchida";
         }
 
-        if (endereco['estado'].length === 0) {
+        if (estado.length === 0) {
             errorMessages += "\n* Estado não preenchido";
         }
 
-        if (endereco['rua'].length === 0) {
+        if (rua.length === 0) {
             errorMessages += "\n* Rua não preenchida";
         }
 
-        if (endereco['numero'].length === 0) {
+        if (numero.length === 0) {
             errorMessages += "\n* Número não preenchido";
         }
 
-        if (endereco['bairro'].length === 0) {
+        if (bairro.length === 0) {
             errorMessages += "\n* Bairro não preenchido";
+        }
+
+        if (pais.length < 2) {
+            errorMessages += "\n* País incorreto";
         }
 
         // Verificando se existe mensagens de erros a serem exibidas...
         if (errorMessages === "") {
 
-            let newOffice = new Office(nome, cpf, telefone, endereco);
+            let newOffice = new Office(nome, cpf, telefone, cep, cidade, estado,
+                rua, complemento, numero, bairro, pais);
 
             let httpHandler = new FirebaseHandler();
             let registered = await httpHandler.tryToRegisterOffice(newOffice);
@@ -100,7 +108,7 @@ class RegisterOfficeView extends React.Component {
             } else {
                 alert('Erro interno no servidor, contacte um administrador!');
             }
-        
+
         }
         else {
             alert('Os seguintes campos estão incorretos:\n'.concat(errorMessages));
@@ -153,7 +161,7 @@ class RegisterOfficeView extends React.Component {
                                 <div className="form-group">
                                     <label>Telefone *</label>
                                     <InputMask
-                                        mask="+999 (99) 9999-9999"
+                                        mask="(99) 9999-9999"
                                         type="text"
                                         name="telefone"
                                         id="telefone"
@@ -180,7 +188,7 @@ class RegisterOfficeView extends React.Component {
                                         id="cidade"
                                         placeholder="Cidade"
                                         style={{ width: '40%' }}
-                                        readOnly
+
                                     />
                                     <input
                                         type="text"
@@ -189,7 +197,7 @@ class RegisterOfficeView extends React.Component {
                                         className="ml-3"
                                         placeholder="Estado"
                                         style={{ width: '50%' }}
-                                        readOnly
+
                                     />
                                     <p />
                                     <input
@@ -198,7 +206,7 @@ class RegisterOfficeView extends React.Component {
                                         id="rua"
                                         placeholder="Rua / Estrada / Avenida"
                                         style={{ width: '40%' }}
-                                        readOnly
+
                                     />
                                     <input
                                         type="text"
@@ -223,7 +231,19 @@ class RegisterOfficeView extends React.Component {
                                         id="bairro"
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
-                                        readOnly
+
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>País *</label>
+                                    <input
+                                        maxLength="2"
+                                        type="text"
+                                        name="pais"
+                                        id="pais"
+                                        placeholder="País (BR, EU, AS)"
+                                        style={{ width: "100%" }}
                                     />
                                 </div>
 

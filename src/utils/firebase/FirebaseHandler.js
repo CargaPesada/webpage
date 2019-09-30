@@ -53,7 +53,7 @@ class FirebaseHandler {
 			marca: truck.marca,
 			modelo: truck.modelo,
 			placa: truck.placa,
-			
+
 			comprimento: truck.comprimento,
 			largura: truck.largura,
 			altura: truck.altura,
@@ -70,7 +70,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -83,7 +83,16 @@ class FirebaseHandler {
 			nome: office.nome,
 			cpf: office.cpf,
 			telefone: office.telefone,
-			endereco: office.endereco
+			endereco: {
+				CEP: office.CEP,
+				cidade: office.cidade,
+				estado: office.estado,
+				rua: office.rua,
+				complemento: office.complemento,
+				numero: office.numero,
+				bairro: office.bairro,
+				pais: office.pais
+			}
 		};
 
 		// Acionando promisses para o endpoint
@@ -91,11 +100,11 @@ class FirebaseHandler {
 			let res = await axios.post(ENDPOINT_ADDRESS + '/office/register', jsonToSend).then();
 
 			if (res != null) {
-				if (res.status === 200) {
+				if (res.status >= 200 && res.status <= 299) {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -112,13 +121,13 @@ class FirebaseHandler {
 
 				for (let index = 0; index < res.data.data.length; index++) {
 					if (res.data.data[index].id != null && res.data.data[index].nome != null) {
-						listOfOffices.push([ res.data.data[index].id, res.data.data[index].nome ]);
+						listOfOffices.push([res.data.data[index].id, res.data.data[index].nome]);
 					}
 				}
 
 				return listOfOffices;
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return [];
 	};
@@ -139,7 +148,7 @@ class FirebaseHandler {
 
 				return listOfTrucks;
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return [];
 	};
@@ -156,7 +165,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -173,7 +182,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -192,7 +201,7 @@ class FirebaseHandler {
 			try {
 				console.log(res);
 				cargo = res.data.data.cargo;
-			} catch (e) {}
+			} catch (e) { }
 		});
 
 		return JOB_TITLE_IDS[cargo];
