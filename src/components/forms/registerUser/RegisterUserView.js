@@ -22,16 +22,16 @@ class RegisterUserView extends React.Component {
      * Método para registrar um novo motorista.
      */
     registerNewUser = () => {
-        this.setState({cargo: 'motorista'});
+        this.setState({ cargo: 'motorista' });
         if (this.state.newUserCategory !== -1) {
             try {
                 let user = new User(this.state);
                 user.validateAndSaveUser().then((message) => {
-                     alert(message);
-                     this.clearForm();
-                 }).catch((message) => {
-                     alert(message);
-                 });
+                    alert(message);
+                    this.clearForm();
+                }).catch((message) => {
+                    alert(message);
+                });
             } catch (err) {
                 alert(err)
             }
@@ -44,11 +44,11 @@ class RegisterUserView extends React.Component {
                 return data;
             })
             .then((data) => {
-                this.setState({cep: data.cep});
-                this.setState({cidade: data.city});
-                this.setState({estado: data.state});
-                this.setState({bairro: data.neighborhood});
-                this.setState({rua: data.street});
+                this.setState({ cep: data.cep });
+                this.setState({ cidade: data.city });
+                this.setState({ estado: data.state });
+                this.setState({ bairro: data.neighborhood });
+                this.setState({ rua: data.street });
             });
     }
 
@@ -85,13 +85,13 @@ class RegisterUserView extends React.Component {
 
         let toRender = [];
         let cargosToShow = [];
-        
-        cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value = "Motorista"/>)
+
+        cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value="Motorista" />)
         if (this.props.cargo >= 3) {
-            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value = "Supervisor"/>);
+            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value="Supervisor" />);
         }
         if (this.props.cargo === 4) {
-            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value = "Gerente Regional"/>);
+            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value="Gerente Regional" />);
         }
 
 
@@ -156,6 +156,18 @@ class RegisterUserView extends React.Component {
                                 </div>
 
                                 <div className="mt-4 form-group">
+                                    <label>Confirmar Senha *</label>
+                                    <input
+                                        type="password"
+                                        name="confirmarSenha"
+                                        id="confirmarSenha"
+                                        placeholder="Senha"
+                                        style={{ width: '100%' }}
+                                        onChange={this.handleChange}
+                                    />
+                                </div>
+
+                                <div className="mt-4 form-group">
                                     <label>Nome *</label>
                                     <input
                                         type="text"
@@ -188,7 +200,7 @@ class RegisterUserView extends React.Component {
                                             <input
                                                 type="radio"
                                                 name="sexo"
-                                                value="m"                                                
+                                                value="m"
                                                 onChange={this.handleChange}
                                             />
                                             Masculino
@@ -196,8 +208,8 @@ class RegisterUserView extends React.Component {
                                         <label>
                                             <input
                                                 type="radio"
-                                                name="sexo"      
-                                                value="f"                                          
+                                                name="sexo"
+                                                value="f"
                                                 onChange={this.handleChange}
                                             />
                                             Feminino
@@ -257,7 +269,7 @@ class RegisterUserView extends React.Component {
                                         <label>
                                             <input
                                                 type="radio"
-                                                name="dependentes"                                                
+                                                name="dependentes"
                                                 onChange={this.handleChange}
                                             />
                                             Não
@@ -275,7 +287,7 @@ class RegisterUserView extends React.Component {
                                         id="cep"
                                         placeholder="CEP"
                                         style={{ width: '40%' }}
-                                        onChange={this.handleChange}                                           
+                                        onChange={this.handleChange}
                                         onBlur={this.handleCEPChange.bind(this)}
                                     />
                                     <p />
@@ -310,20 +322,20 @@ class RegisterUserView extends React.Component {
                                     />
                                     <input
                                         type="text"
-                                        name="complemento"
-                                        id="complemento"
+                                        name="numero"
+                                        id="numero"
                                         className="ml-3"
-                                        placeholder="Complemento"
-                                        style={{ width: '50%' }}                                                
+                                        placeholder="Número"
+                                        style={{ width: '50%' }}
                                         onChange={this.handleChange}
                                     />
                                     <p />
                                     <input
                                         type="text"
-                                        name="numero"
-                                        id="numero"
-                                        placeholder="Número"
-                                        style={{ width: '40%' }}                                                
+                                        name="complemento"
+                                        id="complemento"
+                                        placeholder="Complemento"
+                                        style={{ width: '40%' }}
                                         onChange={this.handleChange}
                                     />
                                     <p />

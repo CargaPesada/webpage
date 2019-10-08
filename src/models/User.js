@@ -9,6 +9,7 @@ function userProps() {
 	return {
 		email: '',
 		senha: '',
+		confirmarSenha: '',
 		nome: '',
 		cpf: '',
 		sexo: '',
@@ -49,6 +50,12 @@ function isPasswordValid(password) {
 
 	// Validate against a password string
 	return schema.validate(password);
+}
+
+function isPasswordEqual(password1, password2) {
+	if (password1 === password2) return true;
+
+	return false;
 }
 
 function isNameValid(name) {
@@ -98,6 +105,10 @@ class User {
 			if (!isPasswordValid(data.senha)) {
 				errorMessages +=
 					'-> Senha inválida (Tamanho mínimo 8, máximo 50, conter maiúsculas e minúsculas, sem espaço)\n';
+			}
+			if (!isPasswordEqual(data.senha, data.confirmarSenha)) {
+				errorMessages +=
+					'-> As senhas não são iguais\n';
 			}
 			if (!isNameValid(data.nome)) {
 				errorMessages += '-> Nome inválido\n';

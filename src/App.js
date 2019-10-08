@@ -10,7 +10,7 @@ class App extends React.Component {
 
 		this.state = {
 			isUserAuthenticated: true,
-			isAdmin: true,
+			isAdmin: false,
 			cargo: 3
 		};
 	}
