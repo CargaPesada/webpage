@@ -2,10 +2,21 @@ import React from 'react';
 import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Office from '../../../models/Office';
+import cep from 'cep-promise';
 
 class RegisterOfficeView extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            cidade: '',
+            estado: '',
+            rua: '',
+            complemento: '',
+            numero: '',
+            bairro: '',
+            pais: ''
+        }
     }
 
     /**
@@ -116,6 +127,20 @@ class RegisterOfficeView extends React.Component {
 
     }
 
+    handleCEPChange(evt) {
+        cep(evt.target.value)
+            .then((data) => {
+                return data;
+            })
+            .then((data) => {
+                this.setState({ cep: data.cep });
+                this.setState({ cidade: data.city });
+                this.setState({ estado: data.state });
+                this.setState({ bairro: data.neighborhood });
+                this.setState({ rua: data.street });
+            });
+    }
+
     /**
      * Método padrão para renderização.
      */
@@ -180,6 +205,7 @@ class RegisterOfficeView extends React.Component {
                                         id="cep"
                                         placeholder="CEP"
                                         style={{ width: '40%' }}
+                                        onBlur={this.handleCEPChange.bind(this)}
                                     />
                                     <p />
                                     <input
@@ -187,8 +213,9 @@ class RegisterOfficeView extends React.Component {
                                         name="cidade"
                                         id="cidade"
                                         placeholder="Cidade"
+                                        value={this.state.cidade}
                                         style={{ width: '40%' }}
-
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -197,16 +224,18 @@ class RegisterOfficeView extends React.Component {
                                         className="ml-3"
                                         placeholder="Estado"
                                         style={{ width: '50%' }}
-
+                                        value={this.state.estado}
+                                        disabled
                                     />
                                     <p />
                                     <input
                                         type="text"
                                         name="rua"
                                         id="rua"
-                                        placeholder="Rua / Estrada / Avenida"
+                                        placeholder="Rua"
                                         style={{ width: '40%' }}
-
+                                        value={this.state.rua}
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -215,6 +244,7 @@ class RegisterOfficeView extends React.Component {
                                         className="ml-3"
                                         placeholder="Número"
                                         style={{ width: '50%' }}
+                                        onChange={this.handleChange}
                                     />
                                     <p />
                                     <input
@@ -223,6 +253,7 @@ class RegisterOfficeView extends React.Component {
                                         id="complemento"
                                         placeholder="Complemento"
                                         style={{ width: '40%' }}
+                                        onChange={this.handleChange}
                                     />
                                     <p />
                                     <input
@@ -231,7 +262,8 @@ class RegisterOfficeView extends React.Component {
                                         id="bairro"
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
-
+                                        value={this.state.bairro}
+                                        disabled
                                     />
                                 </div>
 
