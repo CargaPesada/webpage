@@ -3,6 +3,7 @@ import EmailValidator from 'email-validator';
 import PasswordValidator from 'password-validator';
 import CPF from 'cpf-check';
 import cep from 'cep-promise';
+import { parse, format } from 'date-fns';
 
 //Retorna todas as propriedades obrigatorias do usuario
 function userProps() {
@@ -16,7 +17,7 @@ function userProps() {
 		ddn: '',
 		nomepai: '',
 		nomemae: '',
-		dependentes: '',
+		dependentes: 0,
 		cep: '',
 		cidade: '',
 		estado: '',
@@ -25,7 +26,8 @@ function userProps() {
 		numero: '',
 		bairro: '',
 		cargo: '',
-		numcnh: ''
+		numcnh: '',
+		pais: ''
 	};
 }
 
@@ -72,7 +74,7 @@ function isGenderValid(gender) {
 }
 
 function isDateOfBirthValid(dat) {
-	let date = new Date(dat);
+	let date = parse(dat, 'dd/MM/yyyy', new Date());
 	return date.getFullYear() > 1910 && date.getFullYear() < 2001;
 }
 
@@ -107,8 +109,7 @@ class User {
 					'-> Senha inválida (Tamanho mínimo 8, máximo 50, conter maiúsculas e minúsculas, sem espaço)\n';
 			}
 			if (!isPasswordEqual(data.senha, data.confirmarSenha)) {
-				errorMessages +=
-					'-> As senhas não são iguais\n';
+				errorMessages += '-> As senhas não são iguais\n';
 			}
 			if (!isNameValid(data.nome)) {
 				errorMessages += '-> Nome inválido\n';
@@ -122,13 +123,13 @@ class User {
 			if (!isDateOfBirthValid(data.ddn)) {
 				errorMessages += '-> Data de nascimento inválida\n';
 			}
-			if (!isNameValid(data.nomepai)) {
+			if (data.nomepai && !isNameValid(data.nomepai)) {
 				errorMessages += '-> Nome do pai inválido\n';
 			}
 			if (!isNameValid(data.nomemae)) {
 				errorMessages += '-> Nome da mãe inválido\n';
 			}
-			if (!isComplementoValid(data.complemento)) {
+			if (data.complemento && !isComplementoValid(data.complemento)) {
 				errorMessages += '-> Complemento inválido\n';
 			}
 			if (!isNumberValid(data.numero)) {

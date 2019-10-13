@@ -32,17 +32,22 @@ class FirebaseHandler {
 		};
 
 		// Registra o usuario no autenticador do Firebase
-		firebase.auth().createUserWithEmailAndPassword(jsonToSend.email, jsonToSend.senha).then(
-			async (user) => {
-				// Acionando promisses para o endpoint
-				await axios.post(ENDPOINT_ADDRESS + '/user/register', jsonToSend).then((res) => {
-					callback();
-				});
-			},
-			(error) => {
-				callback(error);
-			}
-		);
+		axios
+			.post(ENDPOINT_ADDRESS + '/user/register', jsonToSend)
+			.then((res) => {
+				firebase
+					.auth()
+					.createUserWithEmailAndPassword(jsonToSend.email, jsonToSend.senha)
+					.then(() => {
+						callback();
+					})
+					.catch((err) => {
+						callback(new Error('Erro ao enviar informações para o firebase'));
+					});
+			})
+			.catch((err) => {
+				callback(new Error('Erro ao enviar informações para o servidor'));
+			});
 	};
 
 	/**
@@ -70,7 +75,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		return false;
 	};
@@ -104,7 +109,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		return false;
 	};
@@ -121,12 +126,11 @@ class FirebaseHandler {
 
 				for (let index = 0; index < res.data.data.length; index++) {
 					listOfOffices.push(res.data.data[index]);
-
 				}
 
 				return listOfOffices;
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		return [];
 	};
@@ -147,7 +151,7 @@ class FirebaseHandler {
 
 				return listOfTrucks;
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		return [];
 	};
@@ -164,7 +168,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		return false;
 	};
@@ -181,7 +185,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) { }
+		} catch (e) {}
 
 		return false;
 	};
@@ -200,7 +204,7 @@ class FirebaseHandler {
 			try {
 				console.log(res);
 				cargo = res.data.data.cargo;
-			} catch (e) { }
+			} catch (e) {}
 		});
 
 		return JOB_TITLE_IDS[cargo];

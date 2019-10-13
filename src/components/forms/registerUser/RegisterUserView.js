@@ -6,9 +6,10 @@ import cep from 'cep-promise';
 class RegisterUserView extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = userProps();
         this.handleChange = this.handleChange.bind(this);
+        this.handleDependentes = this.handleDependentes.bind(this);
+        this.handleCEPChange = this.handleCEPChange.bind(this);
     }
 
     /**
@@ -48,12 +49,17 @@ class RegisterUserView extends React.Component {
                 this.setState({ cidade: data.city });
                 this.setState({ estado: data.state });
                 this.setState({ bairro: data.neighborhood });
-                this.setState({ rua: data.street });
+                this.setState({ rua: data.street});
+                this.setState({ pais: 'Brasil'});
             });
     }
 
     handleChange(evt) {
         this.setState({ [evt.target.name]: evt.target.value });
+    }
+
+    handleDependentes(evt) {
+        this.setState({ [evt.target.name]: parseInt(evt.target.value) > 0 ? parseInt(evt.target.value) : 0 });
     }
 
     /**
@@ -220,7 +226,7 @@ class RegisterUserView extends React.Component {
                                 <div className="mt-4 form-group">
                                     <label>Data de Nascimento *</label>
                                     <InputMask
-                                        mask="9999-99-99"
+                                        mask="99/99/9999"
                                         type="text"
                                         name="ddn"
                                         id="ddn"
@@ -255,26 +261,17 @@ class RegisterUserView extends React.Component {
                                 </div>
 
                                 <div className="mt-4 form-group">
-                                    <label>Tem dependentes *</label>
+                                    <label>Número de dependentes*: </label>
 
-                                    <div className="d-flex row justify-content-between ml-1" style={{ width: '60%' }}>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="dependentes"
-                                                onChange={this.handleChange}
-                                            />
-                                            Sim
-										</label>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="dependentes"
-                                                onChange={this.handleChange}
-                                            />
-                                            Não
-										</label>
-                                    </div>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        value={this.state.dependentes}
+                                        onChange={this.handleDependentes}
+                                        name="dependentes"
+                                        id="dependentes"
+                                        style={{ width: '100%' }}
+                                    />
                                 </div>
 
                                 <div className="form-group mt-1">
@@ -287,8 +284,8 @@ class RegisterUserView extends React.Component {
                                         id="cep"
                                         placeholder="CEP"
                                         style={{ width: '40%' }}
-                                        onChange={this.handleChange}
-                                        onBlur={this.handleCEPChange.bind(this)}
+                                        onChange={this.handleCEPChange}
+                                        onKeyDown={this.handleCEPChange}
                                     />
                                     <p />
                                     <input
@@ -346,6 +343,16 @@ class RegisterUserView extends React.Component {
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
                                         value={this.state.bairro}
+                                        disabled
+                                    />
+                                    <p />
+                                    <input
+                                        type="text"
+                                        name="pais"
+                                        id="pais"
+                                        placeholder="País"
+                                        style={{ width: '40%' }}
+                                        value={this.state.pais}
                                         disabled
                                     />
                                 </div>
