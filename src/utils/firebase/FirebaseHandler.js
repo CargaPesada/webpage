@@ -195,19 +195,26 @@ class FirebaseHandler {
      */
 	tryToLogin = async (email, password, callback) => {
 		await firebase.auth().signInWithEmailAndPassword(email, password).catch((err) => {
-			console.log('ERRO NO FIREBASE!');
 			return -1;
 		});
 
-		let cargo = 'nao_autorizado';
+		let userInfo = {
+			cargo: JOB_TITLE_IDS['nao_autorizado'],
+			cpf: null
+		}
+
 		await axios.get(ENDPOINT_ADDRESS + '/user/' + email).then((res) => {
 			try {
 				console.log(res);
-				cargo = res.data.data.cargo;
+
+				userInfo = {
+					cargo: JOB_TITLE_IDS[res.data.data.cargo],
+					cpf: res.data.data.cpf
+				}
 			} catch (e) {}
 		});
 
-		return JOB_TITLE_IDS[cargo];
+		return userInfo;
 	};
 
 	/**

@@ -308,7 +308,7 @@ class UserView extends React.Component {
 			}
 			else if (this.state.mustShowWorkshopDataReaderView) {
 				toRender.push(
-					<ReadOfficeDataView description="Ver Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} />
+					<ReadOfficeDataView description="Ver Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} cpf={this.props.cpf} />
 				);
 			}
 			else if (this.state.mustShowTruckRegisterView) {

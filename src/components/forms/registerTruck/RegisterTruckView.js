@@ -6,6 +6,10 @@ import Truck from '../../../models/Truck';
 class RegisterTruckView extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            marca: ""
+        }
     }
 
     /**
@@ -32,18 +36,18 @@ class RegisterTruckView extends React.Component {
 
         let errorMessages = "";
 
-        let marca = document.getElementById('marca').value;
+        let marca = this.state.marca;
         let modelo = document.getElementById('modelo').value;
         let placa = document.getElementById('placa').value;
         let comprimento = document.getElementById('comprimento').value;
-		let largura = document.getElementById('largura').value;
-		let altura = document.getElementById('altura').value;
+        let largura = document.getElementById('largura').value;
+        let altura = document.getElementById('altura').value;
         let cargaMaxima = document.getElementById('cargaMaxima').value;
         let pais = document.getElementById('pais').value;
 
         // Validando o campo nome
         if (marca.length === 0) {
-            errorMessages += "\n* Marca não preenchida";
+            errorMessages += "\n* Marca não selecionada";
         }
 
         // Validando o campo CPF
@@ -96,7 +100,7 @@ class RegisterTruckView extends React.Component {
             } else {
                 alert('Erro interno no servidor, contacte um administrador!');
             }
-        
+
         }
         else {
             alert('Os seguintes campos estão incorretos:\n'.concat(errorMessages));
@@ -104,10 +108,28 @@ class RegisterTruckView extends React.Component {
 
     }
 
+    handleBrandChange(name) {
+        this.setState({
+            marca: name
+        })
+    }
+
+
     /**
      * Método padrão para renderização.
      */
     render() {
+
+        let brandName = this.state.marca == ""? "Marca do Veículo" : this.state.marca;
+
+        let availableBrands = [];
+
+        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Volkswagen")} name="marca" value="Volkswagen" />)
+        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Scania")} name="marca" value="Scania" />);
+        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Mercedes-Benz")} name="marca" value="Mercedes-Benz" />);
+        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Iveco")} name="marca" value="Iveco" />);
+
+
 
         return (
             <div
@@ -130,8 +152,14 @@ class RegisterTruckView extends React.Component {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Marca *</label>
-                                    <input type="text" id="marca" name="marca" style={{ width: "100%" }} placeholder="Marca"></input>
+                                    <label>Selecione a Marca *</label>
+                                    <p />
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {brandName}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {availableBrands}
+                                    </div>
                                 </div>
 
                                 <div className="mt-4 form-group">
@@ -156,7 +184,7 @@ class RegisterTruckView extends React.Component {
                                         style={{ width: "100%" }}
                                     />
                                 </div>
-        
+
                                 <div className="form-group">
                                     <label>Comprimento (m)*</label>
                                     <input

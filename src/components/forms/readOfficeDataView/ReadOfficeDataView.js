@@ -28,11 +28,33 @@ class ReadOfficeDataView extends React.Component {
     }
 
     async componentWillMount() {
+
         let availableOffices = await new FirebaseHandler().getAllOffices();
 
-        this.setState({
-            offices: availableOffices
-        });
+        if (this.props.cargo >= 3) {
+
+            this.setState({
+                offices: availableOffices
+            });
+
+        }
+        else {
+            let filteredOffices = [];
+
+            for (let index in availableOffices) {
+
+                // Fazendo filtro por CPF...
+                // OBS: Tem que ser == e não ===, pois o CPF pode ser null
+                if (availableOffices[index].cpf == this.props.cpf) {
+                    filteredOffices.push(availableOffices[index]);
+                }
+            }
+
+            this.setState({
+                offices: filteredOffices
+            });
+        }
+
     }
 
     /**
@@ -90,37 +112,35 @@ class ReadOfficeDataView extends React.Component {
         // Setando os componentes que precisam ser renderizados de acordo com o cargo
         let toRender = []
 
-        if (this.props.cargo >= 3) {
+        // Carregando info de oficinas
+        let officesItems = [];
 
-            // Carregando info de oficinas
-            let officesItems = [];
+        for (let index = 0; index < this.state.offices.length; index++) {
 
-            for (let index = 0; index < this.state.offices.length; index++) {
-
-                officesItems.push(
-                    <a className="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index].nome}</a>
-                );
-            }
-
-
-            let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : "Oficina: " + this.state.offices[this.state.selectedOfficeID].nome
-
-            toRender.push(
-
-                <div className="form-group">
-                    <label>Selecione a Oficina</label>
-                    <p />
-                    <button class="btn btn-secondary dropdown-toggle" style={{ width: "100%" }} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {selectedOffice}
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {officesItems}
-                    </div>
-                </div>
-
-
-            )
+            officesItems.push(
+                <a className="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index].nome}</a>
+            );
         }
+
+
+        let selectedOffice = this.state.selectedOfficeID == -1 ? "Selecione uma Oficina" : "Oficina: " + this.state.offices[this.state.selectedOfficeID].nome
+
+        toRender.push(
+
+            <div className="form-group">
+                <label>Selecione a Oficina</label>
+                <p />
+                <button class="btn btn-secondary dropdown-toggle" style={{ width: "100%" }} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {selectedOffice}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {officesItems}
+                </div>
+            </div>
+
+
+        )
+        
 
 
         // Renderizando agora!!!
@@ -150,7 +170,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="cpf"
                                         placeholder="CPF do Supervisor"
                                         style={{ width: '100%' }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -163,7 +183,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="telefone"
                                         placeholder="Telefone"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -177,7 +197,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="cep"
                                         placeholder="CEP"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -187,7 +207,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="cidade"
                                         placeholder="Cidade"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -197,7 +217,7 @@ class ReadOfficeDataView extends React.Component {
                                         className="ml-3"
                                         placeholder="Estado"
                                         style={{ width: '50%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -207,7 +227,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="rua"
                                         placeholder="Rua / Estrada / Avenida"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -217,7 +237,7 @@ class ReadOfficeDataView extends React.Component {
                                         className="ml-3"
                                         placeholder="Número"
                                         style={{ width: '50%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -227,7 +247,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="complemento"
                                         placeholder="Complemento"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -237,7 +257,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="bairro"
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -251,7 +271,7 @@ class ReadOfficeDataView extends React.Component {
                                         id="pais"
                                         placeholder="País (BR, EU, AS)"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 

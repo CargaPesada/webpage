@@ -138,6 +138,7 @@ class RegisterOfficeView extends React.Component {
                 this.setState({ estado: data.state });
                 this.setState({ bairro: data.neighborhood });
                 this.setState({ rua: data.street });
+                this.setState({ pais: "BR"});
             });
     }
 
@@ -276,6 +277,8 @@ class RegisterOfficeView extends React.Component {
                                         id="pais"
                                         placeholder="País (BR, EU, AS)"
                                         style={{ width: "100%" }}
+                                        value={this.state.pais}
+                                        disabled
                                     />
                                 </div>
 

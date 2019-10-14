@@ -11,17 +11,17 @@ class Login extends React.Component {
 			let httpHandler = new FirebaseHandler();
 
 			// Tentando realizar autenticação...
-			let cargo = await httpHandler.tryToLogin(
+			let userInfo = await httpHandler.tryToLogin(
 				document.getElementById('email').value,
 				document.getElementById('password').value
 			);
 
 			// Se a autenticação deu certa...
 			// Verificaremos se o usuário tem perfil administrativo
-			if (cargo > 1) {
-				this.props.handleUserAuthentication(true, cargo);
-			} else if (cargo === 0 || cargo === 1) {
-				this.props.handleUserAuthentication(false, cargo);
+			if (userInfo.cargo > 1) {
+				this.props.handleUserAuthentication(true, userInfo.cargo, userInfo.cpf);
+			} else if (userInfo.cargo === 0 || userInfo.cargo === 1) {
+				this.props.handleUserAuthentication(false, userInfo.cargo, userInfo.cpf);
 			} else {
 				alert('Credenciais inválidas!');
 			}

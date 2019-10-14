@@ -148,7 +148,7 @@ class DeleteTruckView extends React.Component {
                                         name="marca" 
                                         style={{ width: "100%" }} 
                                         placeholder="Marca" 
-                                        readOnly 
+                                        disabled 
                                     />
                                 </div>
 
@@ -161,7 +161,7 @@ class DeleteTruckView extends React.Component {
                                         id="modelo"
                                         placeholder="Modelo"
                                         style={{ width: '100%' }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -174,7 +174,7 @@ class DeleteTruckView extends React.Component {
                                         id="comprimento"
                                         placeholder="Comprimento"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -187,7 +187,7 @@ class DeleteTruckView extends React.Component {
                                         id="largura"
                                         placeholder="Largura"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -200,7 +200,7 @@ class DeleteTruckView extends React.Component {
                                         id="altura"
                                         placeholder="Altura"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -213,7 +213,7 @@ class DeleteTruckView extends React.Component {
                                         id="cargaMaxima"
                                         placeholder="Carga Máxima"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -227,7 +227,7 @@ class DeleteTruckView extends React.Component {
                                         id="pais"
                                         placeholder="Sigla do País"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 

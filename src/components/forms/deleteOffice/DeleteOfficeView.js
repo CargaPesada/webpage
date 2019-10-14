@@ -158,7 +158,7 @@ class DeleteOfficeView extends React.Component {
                                         id="cpf"
                                         placeholder="CPF do Supervisor"
                                         style={{ width: '100%' }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -171,7 +171,7 @@ class DeleteOfficeView extends React.Component {
                                         id="telefone"
                                         placeholder="Telefone"
                                         style={{ width: "100%" }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -185,7 +185,7 @@ class DeleteOfficeView extends React.Component {
                                         id="cep"
                                         placeholder="CEP"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -195,7 +195,7 @@ class DeleteOfficeView extends React.Component {
                                         id="cidade"
                                         placeholder="Cidade"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -205,7 +205,7 @@ class DeleteOfficeView extends React.Component {
                                         className="ml-3"
                                         placeholder="Estado"
                                         style={{ width: '50%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -215,7 +215,7 @@ class DeleteOfficeView extends React.Component {
                                         id="rua"
                                         placeholder="Rua / Estrada / Avenida"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <input
                                         type="text"
@@ -225,7 +225,7 @@ class DeleteOfficeView extends React.Component {
                                         className="ml-3"
                                         placeholder="Número"
                                         style={{ width: '50%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -235,7 +235,7 @@ class DeleteOfficeView extends React.Component {
                                         id="complemento"
                                         placeholder="Complemento"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                     <p />
                                     <input
@@ -245,7 +245,7 @@ class DeleteOfficeView extends React.Component {
                                         id="bairro"
                                         placeholder="Bairro"
                                         style={{ width: '40%' }}
-                                        readOnly
+                                        disabled
                                     />
                                 </div>
 
@@ -259,6 +259,7 @@ class DeleteOfficeView extends React.Component {
                                         id="pais"
                                         placeholder="País (BR, EU, AS)"
                                         style={{ width: "100%" }}
+                                        disabled
                                     />
                                 </div>
 
