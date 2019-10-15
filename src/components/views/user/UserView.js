@@ -9,6 +9,8 @@ import ReadOfficeDataView from '../../forms/readOfficeDataView/ReadOfficeDataVie
 import RegisterTruckView from '../../forms/registerTruck/RegisterTruckView';
 import ReadTruckDataView from '../../forms/readTruckDataView/ReadTruckDataView';
 import DeleteTruckView from '../../forms/deleteTruckView/DeleteTruckView';
+import ReadUserDataView from '../../forms/readUserDataView/ReadUserDataView';
+import DriverStatusHandlerView from '../../forms/driverStatusHandlerView/DriverStatusHandlerView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -21,6 +23,8 @@ class UserView extends React.Component {
 			mustHideCards: false,
 			mustShowDriverInfo: false,
 			mustShowUserRegisterView: false,
+			mustShowUserDataReaderView: false,
+			mustShowDriverStatusSetterView: false,
 			mustShowWorkshopRegisterView: false,
 			mustShowWorkshopDeleterView: false,
 			mustShowWorkshopDataReaderView: false,
@@ -41,6 +45,29 @@ class UserView extends React.Component {
 			this.setState({ mustHideCards: false, mustShowUserRegisterView: false });
 		}
 	};
+
+	/**
+	 * Método para esconder os cards e demonstrar a view de leitura do Usuário.
+	 */
+	handleUserDataReaderCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowUserDataReaderView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowUserDataReaderView: false });
+		}
+	};
+
+	/**
+	 * Método para esconder os cards e demonstrar a view de leitura do Usuário.
+	 */
+	handleDriverStatusSetterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowDriverStatusSetterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowDriverStatusSetterView: false });
+		}
+	};
+
 
 	/**
      * Método para esconder os cards e demonstrar a view de registro de Oficina.
@@ -130,10 +157,11 @@ class UserView extends React.Component {
 						{/* Dados do Caminhão */}
 						<CustomCard name="fa-truck" description="Dados do Caminhão" />
 
-						{/* Dados do Usuário */}
+						{/* Status do Usuário */}
 						<CustomCard
 							name="fa-user-slash"
-							description="Dados do Motorista"
+							description="Status do Motorista"
+							customOnClick={() => this.handleDriverStatusSetterCard(true)}
 
 						/>
 
@@ -151,11 +179,18 @@ class UserView extends React.Component {
 							className="row d-flex justify-content-between"
 							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
 						>
-							{/* Gerenciar Dados dos Usuários */}
+							{/* Registrar Dados dos Usuários */}
 							<CustomCard
 								name="fa-users"
 								description="Registrar Usuário"
 								customOnClick={() => this.handleUserRegisterCard(true)}
+							/>
+
+							{/* Ver dados dos Usuários */}
+							<CustomCard
+								name="fa-users"
+								description="Ver Usuário"
+								customOnClick={() => this.handleUserDataReaderCard(true)}
 							/>
 
 						</div>
@@ -215,11 +250,18 @@ class UserView extends React.Component {
 							className="row d-flex justify-content-between"
 							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
 						>
-							{/* Gerenciar Dados dos Usuários */}
+							{/* Registrar Dados dos Usuários */}
 							<CustomCard
 								name="fa-users"
 								description="Registrar Usuário"
 								customOnClick={() => this.handleUserRegisterCard(true)}
+							/>
+
+							{/* Ver dados dos Usuários */}
+							<CustomCard
+								name="fa-users"
+								description="Ver Usuário"
+								customOnClick={() => this.handleUserDataReaderCard(true)}
 							/>
 						</div>
 						<div
@@ -291,9 +333,19 @@ class UserView extends React.Component {
 					<InfoView description="Dados do Motorista" handleCard={this.handleUserRegisterCard} infosToShow={this.state.infosToShow} />
 				);
 			}
+			else if (this.state.mustShowDriverStatusSetterView) {
+				toRender.push(
+					<DriverStatusHandlerView description="Status do Motorista" handleCard={this.handleDriverStatusSetterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
+				);
+			}
 			else if (this.state.mustShowUserRegisterView) {
 				toRender.push(
 					<RegisterUserView description="Registrar Usuário" handleCard={this.handleUserRegisterCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowUserDataReaderView) {
+				toRender.push(
+					<ReadUserDataView description="Ver Usuário" handleCard={this.handleUserDataReaderCard} cargo={this.props.cargo} />
 				);
 			}
 			else if (this.state.mustShowWorkshopRegisterView) {

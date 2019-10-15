@@ -28,6 +28,7 @@ class FirebaseHandler {
 			nomepai: user.nomepai,
 			nomemae: user.nomemae,
 			dependentes: user.dependentes,
+			status: false,
 			ocorrencias: []
 		};
 
@@ -150,6 +151,27 @@ class FirebaseHandler {
 				}
 
 				return listOfTrucks;
+			}
+		} catch (e) {}
+
+		return [];
+	};
+
+	/**
+	 * Método para retornar todas oficinas.
+	 */
+	getAllUsers = async () => {
+		try {
+			let res = await axios.get(ENDPOINT_ADDRESS + '/user/all');
+
+			if (res != null) {
+				let listOfUsers = [];
+
+				for (let index = 0; index < res.data.data.length; index++) {
+					listOfUsers.push(res.data.data[index]);
+				}
+
+				return listOfUsers;
 			}
 		} catch (e) {}
 
