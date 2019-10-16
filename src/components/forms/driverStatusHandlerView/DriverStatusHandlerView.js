@@ -22,12 +22,6 @@ class DriverStatusHandlerView extends React.Component {
         for (let index in availableUsers) {
             if (availableUsers[index].cargo == "motorista" && availableUsers[index].cpf == this.props.cpf) {
 
-                // let statusToReadable = "Indisponível / Ocupado";
-
-                // if (availableUsers[id].status) {
-                //     statusToReadable = "Disponível para tarefas";
-                // }
-
                 this.setState({
                     user: availableUsers[index],
                     status: availableUsers[index].status
@@ -40,28 +34,31 @@ class DriverStatusHandlerView extends React.Component {
     }
 
     /**
-     * Método para gerenciar os tipos de usuários disponíveis para visualização.
+     * Método para gerenciar o status do usuário (motorista).
      * 
      * Os valores deverão ser em INTEIRO e entre 0 à N elementos disponíveis!
      */
-    handleUserDropdown = (id) => {
+    handleUserDropdown = async (newStatus) => {
 
         try {
 
-            // let statusToReadable = "Indisponível / Ocupado";
+            let response = await new FirebaseHandler().updateDriverStatus(this.state.user.cpf, newStatus);
 
-            // if (this.state.users[id].status) {
-            //     statusToReadable = "Disponível para tarefas";
-            // }
+            if (response) {
+                if (newStatus === true) {
+                    this.setState({status: true});
+                }
+                else {
+                    this.setState({status: false});
+                }
 
-            // this.setState(
-            //     {
-            //         status: statusToReadable,
-            //         nome: this.state.users[id].nome,
-            //         cpf: this.state.users[id].cpf
+                console.log(this.state.status);
+            }
+            else {
+                throw "Erro! O servidor não está conseguindo atualizar o usuário!";
+            }
 
-            //     }
-            // );
+
         }
         catch (e) {
             alert("Erro! Foi detectado um usuário com informação corrompida no sistema! Contacte um administrador!");
@@ -80,13 +77,13 @@ class DriverStatusHandlerView extends React.Component {
         // Carregando opções de seleção
         let userAlternatives = [];
 
-        // userAlternatives.push(
-        //     <a class="dropdown-item" href="#" onClick={() => this.handleUserDropdown(index)}>{"Indisponível / Ocupado"}</a>
-        // );
+        userAlternatives.push(
+            <a class="dropdown-item" href="#" onClick={() => this.handleUserDropdown(false)}>{"Indisponível / Ocupado"}</a>
+        );
 
-        // userAlternatives.push(
-        //     <a class="dropdown-item" href="#" onClick={() => this.handleUserDropdown(index)}>{"Disponível para tarefas"}</a>
-        // );
+        userAlternatives.push(
+            <a class="dropdown-item" href="#" onClick={() => this.handleUserDropdown(true)}>{"Disponível para tarefas"}</a>
+        );
 
 
         // Setando o valor default do combo box!

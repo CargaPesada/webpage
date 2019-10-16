@@ -179,6 +179,30 @@ class FirebaseHandler {
 	};
 
 	/**
+	 * Método para atualizar o status do motorista.
+	 */
+	updateDriverStatus = async (cpf, newStatus) => {
+
+		let jsonToSend = {
+			cpf: cpf,
+			status: newStatus
+		};
+
+		try {
+			let res = await axios.put(ENDPOINT_ADDRESS + '/user/status', jsonToSend);
+
+			if (res != null) {
+				if (res.status >= 200 && res.status <= 299) {
+					return true;
+				}
+
+			}
+		} catch (e) {}
+
+		return false;
+	}
+
+	/**
 	 * Método para deletar uma certa oficina.
 	 */
 	deleteCertainOffice = async (id) => {
