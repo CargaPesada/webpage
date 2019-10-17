@@ -15,7 +15,8 @@ class RegisterOfficeView extends React.Component {
             complemento: '',
             numero: '',
             bairro: '',
-            pais: ''
+            pais: '',
+            telefone: []
         }
     }
 
@@ -36,6 +37,26 @@ class RegisterOfficeView extends React.Component {
         document.getElementById('pais').value = "";
 
         //this.state.newUserCategory;
+    }
+
+    verifyPhone = (evt) => {
+        let pressed = String.fromCharCode(evt.charCode);
+        let novoNumero = this.state.telefone;
+        let i = 0;
+
+        novoNumero.push(parseInt(pressed));
+        i++;
+        if (i > 2) {
+            novoNumero.splice(0, novoNumero.length);
+            i = 0;
+        }       
+
+        console.log(novoNumero);
+
+        this.setState({
+            telefone: novoNumero
+        })
+        
     }
 
     /**
@@ -185,12 +206,56 @@ class RegisterOfficeView extends React.Component {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Telefone *</label>
+                                    <label style={{ width: '100%' }}>País *</label>
+                                    <label class="radio">
+                                        <input type="radio" name="answer"/>
+                                        US
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" name="answer"/>
+                                        BR
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" name="answer"/>
+                                        SA
+                                    </label>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>US Telefone *</label>
                                     <InputMask
-                                        mask="(99) 9999-9999"
+                                        onKeyPress={(evt) => this.verifyPhone(evt)}
+                                        mask="+99 (999) 999-9999"
                                         type="text"
                                         name="telefone"
-                                        id="telefone"
+                                        id="telefone-us"
+                                        placeholder="Telefone"
+                                        style={{ width: "100%" }}
+                                    />
+                                </div>
+
+                            
+                                <div className="form-group">
+                                    <label>BR Telefone *</label>
+                                    <InputMask
+                                        onKeyPress={(evt) => this.verifyPhone(evt)}
+                                        mask="+99 (99) 99999-9999"
+                                        type="text"
+                                        name="telefone"
+                                        id="telefone-br"
+                                        placeholder="Telefone"
+                                        style={{ width: "100%" }}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>SA Telefone *</label>
+                                    <InputMask
+                                        onKeyPress={(evt) => this.verifyPhone(evt)}
+                                        mask="+99 (99) 999-9999"
+                                        type="text"
+                                        name="telefone"
+                                        id="telefone-sa"
                                         placeholder="Telefone"
                                         style={{ width: "100%" }}
                                     />
