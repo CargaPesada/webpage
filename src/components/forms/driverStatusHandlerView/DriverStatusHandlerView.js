@@ -17,6 +17,7 @@ class DriverStatusHandlerView extends React.Component {
     }
 
     async componentWillMount() {
+
         let availableUsers = await new FirebaseHandler().getAllUsers();
 
         for (let index in availableUsers) {
@@ -46,10 +47,10 @@ class DriverStatusHandlerView extends React.Component {
 
             if (response) {
                 if (newStatus === true) {
-                    this.setState({status: true});
+                    this.setState({ status: true });
                 }
                 else {
-                    this.setState({status: false});
+                    this.setState({ status: false });
                 }
 
                 console.log(this.state.status);
@@ -95,7 +96,7 @@ class DriverStatusHandlerView extends React.Component {
             <div className="form-group">
                 <label>Configure o seu status atual</label>
                 <p />
-                <button class="btn btn-secondary dropdown-toggle" type="button" style={{width: "100%"}} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle" type="button" style={{ width: "100%" }} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {selectedStatus}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -104,7 +105,7 @@ class DriverStatusHandlerView extends React.Component {
             </div>
 
         );
-        
+
 
 
         // Renderizando agora!!!
