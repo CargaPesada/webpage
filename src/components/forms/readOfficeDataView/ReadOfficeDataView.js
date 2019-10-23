@@ -31,11 +31,8 @@ class ReadOfficeDataView extends React.Component {
             bairro: "",
             pais: "",
 
-            // Datas
-            dates: [
-                { title: 'event 1', date: '2019-10-01' },
-                { title: 'event 2', date: '2019-10-02' }
-            ]
+            // Datas para manutenção
+            dates: []
 
         }
     }
@@ -122,19 +119,14 @@ class ReadOfficeDataView extends React.Component {
      */
     handleCalendarOnClick = (evt) => {
 
-        let dates = this.state.dates;
-
-        dates.push({
-            title: 'Manutenção',
-            date: evt.dateStr
-        });
-
-        console.log(dates);
 
         this.setState({
-            dates: dates
+            dates: this.state.dates.concat({
+                title: "Manutenção",
+                start: evt.date,
+                allDay: evt.allDay
+            })
         });
-
 
 
     }
@@ -310,6 +302,9 @@ class ReadOfficeDataView extends React.Component {
                                     />
                                 </div>
 
+
+                                <h1 className="display-5 text-center mt-5 mb-5">Calendário de Manutenções</h1>
+
                                 <FullCalendar
                                     id="calendar"
                                     name="calendar"
@@ -323,6 +318,9 @@ class ReadOfficeDataView extends React.Component {
 
                             </form>
                         </div>
+                        
+
+
                     </div>
                 </div>
             </div>
