@@ -21,16 +21,14 @@ class ReadUserDataView extends React.Component {
     async componentWillMount() {
         let availableUsers = await new FirebaseHandler().getAllUsers();
 
-        let motoristaList = [];
+        let usersList = [];
 
         for (let index in availableUsers) {
-            if (availableUsers[index].cargo == "motorista") {
-                motoristaList.push(availableUsers[index])
-            }
+            usersList.push(availableUsers[index])
         }
 
         this.setState({
-            users: motoristaList
+            users: usersList
         });
     }
 
@@ -77,14 +75,22 @@ class ReadUserDataView extends React.Component {
 
         for (let index = 0; index < this.state.users.length; index++) {
 
+            let statusToReadable = "Indisponível / Ocupado";
+
+            if (this.state.users[index].status) {
+                statusToReadable = "Disponível para tarefas";
+            }
+
             userItems.push(
-                <a class="dropdown-item" href="#" onClick={() => this.handleUserDropdown(index)}>{this.state.users[index].cpf + " | " + this.state.users[index].nome}</a>
+                <a class="dropdown-item" href="#" onClick={() => this.handleUserDropdown(index)}>{this.state.users[index].cpf + " | " + this.state.users[index].nome
+                    + " | " + statusToReadable}</a>
             );
         }
 
 
         // Setando o valor default do combo box!
         let selectedUser = this.state.selectedUserID == -1 ? "Selecione um Funcionário" : "Funcionário: " + this.state.trucks[this.state.selectedUserID].cpf + " | " + this.state.users[this.state.selectedUserID].nome
+            + " | " + this.state.users[this.state.selectedUserID].status;
 
         // Montando os componentes para renderizar na tela!
         toRender.push(
@@ -92,7 +98,7 @@ class ReadUserDataView extends React.Component {
             <div className="form-group">
                 <label>Selecione um Funcionário</label>
                 <p />
-                <button class="btn btn-secondary dropdown-toggle" type="button" style={{width: "100%"}} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle" type="button" style={{ width: "100%" }} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {selectedUser}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -101,7 +107,7 @@ class ReadUserDataView extends React.Component {
             </div>
 
         );
-        
+
 
 
         // Renderizando agora!!!
@@ -125,14 +131,14 @@ class ReadUserDataView extends React.Component {
 
                                 <div className="form-group">
                                     <label>Nome </label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         value={this.state.nome}
-                                        id="nome" 
-                                        name="nome" 
-                                        style={{ width: "100%" }} 
-                                        placeholder="Nome" 
-                                        disabled 
+                                        id="nome"
+                                        name="nome"
+                                        style={{ width: "100%" }}
+                                        placeholder="Nome"
+                                        disabled
                                     />
                                 </div>
 
@@ -162,7 +168,7 @@ class ReadUserDataView extends React.Component {
                                     />
                                 </div>
 
-                              
+
 
                             </form>
                         </div>

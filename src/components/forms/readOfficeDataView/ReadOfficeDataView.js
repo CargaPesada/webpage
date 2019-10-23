@@ -98,7 +98,7 @@ class ReadOfficeDataView extends React.Component {
                     numero: this.state.offices[id].endereco.numero,
                     complemento: this.state.offices[id].endereco.complemento,
                     bairro: this.state.offices[id].endereco.bairro,
-                    pais: this.state.offices[id].pais
+                    pais: this.state.offices[id].endereco.pais
                 }
             );
         } catch (e) { }
@@ -140,7 +140,7 @@ class ReadOfficeDataView extends React.Component {
 
 
         )
-        
+
 
 
         // Renderizando agora!!!

@@ -16,7 +16,6 @@ class RegisterTruckView extends React.Component {
      * Método para limpar os campos do formulário.
      */
     clearForm = () => {
-        document.getElementById('marca').value = "";
         document.getElementById('modelo').value = "";
         document.getElementById('placa').value = "";
 
@@ -120,7 +119,7 @@ class RegisterTruckView extends React.Component {
      */
     render() {
 
-        let brandName = this.state.marca == ""? "Marca do Veículo" : this.state.marca;
+        let brandName = this.state.marca == "" ? "Marca do Veículo" : this.state.marca;
 
         let availableBrands = [];
 
