@@ -4,8 +4,11 @@ import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Office from '../../../models/Office';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
+import brLocale from '@fullcalendar/core/locales/pt-br';
+import { Calendar } from '@fullcalendar/core';
 
 class ReadOfficeDataView extends React.Component {
     constructor(props) {
@@ -26,7 +29,13 @@ class ReadOfficeDataView extends React.Component {
             complemento: "",
             numero: "",
             bairro: "",
-            pais: ""
+            pais: "",
+
+            // Datas
+            dates: [
+                { title: 'event 1', date: '2019-10-01' },
+                { title: 'event 2', date: '2019-10-02' }
+            ]
 
         }
     }
@@ -106,6 +115,28 @@ class ReadOfficeDataView extends React.Component {
                 }
             );
         } catch (e) { }
+    }
+
+    /**
+     * Método para lidar com o OnClick em cima de uma célula do calendário.
+     */
+    handleCalendarOnClick = (evt) => {
+
+        let dates = this.state.dates;
+
+        dates.push({
+            title: 'Manutenção',
+            date: evt.dateStr
+        });
+
+        console.log(dates);
+
+        this.setState({
+            dates: dates
+        });
+
+
+
     }
 
     /**
@@ -280,12 +311,14 @@ class ReadOfficeDataView extends React.Component {
                                 </div>
 
                                 <FullCalendar
+                                    id="calendar"
+                                    name="calendar"
+                                    editable={true}
                                     defaultView="dayGridMonth"
-                                    plugins={[dayGridPlugin]}
-                                    events={[
-                                        { title: 'event 1', date: '2019-10-01' },
-                                        { title: 'event 2', date: '2019-10-02' }
-                                    ]}
+                                    plugins={[dayGridPlugin, interactionPlugin]}
+                                    events={this.state.dates}
+                                    locale={brLocale}
+                                    dateClick={this.handleCalendarOnClick}
                                 />
 
                             </form>
