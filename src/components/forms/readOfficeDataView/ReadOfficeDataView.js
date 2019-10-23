@@ -2,6 +2,10 @@ import React from 'react';
 import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Office from '../../../models/Office';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import '@fullcalendar/core/main.css';
+import '@fullcalendar/daygrid/main.css';
 
 class ReadOfficeDataView extends React.Component {
     constructor(props) {
@@ -274,6 +278,15 @@ class ReadOfficeDataView extends React.Component {
                                         disabled
                                     />
                                 </div>
+
+                                <FullCalendar
+                                    defaultView="dayGridMonth"
+                                    plugins={[dayGridPlugin]}
+                                    events={[
+                                        { title: 'event 1', date: '2019-10-01' },
+                                        { title: 'event 2', date: '2019-10-02' }
+                                    ]}
+                                />
 
                             </form>
                         </div>

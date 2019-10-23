@@ -10,6 +10,7 @@ class ReadUserDataView extends React.Component {
 
         this.state = {
             selectedUserID: -1,
+            cargo: '',
             status: '',
             nome: '',
             cpf: '',
@@ -24,7 +25,9 @@ class ReadUserDataView extends React.Component {
         let usersList = [];
 
         for (let index in availableUsers) {
-            usersList.push(availableUsers[index])
+            if (availableUsers[index].cargo == "mecanico" || availableUsers[index].cargo == "motorista") {
+                usersList.push(availableUsers[index])
+            }
         }
 
         this.setState({
@@ -51,6 +54,7 @@ class ReadUserDataView extends React.Component {
                 {
                     status: statusToReadable,
                     nome: this.state.users[id].nome,
+                    cargo: this.state.users[id].cargo,
                     cpf: this.state.users[id].cpf
 
                 }
@@ -151,6 +155,19 @@ class ReadUserDataView extends React.Component {
                                         id="cpf"
                                         placeholder="CPF"
                                         style={{ width: '100%' }}
+                                        disabled
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Cargo</label>
+                                    <input
+                                        type="text"
+                                        value={this.state.cargo}
+                                        name="cargo"
+                                        id="cargo"
+                                        placeholder="Cargo"
+                                        style={{ width: "100%" }}
                                         disabled
                                     />
                                 </div>
