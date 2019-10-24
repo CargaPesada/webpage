@@ -32,7 +32,9 @@ class ReadOfficeDataView extends React.Component {
             pais: "",
 
             // Datas para manutenção
-            dates: []
+            dates: [],
+            calendarRef: React.createRef(),
+            gambiarra: 0
 
         }
     }
@@ -108,7 +110,8 @@ class ReadOfficeDataView extends React.Component {
                     numero: this.state.offices[id].endereco.numero,
                     complemento: this.state.offices[id].endereco.complemento,
                     bairro: this.state.offices[id].endereco.bairro,
-                    pais: this.state.offices[id].endereco.pais
+                    pais: this.state.offices[id].endereco.pais,
+                    dates: [] // TODO: Remover aqui depois
                 }
             );
         } catch (e) { }
@@ -119,14 +122,68 @@ class ReadOfficeDataView extends React.Component {
      */
     handleCalendarOnClick = (evt) => {
 
+        if (this.state.selectedOfficeID != -1) {
 
-        this.setState({
-            dates: this.state.dates.concat({
-                title: "Manutenção",
-                start: evt.date,
-                allDay: evt.allDay
-            })
-        });
+
+            let calendarApi = this.state.calendarRef.current.getApi()
+
+            let calendarEvt = calendarApi.getEventById(evt.id);
+
+            // Verificando se foi clicado em um evento...
+            if (calendarEvt == null) {
+
+                console.log("Evt nao nulo");
+
+                // TODO: Remover essa gambi de gerar ID
+                let id = this.state.gambiarra + 1;
+
+
+                this.setState({
+                    gambiarra: id,
+                    dates: this.state.dates.concat({
+                        id: id,
+                        title: "Manutenção",
+                        start: evt.date,
+                        allDay: evt.allDay
+                    })
+                });
+            }
+            else {
+
+
+                // BUG: Nao ta entrando aqui
+
+                let dates = this.state.dates;
+
+
+                let indexToDrop = -1;
+
+
+                console.log("Alo");
+                console.log(calendarEvt.id);
+
+                // Procurando se há 
+                for (let index in this.state.dates) {
+
+                    console.log(this.state.dates[index].id)
+
+                    if (this.state.dates[index].id == calendarEvt.id) {
+                        indexToDrop = index;
+                        break;
+                    }
+                }
+
+                dates.splice(indexToDrop, 1);
+
+                this.setState({
+                    dates: dates
+                });
+
+                calendarEvt.remove();
+            }
+
+
+        }
 
 
     }
@@ -308,7 +365,8 @@ class ReadOfficeDataView extends React.Component {
                                 <FullCalendar
                                     id="calendar"
                                     name="calendar"
-                                    editable={true}
+                                    editable={false}
+                                    ref={this.state.calendarRef}
                                     defaultView="dayGridMonth"
                                     plugins={[dayGridPlugin, interactionPlugin]}
                                     events={this.state.dates}
@@ -318,7 +376,7 @@ class ReadOfficeDataView extends React.Component {
 
                             </form>
                         </div>
-                        
+
 
 
                     </div>
