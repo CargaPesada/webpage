@@ -132,8 +132,6 @@ class ReadOfficeDataView extends React.Component {
             // Verificando se foi clicado em um evento...
             if (calendarEvt == null) {
 
-                console.log("Evt nao nulo");
-
                 // TODO: Remover essa gambi de gerar ID
                 let id = this.state.gambiarra + 1;
 
@@ -148,44 +146,42 @@ class ReadOfficeDataView extends React.Component {
                     })
                 });
             }
-            else {
-
-
-                // BUG: Nao ta entrando aqui
-
-                let dates = this.state.dates;
-
-
-                let indexToDrop = -1;
-
-
-                console.log("Alo");
-                console.log(calendarEvt.id);
-
-                // Procurando se há 
-                for (let index in this.state.dates) {
-
-                    console.log(this.state.dates[index].id)
-
-                    if (this.state.dates[index].id == calendarEvt.id) {
-                        indexToDrop = index;
-                        break;
-                    }
-                }
-
-                dates.splice(indexToDrop, 1);
-
-                this.setState({
-                    dates: dates
-                });
-
-                calendarEvt.remove();
-            }
 
 
         }
 
 
+    }
+
+    /**
+     * Método para lidar com o OnClick em cima de um evento de uma célula do calendário.
+     */
+    handleEventOnClick = (evt) => {
+
+        if (evt.event != null) {
+
+            let dates = this.state.dates;
+
+            let indexToDrop = -1;
+
+
+            // Procurando se há um evento com o mesmo id para dropar
+            for (let index in this.state.dates) {
+
+                if (this.state.dates[index].id == evt.event.id) {
+                    indexToDrop = index;
+                    break;
+                }
+            }
+
+            dates.splice(indexToDrop, 1);
+
+            this.setState({
+                dates: dates
+            });
+
+            evt.event.remove();
+        }
     }
 
     /**
@@ -372,6 +368,7 @@ class ReadOfficeDataView extends React.Component {
                                     events={this.state.dates}
                                     locale={brLocale}
                                     dateClick={this.handleCalendarOnClick}
+                                    eventClick={this.handleEventOnClick}
                                 />
 
                             </form>
