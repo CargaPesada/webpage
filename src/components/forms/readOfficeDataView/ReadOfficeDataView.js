@@ -9,6 +9,7 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import brLocale from '@fullcalendar/core/locales/pt-br';
 import { Calendar } from '@fullcalendar/core';
+import TruckMaintenanceModal from '../../popups/TruckMaintenanceModal'
 
 class ReadOfficeDataView extends React.Component {
     constructor(props) {
@@ -34,8 +35,10 @@ class ReadOfficeDataView extends React.Component {
             // Datas para manutenção
             dates: [],
             calendarRef: React.createRef(),
-            gambiarra: 0
+            gambiarra: 0,
 
+            // Popup state
+            isPopupOpen: false
         }
     }
 
@@ -123,18 +126,13 @@ class ReadOfficeDataView extends React.Component {
     handleCalendarOnClick = (evt) => {
 
         if (this.state.selectedOfficeID != -1) {
-
-
             let calendarApi = this.state.calendarRef.current.getApi()
-
             let calendarEvt = calendarApi.getEventById(evt.id);
 
             // Verificando se foi clicado em um evento...
             if (calendarEvt == null) {
-
                 // TODO: Remover essa gambi de gerar ID
                 let id = this.state.gambiarra + 1;
-
 
                 this.setState({
                     gambiarra: id,
@@ -143,14 +141,11 @@ class ReadOfficeDataView extends React.Component {
                         title: "Manutenção",
                         start: evt.date,
                         allDay: evt.allDay
-                    })
+                    }),
+                    isPopupOpen: true
                 });
             }
-
-
         }
-
-
     }
 
     /**
@@ -220,7 +215,6 @@ class ReadOfficeDataView extends React.Component {
 
 
         )
-
 
 
         // Renderizando agora!!!
@@ -373,11 +367,16 @@ class ReadOfficeDataView extends React.Component {
 
                             </form>
                         </div>
-
-
-
                     </div>
                 </div>
+                <TruckMaintenanceModal 
+                    isOpen = { this.state.isPopupOpen } 
+                    closePopup = {
+                        () => {
+                            this.setState({isPopupOpen: false})
+                        }
+                    } 
+                />
             </div>
         );
     }
