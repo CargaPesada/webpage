@@ -189,7 +189,7 @@ class UserView extends React.Component {
 							{/* Ver dados dos Usuários */}
 							<CustomCard
 								name="fa-users"
-								description="Ver Usuário"
+								description="Consultar Usuário"
 								customOnClick={() => this.handleUserDataReaderCard(true)}
 							/>
 
@@ -201,7 +201,7 @@ class UserView extends React.Component {
 							{/* Ver Oficina */}
 							<CustomCard
 								name="fa-warehouse"
-								description="Ver Oficina"
+								description="Consultar Oficina"
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
 							/>
 
@@ -260,7 +260,7 @@ class UserView extends React.Component {
 							{/* Ver dados dos Usuários */}
 							<CustomCard
 								name="fa-users"
-								description="Ver Usuário"
+								description="Consultar Usuário"
 								customOnClick={() => this.handleUserDataReaderCard(true)}
 							/>
 						</div>
@@ -279,7 +279,7 @@ class UserView extends React.Component {
 							{/* Ver Oficina */}
 							<CustomCard
 								name="fa-warehouse"
-								description="Ver Oficina"
+								description="Consultar Oficina"
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
 							/>
 
@@ -345,7 +345,7 @@ class UserView extends React.Component {
 			}
 			else if (this.state.mustShowUserDataReaderView) {
 				toRender.push(
-					<ReadUserDataView description="Ver Usuário" handleCard={this.handleUserDataReaderCard} cargo={this.props.cargo} />
+					<ReadUserDataView description="Consultar Usuário" handleCard={this.handleUserDataReaderCard} cargo={this.props.cargo} />
 				);
 			}
 			else if (this.state.mustShowWorkshopRegisterView) {
@@ -360,7 +360,7 @@ class UserView extends React.Component {
 			}
 			else if (this.state.mustShowWorkshopDataReaderView) {
 				toRender.push(
-					<ReadOfficeDataView description="Ver Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} cpf={this.props.cpf} />
+					<ReadOfficeDataView description="Consultar Oficina" handleCard={this.handleWorkshopDataReaderCard} cargo={this.props.cargo} cpf={this.props.cpf} />
 				);
 			}
 			else if (this.state.mustShowTruckRegisterView) {
@@ -370,7 +370,7 @@ class UserView extends React.Component {
 			}
 			else if (this.state.mustShowTruckDataView) {
 				toRender.push(
-					<ReadTruckDataView description="Ver Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
+					<ReadTruckDataView description="Consultar Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
 				);
 			}
 			else if (this.state.mustShowTruckDeleterView) {
