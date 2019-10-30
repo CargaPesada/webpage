@@ -9,6 +9,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
 	modal: {
@@ -30,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2)
+	},
+	buttonsDiv: {
+		marginTop: theme.spacing(3),
+		display: 'flex',
+		justifyContent: 'space-around'
 	}
 }));
 
@@ -63,6 +69,7 @@ export default function TruckMaintenanceModal(props) {
 	const [ trucks, setTrucks ] = React.useState([]);
 	const [ selectedTruck, setSelectedTruck ] = React.useState('');
 	const [ selectedMechanical, setSelectedMechanical ] = React.useState('');
+	const [ title, setTitle ] = React.useState('');
 
 	const handleTruckChange = (event) => {
 		setSelectedTruck(event.target.value);
@@ -73,7 +80,21 @@ export default function TruckMaintenanceModal(props) {
 	};
 
 	const handleClose = () => {
-		props.closePopup();
+		clearState();
+		props.closePopup({ isRegisterConfirmed: false });
+	};
+
+	const handleRegister = () => {
+		clearState();
+		props.closePopup({ isRegisterConfirmed: true, truck: selectedTruck, mechanical: selectedMechanical, title });
+	};
+
+	const clearState = () => {
+		setUsers([]);
+		setTrucks([]);
+		setSelectedTruck('');
+		setSelectedMechanical('');
+		setTitle('');
 	};
 
 	const fetchUsers = async () => {
@@ -129,13 +150,18 @@ export default function TruckMaintenanceModal(props) {
 						<InputLabel shrink id="demo-simple-select-placeholder-label-label">
 							Título
 						</InputLabel>
-						<input type="text" />
+						<input
+							defaultValue={title}
+							type="text"
+							onInput={(e) => {
+								setTitle(e.target.value);
+							}}
+						/>
 						<FormControl className={classes.formControl}>
 							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
 								Mecânico
 							</InputLabel>
 							<Select
-								labelId="demo-simple-select-placeholder-label-label"
 								id="demo-simple-select-placeholder-label"
 								onChange={handleMechanicalChange}
 								value={selectedMechanical}
@@ -152,7 +178,6 @@ export default function TruckMaintenanceModal(props) {
 								Placa do caminhão
 							</InputLabel>
 							<Select
-								labelId="demo-simple-select-placeholder-label-label"
 								id="demo-simple-select-placeholder-label"
 								onChange={handleTruckChange}
 								value={selectedTruck}
@@ -164,6 +189,19 @@ export default function TruckMaintenanceModal(props) {
 								})}
 							</Select>
 						</FormControl>
+						<div className={classes.buttonsDiv}>
+							<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
+								Cancelar
+							</Button>
+							<Button
+								variant="contained"
+								color="primary"
+								className={classes.buttonRegister}
+								onClick={handleRegister}
+							>
+								Cadastrar
+							</Button>
+						</div>
 					</div>
 				</Fade>
 			</Modal>

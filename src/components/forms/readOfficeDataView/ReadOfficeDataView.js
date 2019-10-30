@@ -125,7 +125,7 @@ class ReadOfficeDataView extends React.Component {
      */
     handleCalendarOnClick = (evt) => {
 
-        if (this.state.selectedOfficeID != -1) {
+        if (this.state.selectedOfficeID !== -1) {
             let calendarApi = this.state.calendarRef.current.getApi()
             let calendarEvt = calendarApi.getEventById(evt.id);
 
@@ -152,17 +152,12 @@ class ReadOfficeDataView extends React.Component {
      * Método para lidar com o OnClick em cima de um evento de uma célula do calendário.
      */
     handleEventOnClick = (evt) => {
-
         if (evt.event != null) {
-
             let dates = this.state.dates;
-
             let indexToDrop = -1;
-
 
             // Procurando se há um evento com o mesmo id para dropar
             for (let index in this.state.dates) {
-
                 if (this.state.dates[index].id == evt.event.id) {
                     indexToDrop = index;
                     break;
@@ -170,13 +165,27 @@ class ReadOfficeDataView extends React.Component {
             }
 
             dates.splice(indexToDrop, 1);
-
             this.setState({
                 dates: dates
             });
-
             evt.event.remove();
         }
+    }
+
+    /**
+     * Metodo que lida com o retorno do popup de registro de manutencao.
+     * Caso o usuario tenha cancelado o registro a propriedade isRegisterConfirmed retornara false,
+     * caso o usuario tenha confirmado o registro as informacoes inseridas retornam como campos do
+     * objeto data.
+     */
+    handlePopupReturn = (data) => {
+        let newState = {isPopupOpen: false};
+
+        if(!data.isRegisterConfirmed) {
+            newState.dates = this.state.dates.filter(date => date.id !== this.state.gambiarra);
+        }
+        
+        this.setState(newState)
     }
 
     /**
@@ -371,11 +380,7 @@ class ReadOfficeDataView extends React.Component {
                 </div>
                 <TruckMaintenanceModal 
                     isOpen = { this.state.isPopupOpen } 
-                    closePopup = {
-                        () => {
-                            this.setState({isPopupOpen: false})
-                        }
-                    } 
+                    closePopup = { this.handlePopupReturn } 
                 />
             </div>
         );
