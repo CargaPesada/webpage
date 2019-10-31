@@ -35,6 +35,7 @@ class ReadOfficeDataView extends React.Component {
             // Datas para manutenção
             dates: [],
             calendarRef: React.createRef(),
+            selectedDate: null,
             gambiarra: 0,
 
             // Popup state
@@ -131,17 +132,9 @@ class ReadOfficeDataView extends React.Component {
 
             // Verificando se foi clicado em um evento...
             if (calendarEvt == null) {
-                // TODO: Remover essa gambi de gerar ID
-                let id = this.state.gambiarra + 1;
 
                 this.setState({
-                    gambiarra: id,
-                    dates: this.state.dates.concat({
-                        id: id,
-                        title: "Manutenção",
-                        start: evt.date,
-                        allDay: evt.allDay
-                    }),
+                    selectedDate: evt.date,
                     isPopupOpen: true
                 });
             }
@@ -179,13 +172,32 @@ class ReadOfficeDataView extends React.Component {
      * objeto data.
      */
     handlePopupReturn = (data) => {
-        let newState = {isPopupOpen: false};
+        let newState = { isPopupOpen: false };
 
-        if(!data.isRegisterConfirmed) {
-            newState.dates = this.state.dates.filter(date => date.id !== this.state.gambiarra);
+        if (data.isRegisterConfirmed) {
+
+            // TODO: Remover essa gambi de gerar ID
+            let id = this.state.gambiarra + 1;
+
+            this.setState({
+                gambiarra: id,
+                dates: this.state.dates.concat({
+                    id: data.id,
+                    title: data.truck,
+                    start: this.state.selectedDate,
+                    allDay: true,
+                    nome: data.title,
+                    placa: data.truck
+                }),
+                isPopupOpen: false
+            });
+
         }
-        
-        this.setState(newState)
+        else {
+            this.setState({
+                isPopupOpen: false
+            })
+        }
     }
 
     /**
@@ -378,9 +390,9 @@ class ReadOfficeDataView extends React.Component {
                         </div>
                     </div>
                 </div>
-                <TruckMaintenanceModal 
-                    isOpen = { this.state.isPopupOpen } 
-                    closePopup = { this.handlePopupReturn } 
+                <TruckMaintenanceModal
+                    isOpen={this.state.isPopupOpen}
+                    closePopup={this.handlePopupReturn}
                 />
             </div>
         );

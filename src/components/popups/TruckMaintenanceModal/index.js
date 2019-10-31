@@ -65,11 +65,11 @@ const Fade = React.forwardRef(function Fade(props, ref) {
 
 export default function TruckMaintenanceModal(props) {
 	const classes = useStyles();
-	const [ users, setUsers ] = React.useState([]);
-	const [ trucks, setTrucks ] = React.useState([]);
-	const [ selectedTruck, setSelectedTruck ] = React.useState('');
-	const [ selectedMechanical, setSelectedMechanical ] = React.useState('');
-	const [ title, setTitle ] = React.useState('');
+	const [users, setUsers] = React.useState([]);
+	const [trucks, setTrucks] = React.useState([]);
+	const [selectedTruck, setSelectedTruck] = React.useState('');
+	const [selectedMechanical, setSelectedMechanical] = React.useState('');
+	const [title, setTitle] = React.useState('');
 
 	const handleTruckChange = (event) => {
 		setSelectedTruck(event.target.value);
@@ -118,7 +118,6 @@ export default function TruckMaintenanceModal(props) {
 			trucksList.push(availableTrucks[index]);
 		}
 
-		console.log(trucksList);
 		setTrucks(trucksList);
 	};
 
