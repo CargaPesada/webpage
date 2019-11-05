@@ -11,7 +11,9 @@ import ReadTruckDataView from '../../forms/readTruckDataView/ReadTruckDataView';
 import DeleteTruckView from '../../forms/deleteTruckView/DeleteTruckView';
 import ReadUserDataView from '../../forms/readUserDataView/ReadUserDataView';
 import DriverStatusHandlerView from '../../forms/driverStatusHandlerView/DriverStatusHandlerView';
-import ServiceAndToolOptions from '../../dashboard/ServiceAndToolOptions';
+import RegisterServiceAndToolView from '../../forms/registerServiceAndTool/RegisterServiceAndToolView';
+import ReadServiceAndToolDataView from '../../forms/readServiceAndToolView/ReadServiceAndToolDataView';
+import DeleteServiceAndToolView from '../../forms/deleteServiceAndToolView/DeleteServiceAndToolView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
