@@ -137,6 +137,39 @@ class UserView extends React.Component {
 	}
 
 	/**
+	 * Método apra esconder os cards e demonstrar a view de ver dados dos servicos e pecas.
+	 */
+	handleServiceAndToolDataCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowServiceAndToolDataView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowServiceAndToolDataView: false });
+		}
+	};
+
+	/**
+	 * Método apra esconder os cards e demonstrar a view de registrar os servicos e pecas.
+	 */
+	handleServiceAndToolRegisterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowServiceAndToolRegisterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowServiceAndToolRegisterView: false });
+		}
+	};
+
+	/**
+     * Método para esconder os cards e demonstrar a view de deletar os servicos e pecas.
+     */
+	handleServiceAndToolDeleterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowServiceAndToolDeleterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowServiceAndToolDeleterView: false });
+		}
+	}
+
+	/**
      * Método padrão de renderização do componente.
      */
 	render() {
@@ -317,10 +350,30 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
 
-							
+
 						</div>
-						
-						<ServiceAndToolOptions />
+
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%', marginBottom: '10%' }}
+						>
+							<CustomCard
+								name="fa-tools"
+								description="Registrar peças ou serviços"
+								customOnClick={() => this.handleTruckRegisterCard(true)}
+							/>
+							<CustomCard
+								name="fa-tools"
+								description="Consultar peças ou serviços"
+								customOnClick={() => this.handleTruckDataCard(true)}
+							/>
+							<CustomCard
+								name="fa-ban"
+								description="Excluir peças ou serviços"
+								customOnClick={() => this.handleTruckDeleterCard(true)}
+							/>
+						</div>
+						)
 					</div>
 				);
 			}
@@ -376,6 +429,21 @@ class UserView extends React.Component {
 			else if (this.state.mustShowTruckDeleterView) {
 				toRender.push(
 					<DeleteTruckView description="Excluir Caminhões" handleCard={this.handleTruckDataCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowServiceAndToolRegisterView) {
+				toRender.push(
+					<RegisterServiceAndToolView description="Registrar Serviços e Peças" handleCard={this.handleServiceAndToolRegisterCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowServiceAndToolDataView) {
+				toRender.push(
+					<ReadServiceAndToolDataView description="Consultar Serviços e Peças" handleCard={this.handleServiceAndToolDataCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowServiceAndToolDeleterView) {
+				toRender.push(
+					<DeleteServiceAndToolView description="Excluir Serviços e Peças" handleCard={this.handleServiceAndToolDeleterCard} cargo={this.props.cargo} />
 				);
 			}
 		}
