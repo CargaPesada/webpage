@@ -39,7 +39,11 @@ class ReadOfficeDataView extends React.Component {
             gambiarra: 0,
 
             // Popup state
-            isPopupOpen: false
+            isPopupOpen: false,
+            isReadOnly: false,
+            indexToDrop: -1,
+            selectedEvent: null,
+            selectedMaintance: null
         }
     }
 
@@ -130,7 +134,7 @@ class ReadOfficeDataView extends React.Component {
             let calendarApi = this.state.calendarRef.current.getApi()
             let calendarEvt = calendarApi.getEventById(evt.id);
 
-            // Verificando se foi clicado em um evento...
+            // Verificando se foi clicado em um dia...
             if (calendarEvt == null) {
 
                 this.setState({
@@ -142,39 +146,43 @@ class ReadOfficeDataView extends React.Component {
     }
 
     /**
-     * Método para lidar com o OnClick em cima de um evento de uma célula do calendário.
+     * Método para lidar com o OnClick em cima de um evento de uma célula (Dia) do calendário.
      */
     handleEventOnClick = (evt) => {
         if (evt.event != null) {
             let dates = this.state.dates;
             let indexToDrop = -1;
+            let selectedMaintance = null;
 
             // Procurando se há um evento com o mesmo id para dropar
             for (let index in this.state.dates) {
                 if (this.state.dates[index].id == evt.event.id) {
                     indexToDrop = index;
+                    selectedMaintance = this.state.dates[index];
                     break;
                 }
             }
 
-            dates.splice(indexToDrop, 1);
             this.setState({
-                dates: dates
+                isPopupOpen: true,
+                isReadOnly: true,
+                indexToDrop: indexToDrop,
+                selectedEvent: evt,
+                selectedMaintance: selectedMaintance
             });
-            evt.event.remove();
         }
     }
 
     /**
      * Metodo que lida com o retorno do popup de registro de manutencao.
-     * Caso o usuario tenha cancelado o registro a propriedade isRegisterConfirmed retornara false,
+     * Caso o usuario te nha cancelado o registro a propriedade isRegisterConfirmed retornara false,
      * caso o usuario tenha confirmado o registro as informacoes inseridas retornam como campos do
      * objeto data.
      */
     handlePopupReturn = (data) => {
         let newState = { isPopupOpen: false };
 
-        if (data.isRegisterConfirmed) {
+        if (!data.isDeleting && data.isRegisterConfirmed) {
 
             // TODO: Remover essa gambi de gerar ID
             let id = this.state.gambiarra + 1;
@@ -192,6 +200,17 @@ class ReadOfficeDataView extends React.Component {
                 isPopupOpen: false
             });
 
+        }
+        else if (data.isDeleting) {
+            let dates = this.state.dates;
+
+            dates.splice(this.state.indexToDrop, 1);
+
+            this.setState({
+                dates: dates
+            });
+
+            this.state.selectedEvent.event.remove();
         }
         else {
             this.setState({
@@ -392,7 +411,9 @@ class ReadOfficeDataView extends React.Component {
                 </div>
                 <TruckMaintenanceModal
                     isOpen={this.state.isPopupOpen}
+                    isReadOnly={this.state.isReadOnly}
                     closePopup={this.handlePopupReturn}
+                    selectedMaintance={this.state.selectedMaintance}
                 />
             </div>
         );

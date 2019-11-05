@@ -86,7 +86,24 @@ export default function TruckMaintenanceModal(props) {
 
 	const handleRegister = () => {
 		clearState();
-		props.closePopup({ isRegisterConfirmed: true, truck: selectedTruck, mechanical: selectedMechanical, title });
+		props.closePopup({
+			isDeleting: false,
+			isRegisterConfirmed: true,
+			truck: selectedTruck,
+			mechanical: selectedMechanical,
+			title
+		});
+	};
+
+	const handleDelete = () => {
+		clearState();
+		props.closePopup({
+			isDeleting: true,
+			isRegisterConfirmed: true,
+			truck: selectedTruck,
+			mechanical: selectedMechanical,
+			title
+		});
 	};
 
 	const clearState = () => {

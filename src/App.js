@@ -10,8 +10,8 @@ class App extends React.Component {
 
 		this.state = {
 			isUserAuthenticated: true,
-			isAdmin: false,
-			cargo: 2,
+			isAdmin: true,
+			cargo: 3,
 			cpf: "448.892.118-38"
 		};
 	}

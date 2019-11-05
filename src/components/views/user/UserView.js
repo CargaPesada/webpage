@@ -221,7 +221,7 @@ class UserView extends React.Component {
 							{/* Dados do Caminhão */}
 							<CustomCard
 								name="fa-truck"
-								description="Dados do Caminhão"
+								description="Consultar Caminhão"
 								customOnClick={() => this.handleTruckDataCard(true)}
 							/>
 
@@ -305,7 +305,7 @@ class UserView extends React.Component {
 							{/* Dados do Caminhão */}
 							<CustomCard
 								name="fa-truck"
-								description="Dados do Caminhão"
+								description="Consultar Caminhão"
 								customOnClick={() => this.handleTruckDataCard(true)}
 							/>
 
