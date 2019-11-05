@@ -146,81 +146,151 @@ export default function TruckMaintenanceModal(props) {
 		fetchTrucks();
 	}
 
-	return (
-		<div>
-			<Modal
-				aria-labelledby="spring-modal-title"
-				aria-describedby="spring-modal-description"
-				className={classes.modal}
-				open={props.isOpen}
-				onClose={handleClose}
-				closeAfterTransition
-				BackdropComponent={Backdrop}
-				BackdropProps={{
-					timeout: 500
-				}}
-			>
-				<Fade in={props.isOpen}>
-					<div className={classes.paper}>
-						<h2 id="spring-modal-title">Cadastro de manutenção</h2>
-						<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-							Título
+	// Checando se o modo do modal será apenas para read...
+	if (!props.isReadOnly) {
+
+		return (
+			<div>
+				<Modal
+					aria-labelledby="spring-modal-title"
+					aria-describedby="spring-modal-description"
+					className={classes.modal}
+					open={props.isOpen}
+					onClose={handleClose}
+					closeAfterTransition
+					BackdropComponent={Backdrop}
+					BackdropProps={{
+						timeout: 500
+					}}
+				>
+					<Fade in={props.isOpen}>
+						<div className={classes.paper}>
+							<h2 id="spring-modal-title">Cadastro de manutenção</h2>
+							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+								Título
 						</InputLabel>
-						<input
-							defaultValue={title}
-							type="text"
-							onInput={(e) => {
-								setTitle(e.target.value);
-							}}
-						/>
-						<FormControl className={classes.formControl}>
-							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-								Mecânico
+							<input
+								defaultValue={title}
+								type="text"
+								onInput={(e) => {
+									setTitle(e.target.value);
+								}}
+							/>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Mecânico
 							</InputLabel>
-							<Select
-								id="demo-simple-select-placeholder-label"
-								onChange={handleMechanicalChange}
-								value={selectedMechanical}
-								displayEmpty
-								className={classes.selectEmpty}
-							>
-								{users.map((user) => {
-									return <MenuItem value={user.nome}>{user.nome}</MenuItem>;
-								})}
-							</Select>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-								Placa do caminhão
+								<Select
+									id="demo-simple-select-placeholder-label"
+									onChange={handleMechanicalChange}
+									value={selectedMechanical}
+									displayEmpty
+									className={classes.selectEmpty}
+								>
+									{users.map((user) => {
+										return <MenuItem value={user.nome}>{user.nome}</MenuItem>;
+									})}
+								</Select>
+							</FormControl>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Placa do caminhão
 							</InputLabel>
-							<Select
-								id="demo-simple-select-placeholder-label"
-								onChange={handleTruckChange}
-								value={selectedTruck}
-								displayEmpty
-								className={classes.selectEmpty}
-							>
-								{trucks.map((truck) => {
-									return <MenuItem value={truck.placa}>{truck.placa}</MenuItem>;
-								})}
-							</Select>
-						</FormControl>
-						<div className={classes.buttonsDiv}>
-							<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
-								Cancelar
+								<Select
+									id="demo-simple-select-placeholder-label"
+									onChange={handleTruckChange}
+									value={selectedTruck}
+									displayEmpty
+									className={classes.selectEmpty}
+								>
+									{trucks.map((truck) => {
+										return <MenuItem value={truck.placa}>{truck.placa}</MenuItem>;
+									})}
+								</Select>
+							</FormControl>
+							<div className={classes.buttonsDiv}>
+								<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
+									Cancelar
 							</Button>
-							<Button
-								variant="contained"
-								color="primary"
-								className={classes.buttonRegister}
-								onClick={handleRegister}
-							>
-								Cadastrar
+								<Button
+									variant="contained"
+									color="primary"
+									className={classes.buttonRegister}
+									onClick={handleRegister}
+								>
+									Cadastrar
 							</Button>
+							</div>
 						</div>
-					</div>
-				</Fade>
-			</Modal>
-		</div>
-	);
+					</Fade>
+				</Modal>
+			</div>
+		);
+	}
+	// Showing the read only modal
+	else {
+		return (
+			<div>
+				<Modal
+					aria-labelledby="spring-modal-title"
+					aria-describedby="spring-modal-description"
+					className={classes.modal}
+					open={props.isOpen}
+					onClose={handleClose}
+					closeAfterTransition
+					BackdropComponent={Backdrop}
+					BackdropProps={{
+						timeout: 500
+					}}
+				>
+					<Fade in={props.isOpen}>
+						<div className={classes.paper}>
+							<h2 id="spring-modal-title">Cadastro de manutenção</h2>
+							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+								Título
+							</InputLabel>
+							<input
+								defaultValue={props.selectedMaintance.nome}
+								type="text"
+								disabled
+							/>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Mecânico
+								</InputLabel>
+								<input
+									defaultValue={props.selectedMaintance.mechanical}
+									type="text"
+									disabled
+								/>
+							</FormControl>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Placa do caminhão
+								</InputLabel>
+								<input
+									defaultValue={props.selectedMaintance.placa}
+									type="text"
+									disabled
+								/>
+							</FormControl>
+							<div className={classes.buttonsDiv}>
+								<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
+									Voltar
+							</Button>
+								<Button
+									variant="contained"
+									color="danger"
+									className={classes.buttonRegister}
+									onClick={handleDelete}
+								>
+									Excluir
+							</Button>
+							</div>
+						</div>
+					</Fade>
+				</Modal>
+			</div>
+		);
+	}
 }

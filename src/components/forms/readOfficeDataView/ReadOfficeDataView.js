@@ -190,12 +190,13 @@ class ReadOfficeDataView extends React.Component {
             this.setState({
                 gambiarra: id,
                 dates: this.state.dates.concat({
-                    id: data.id,
+                    id: id,
                     title: data.truck,
                     start: this.state.selectedDate,
                     allDay: true,
                     nome: data.title,
-                    placa: data.truck
+                    placa: data.truck,
+                    mechanical: data.mechanical
                 }),
                 isPopupOpen: false
             });
@@ -207,7 +208,8 @@ class ReadOfficeDataView extends React.Component {
             dates.splice(this.state.indexToDrop, 1);
 
             this.setState({
-                dates: dates
+                dates: dates,
+                isPopupOpen: false
             });
 
             this.state.selectedEvent.event.remove();
