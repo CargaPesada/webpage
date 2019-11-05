@@ -11,6 +11,7 @@ import ReadTruckDataView from '../../forms/readTruckDataView/ReadTruckDataView';
 import DeleteTruckView from '../../forms/deleteTruckView/DeleteTruckView';
 import ReadUserDataView from '../../forms/readUserDataView/ReadUserDataView';
 import DriverStatusHandlerView from '../../forms/driverStatusHandlerView/DriverStatusHandlerView';
+import ServiceAndToolOptions from '../../dashboard/ServiceAndToolOptions';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -315,12 +316,11 @@ class UserView extends React.Component {
 								description="Excluir Caminhão"
 								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
+
+							
 						</div>
-						<div
-							className="row d-flex justify-content-between"
-							style={{ marginTop: '5%', marginLeft: '10%', marginRight: '10%' }}
-						>
-						</div>
+						
+						<ServiceAndToolOptions />
 					</div>
 				);
 			}
