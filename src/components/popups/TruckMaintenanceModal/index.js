@@ -254,26 +254,22 @@ export default function TruckMaintenanceModal(props) {
 								type="text"
 								disabled
 							/>
-							<FormControl className={classes.formControl}>
-								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-									Mecânico
-								</InputLabel>
-								<input
-									defaultValue={props.selectedMaintance.mechanical}
-									type="text"
-									disabled
-								/>
-							</FormControl>
-							<FormControl className={classes.formControl}>
-								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-									Placa do caminhão
-								</InputLabel>
-								<input
-									defaultValue={props.selectedMaintance.placa}
-									type="text"
-									disabled
-								/>
-							</FormControl>
+							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+								Mecânico
+							</InputLabel>
+							<input
+								defaultValue={props.selectedMaintance.mechanical}
+								type="text"
+								disabled
+							/>
+							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+								Placa do caminhão
+							</InputLabel>
+							<input
+								defaultValue={props.selectedMaintance.placa}
+								type="text"
+								disabled
+							/>
 							<div className={classes.buttonsDiv}>
 								<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
 									Voltar

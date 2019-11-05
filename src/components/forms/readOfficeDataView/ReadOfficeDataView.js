@@ -209,6 +209,7 @@ class ReadOfficeDataView extends React.Component {
 
             this.setState({
                 dates: dates,
+                isReadOnly: false,
                 isPopupOpen: false
             });
 
