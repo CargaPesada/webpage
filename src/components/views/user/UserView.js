@@ -362,17 +362,17 @@ class UserView extends React.Component {
 							<CustomCard
 								name="fa-tools"
 								description="Registrar peças ou serviços"
-								customOnClick={() => this.handleTruckRegisterCard(true)}
+								customOnClick={() => this.handleServiceAndToolRegisterCard(true)}
 							/>
 							<CustomCard
 								name="fa-tools"
 								description="Consultar peças ou serviços"
-								customOnClick={() => this.handleTruckDataCard(true)}
+								customOnClick={() => this.handleServiceAndToolDataCard(true)}
 							/>
 							<CustomCard
 								name="fa-ban"
 								description="Excluir peças ou serviços"
-								customOnClick={() => this.handleTruckDeleterCard(true)}
+								customOnClick={() => this.handleServiceAndToolDeleterCard(true)}
 							/>
 						</div>
 						)
