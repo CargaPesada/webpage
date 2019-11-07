@@ -117,7 +117,6 @@ class DeleteTruckView extends React.Component {
         return (
             <div
                 className="card bg-white"
-                style={{ marginTop: '5%', marginLeft: '0%', marginRight: '0%', paddingBottom: '3vh' }}
             >
                 <a href="#" className="text-dark text-right" onClick={() => this.props.handleCard(false)}>
                     <i class="fas fa-2x fa-times-circle" />
@@ -131,7 +130,7 @@ class DeleteTruckView extends React.Component {
                                 <div className="form-group">
                                     <label>Selecione um veículo *</label>
                                     <p />
-                                    <button class="btn btn-secondary dropdown-toggle" style={{width: "100%"}} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle" style={{ width: "100%" }} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         {selectedTruck}
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -141,14 +140,14 @@ class DeleteTruckView extends React.Component {
 
                                 <div className="form-group">
                                     <label>Marca </label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         value={this.state.marca}
-                                        id="marca" 
-                                        name="marca" 
-                                        style={{ width: "100%" }} 
-                                        placeholder="Marca" 
-                                        disabled 
+                                        id="marca"
+                                        name="marca"
+                                        style={{ width: "100%" }}
+                                        placeholder="Marca"
+                                        disabled
                                     />
                                 </div>
 

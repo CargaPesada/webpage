@@ -1,22 +1,38 @@
+html,
+body {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+#root,
+.App {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	flex-grow: 1;
+}
+
 .main-content {
-    margin-left: 3%;
-    margin-right: 3%;
-    margin-top: 52%;
+	margin-left: 3%;
+	margin-right: 3%;
+	margin-top: 52%;
 }
 
 .empty-space {
-    display: none;
+	display: none;
 }
 
 @media only screen and (min-width: 768px) {
-    .empty-space {
-        display: block;
-        margin-right: 20%;
-    }
+	.empty-space {
+		display: block;
+		margin-right: 20%;
+	}
 
-    .main-content {
-        margin-top: 10%;
-    }
-
-
+	.main-content {
+		margin-top: 10%;
+	}
 }

@@ -2,18 +2,18 @@ import React from 'react';
 import CustomCard from '../../cards/CustomCard';
 import './UserView.css';
 import InfoView from './info/InfoView';
-import RegisterUserView from '../../forms/registerUser/RegisterUserView';
-import RegisterOfficeView from '../../forms/registerOffice/RegisterOfficeView';
-import DeleteOfficeView from '../../forms/deleteOffice/DeleteOfficeView';
-import ReadOfficeDataView from '../../forms/readOfficeDataView/ReadOfficeDataView';
-import RegisterTruckView from '../../forms/registerTruck/RegisterTruckView';
-import ReadTruckDataView from '../../forms/readTruckDataView/ReadTruckDataView';
-import DeleteTruckView from '../../forms/deleteTruckView/DeleteTruckView';
-import ReadUserDataView from '../../forms/readUserDataView/ReadUserDataView';
-import DriverStatusHandlerView from '../../forms/driverStatusHandlerView/DriverStatusHandlerView';
-import RegisterServiceAndToolView from '../../forms/registerServiceAndTool/RegisterServiceAndToolView';
-import ReadServiceAndToolDataView from '../../forms/readServiceAndToolView/ReadServiceAndToolDataView';
-import DeleteServiceAndToolView from '../../forms/deleteServiceAndToolView/DeleteServiceAndToolView';
+import RegisterUserView from '../registerUser/RegisterUserView';
+import RegisterOfficeView from '../registerOffice/RegisterOfficeView';
+import DeleteOfficeView from '../deleteOffice/DeleteOfficeView';
+import ReadOfficeDataView from '../readOfficeDataView/ReadOfficeDataView';
+import RegisterTruckView from '../registerTruck/RegisterTruckView';
+import ReadTruckDataView from '../readTruckDataView/ReadTruckDataView';
+import DeleteTruckView from '../deleteTruckView/DeleteTruckView';
+import ReadUserDataView from '../readUserDataView/ReadUserDataView';
+import DriverStatusHandlerView from '../driverStatusHandlerView/DriverStatusHandlerView';
+import RegisterServiceAndToolView from '../registerServiceAndTool/RegisterServiceAndToolView';
+import ReadServiceAndToolDataView from '../readServiceAndToolView';
+import DeleteServiceAndToolView from '../deleteServiceAndToolView/DeleteServiceAndToolView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -452,7 +452,7 @@ class UserView extends React.Component {
 
 
 		// Retornando para a tela do usuário as interfaces
-		return <div>{toRender}</div>;
+		return <div className="UserView">{toRender}</div>;
 
 	}
 }

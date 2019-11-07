@@ -1,9 +1,8 @@
 import React from 'react';
 import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
-import Office from '../../../models/Office';
 
-class ReadTruckDataView extends React.Component {
+class DeleteTruckView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -17,16 +16,18 @@ class ReadTruckDataView extends React.Component {
             altura: "",
             cargaMaxima: "",
             pais: ""
-
         }
+
     }
 
     async componentWillMount() {
+
         let availableTrucks = await new FirebaseHandler().getAllTrucks();
 
         this.setState({
             trucks: availableTrucks
         });
+
     }
 
     /**
@@ -73,54 +74,49 @@ class ReadTruckDataView extends React.Component {
     }
 
     /**
+     * Método para deletar uma certa oficina (pelo seu ID).
+     * 
+     * Lembrando que o ID não será passado como parâmetro,
+     * pois o ID está no State da classe.
+     */
+    deleteCertainTruck = async () => {
+
+        if (this.state.selectedTruckID !== -1) {
+            let res = await new FirebaseHandler().deleteCertainTruck(this.state.trucks[this.state.selectedTruckID].id);
+
+            if (res === true) {
+                alert("Veículo removido do sistema com sucesso!");
+                this.props.handleCard(false); // GAMBIARRA
+            }
+            else {
+                alert("Erro interno no servidor ao deletar um veículo!");
+            }
+        }
+        else {
+            alert("Selecione um veículo primeiramente!");
+        }
+    }
+
+    /**
      * Método padrão para renderização.
      */
     render() {
 
-        // Setando os componentes que precisam ser renderizados de acordo com o cargo
-        let toRender = []
+        let truckItems = [];
 
-        if (this.props.cargo >= 2) {
+        for (let index = 0; index < this.state.trucks.length; index++) {
 
-            // Carregando info de oficinas
-            let trucksItems = [];
-
-            for (let index = 0; index < this.state.trucks.length; index++) {
-
-                console.log(this.state.trucks[index])
-
-                trucksItems.push(
-                    <a class="dropdown-item" href="#" onClick={() => this.handleTruckDropdown(index)}>{this.state.trucks[index].placa}</a>
-                );
-            }
-
-
-            // Setando o valor default do combo box!
-            let selectedTruck = this.state.selectedTruckID == -1 ? "Placa" : "Placa: " + this.state.trucks[this.state.selectedTruckID].placa
-
-            // Montando os componentes para renderizar na tela!
-            toRender.push(
-
-                <div className="form-group">
-                    <label>Selecione um Veículo</label>
-                    <p />
-                    <button class="btn btn-secondary dropdown-toggle" type="button" style={{width: "100%"}} id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {selectedTruck}
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {trucksItems}
-                    </div>
-                </div>
-
+            truckItems.push(
+                <a class="dropdown-item" href="#" onClick={() => this.handleTruckDropdown(index)}>{this.state.trucks[index].placa}</a>
             );
         }
 
 
-        // Renderizando agora!!!
+        let selectedTruck = this.state.selectedTruckID == -1 ? "Placa" : "Placa: " + this.state.trucks[this.state.selectedTruckID].placa
+
         return (
             <div
                 className="card bg-white"
-                style={{ marginTop: '5%', marginLeft: '0%', marginRight: '0%', paddingBottom: '3vh' }}
             >
                 <a href="#" className="text-dark text-right" onClick={() => this.props.handleCard(false)}>
                     <i class="fas fa-2x fa-times-circle" />
@@ -131,20 +127,27 @@ class ReadTruckDataView extends React.Component {
                         <h1 className="display-4 text-center">{this.props.description}</h1>
                         <div className="mt-3 justify-content-center" style={{ width: '100%' }}>
                             <form>
-
-
-                                {toRender}
+                                <div className="form-group">
+                                    <label>Selecione um veículo *</label>
+                                    <p />
+                                    <button class="btn btn-secondary dropdown-toggle" style={{ width: "100%" }} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {selectedTruck}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {truckItems}
+                                    </div>
+                                </div>
 
                                 <div className="form-group">
                                     <label>Marca </label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         value={this.state.marca}
-                                        id="marca" 
-                                        name="marca" 
-                                        style={{ width: "100%" }} 
-                                        placeholder="Marca" 
-                                        disabled 
+                                        id="marca"
+                                        name="marca"
+                                        style={{ width: "100%" }}
+                                        placeholder="Marca"
+                                        disabled
                                     />
                                 </div>
 
@@ -223,11 +226,19 @@ class ReadTruckDataView extends React.Component {
                                         id="pais"
                                         placeholder="Sigla do País"
                                         style={{ width: "100%" }}
-                                        value={this.state.pais}
                                         disabled
                                     />
                                 </div>
 
+
+                                <button
+                                    type="button"
+                                    className="btn btn-primary mt-5"
+                                    style={{ width: '100%' }}
+                                    onClick={() => this.deleteCertainTruck()}
+                                >
+                                    Deletar
+								</button>
                             </form>
                         </div>
                     </div>
@@ -237,4 +248,4 @@ class ReadTruckDataView extends React.Component {
     }
 }
 
-export default ReadTruckDataView;
+export default DeleteTruckView;
