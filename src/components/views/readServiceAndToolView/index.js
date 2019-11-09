@@ -2,6 +2,17 @@ import React from 'react'
 import './style.css'
 import OptionsTable from '../../forms/tables/OptionsTable';
 
+const hardData = [
+    {
+        name: 'Pecas',
+        objects: [{ name: 'peca1', preco: 19.5 }, { name: 'peca2', preco: 19.5 }, { name: 'peca3', preco: 19.5 }]
+    },
+    {
+        name: "Servicos",
+        objects: [{ name: 'ser1', preco: 19.5 }, { name: 'ser2', preco: 19.5 }, { name: 'ser3', preco: 19.5 }]
+    },
+]
+
 export default function ReadServiceAndToolDataView(props) {
     return (
         <div
@@ -24,18 +35,7 @@ export default function ReadServiceAndToolDataView(props) {
                     </h1>
                     <div className="">
                         <OptionsTable
-                            data={
-                                [
-                                    {
-                                        name: "Pecas",
-                                        objects: [Object, Object, Object]
-                                    },
-                                    {
-                                        name: "Servicos",
-                                        objects: [Object, Object, Object]
-                                    },
-                                ]
-                            }
+                            data={hardData}
                             defaultValueName="Pecas"
                         />
                     </div>
