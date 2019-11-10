@@ -7,20 +7,31 @@ export default function OptionsTable(props) {
 
     const getOptionObjects = optionName => {
         const option = data.filter((option) => {
-            return option.name === optionName;
+            return option.nome === optionName;
         });
 
         return option[0].objects;
     }
 
     const handleDropdownChange = event => {
-        setSelectedOption(event.target.value)
+        setSelectedOption(event.target.value);
+        setSelectedOptionObjects(getOptionObjects(event.target.value));
     }
 
     const data = props.data;
-    const [selectedOption, setSelectedOption] = React.useState(props.defaultValueName)
-    const [selectedOptionObjects, setSelectedOptionObjects] = React.useState(getOptionObjects(selectedOption))
-
+    const [selectedOption, setSelectedOption] = React.useState(props.defaultValueName);
+    const [selectedOptionObjects, setSelectedOptionObjects] = React.useState(getOptionObjects(selectedOption));
+    const objects = selectedOptionObjects ?
+        selectedOptionObjects.map((object) => {
+            return (
+                <div>
+                    <OptionsTableLine
+                        object={object}
+                    />
+                    <hr />
+                </div>
+            )
+        }) : null;
 
     return (
         <div className="OptionsTable">
@@ -34,24 +45,17 @@ export default function OptionsTable(props) {
                             data.map((option) => {
                                 return (
                                     <MenuItem
-                                        value={option.name} >
-                                        {option.name}
+                                        value={option.nome} >
+                                        {option.nome}
                                     </MenuItem>
                                 );
                             })
                         }
                     </Select>
                 </FormControl>
-
-                {
-                    selectedOptionObjects.map((object) => {
-                        return (
-                            <OptionsTableLine
-                                object={object}
-                            />
-                        )
-                    })
-                }
+            </div>
+            <div className="content">
+                {objects}
             </div>
         </div>
     );

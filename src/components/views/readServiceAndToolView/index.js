@@ -1,19 +1,23 @@
 import React from 'react'
 import './style.css'
 import OptionsTable from '../../forms/tables/OptionsTable';
-
-const hardData = [
-    {
-        name: 'Pecas',
-        objects: [{ name: 'peca1', preco: 19.5 }, { name: 'peca2', preco: 19.5 }, { name: 'peca3', preco: 19.5 }]
-    },
-    {
-        name: "Servicos",
-        objects: [{ name: 'ser1', preco: 19.5 }, { name: 'ser2', preco: 19.5 }, { name: 'ser3', preco: 19.5 }]
-    },
-]
+import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 
 export default function ReadServiceAndToolDataView(props) {
+    const [services, setServices] = React.useState([]);
+    const [tools, setTools] = React.useState([]);
+
+    const getData = async () => {
+        const firebaseHandler = new FirebaseHandler();
+        const services = await firebaseHandler.getAllServices();
+        const tools = await firebaseHandler.getAllTools();
+        setServices(services);
+        setTools(tools);
+    }
+    if (services.length === 0 || tools.length === 0) {
+        getData();
+    }
+
     return (
         <div
             className="ReadServiceAndToolDataView">
@@ -35,7 +39,18 @@ export default function ReadServiceAndToolDataView(props) {
                     </h1>
                     <div className="">
                         <OptionsTable
-                            data={hardData}
+                            data={
+                                [
+                                    {
+                                        nome: 'Pecas',
+                                        objects: tools
+                                    },
+                                    {
+                                        nome: 'Servicos',
+                                        objects: services
+                                    },
+                                ]
+                            }
                             defaultValueName="Pecas"
                         />
                     </div>
