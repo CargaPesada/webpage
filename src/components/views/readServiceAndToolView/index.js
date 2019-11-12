@@ -14,7 +14,7 @@ export default function ReadServiceAndToolDataView(props) {
         setServices(services);
         setTools(tools);
     }
-    if (services.length === 0 || tools.length === 0) {
+    if (!services || !tools || services.length === 0 || tools.length === 0) {
         getData();
     }
 

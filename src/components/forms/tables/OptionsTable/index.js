@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './style.css'
 import { MenuItem, Select, FormControl } from '@material-ui/core';
 import OptionsTableLine from './OptionsTableLine';
@@ -17,6 +17,11 @@ export default function OptionsTable(props) {
         setSelectedOption(event.target.value);
         setSelectedOptionObjects(getOptionObjects(event.target.value));
     }
+
+    useEffect(() => {
+        let object = { target: { value: selectedOption } };
+        handleDropdownChange(object);
+    })
 
     const data = props.data;
     const [selectedOption, setSelectedOption] = React.useState(props.defaultValueName);
