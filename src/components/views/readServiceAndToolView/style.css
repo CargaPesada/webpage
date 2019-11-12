@@ -1,0 +1,9 @@
+.ReadServiceAndToolDataView {
+	background: white;
+	height: 100%;
+}
+
+#close-button {
+	background: none;
+	border: none;
+}

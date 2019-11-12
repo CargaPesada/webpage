@@ -3,9 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fullcalendar/core": "^4.3.1",
+    "@fullcalendar/daygrid": "^4.3.0",
+    "@fullcalendar/interaction": "^4.3.0",
+    "@fullcalendar/react": "^4.3.0",
+    "@material-ui/core": "^4.4.2",
+    "@types/react-input-mask": "^2.0.3",
+    "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
+    "cep-promise": "^3.0.7",
+    "cpf-check": "^3.0.0",
+    "date-fns": "^2.4.1",
+    "email-deep-validator": "^3.3.0",
+    "email-validator": "^2.0.4",
+    "firebase": "^6.6.1",
+    "password-validator": "^5.0.2",
     "react": "^16.9.0",
+    "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "react-input-mask": "^2.0.4",
+    "react-scripts": "3.1.1",
+    "react-spring": "^8.0.27"
   },
   "scripts": {
     "start": "react-scripts start",

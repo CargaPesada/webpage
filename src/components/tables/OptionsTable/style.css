@@ -1,0 +1,15 @@
+.OptionsTable {
+	-webkit-box-shadow: 0px 0px 28px -5px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 0px 0px 28px -5px rgba(0, 0, 0, 0.75);
+	box-shadow: 0px 0px 28px -5px rgba(0, 0, 0, 0.75);
+	border-radius: 10px;
+	padding-bottom: 5px;
+}
+.header {
+	background: #e88357;
+	border-radius: 10px 10px 0px 0px;
+	padding: 10px;
+}
+.content {
+	margin-top: 5px;
+}
