@@ -76,7 +76,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -110,7 +110,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -131,7 +131,7 @@ class FirebaseHandler {
 
 				return listOfOffices;
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return [];
 	};
@@ -152,7 +152,7 @@ class FirebaseHandler {
 
 				return listOfTrucks;
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return [];
 	};
@@ -173,7 +173,49 @@ class FirebaseHandler {
 
 				return listOfUsers;
 			}
-		} catch (e) {}
+		} catch (e) { }
+
+		return [];
+	};
+
+	/**
+	 * Método para retornar todos os servicos.
+	 */
+	getAllServices = async () => {
+		try {
+			let res = await axios.get(ENDPOINT_ADDRESS + '/service/list');
+
+			if (res != null) {
+				let listOfServices = [];
+
+				for (let index = 0; index < res.data.data.length; index++) {
+					listOfServices.push(res.data.data[index]);
+				}
+
+				return listOfServices;
+			}
+		} catch (e) { }
+
+		return [];
+	};
+
+	/**
+	 * Método para retornar todos os servicos.
+	 */
+	getAllTools = async () => {
+		try {
+			let res = await axios.get(ENDPOINT_ADDRESS + '/piece/list');
+
+			if (res != null) {
+				let listOfTools = [];
+
+				for (let index = 0; index < res.data.data.length; index++) {
+					listOfTools.push(res.data.data[index]);
+				}
+
+				return listOfTools;
+			}
+		} catch (e) { }
 
 		return [];
 	};
@@ -197,7 +239,7 @@ class FirebaseHandler {
 				}
 
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	}
@@ -214,7 +256,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -231,7 +273,7 @@ class FirebaseHandler {
 					return true;
 				}
 			}
-		} catch (e) {}
+		} catch (e) { }
 
 		return false;
 	};
@@ -257,7 +299,7 @@ class FirebaseHandler {
 					cargo: JOB_TITLE_IDS[res.data.data.cargo],
 					cpf: res.data.data.cpf
 				}
-			} catch (e) {}
+			} catch (e) { }
 		});
 
 		return userInfo;

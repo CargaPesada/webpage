@@ -49,8 +49,8 @@ class RegisterUserView extends React.Component {
                 this.setState({ cidade: data.city });
                 this.setState({ estado: data.state });
                 this.setState({ bairro: data.neighborhood });
-                this.setState({ rua: data.street});
-                this.setState({ pais: 'BR'});
+                this.setState({ rua: data.street });
+                this.setState({ pais: 'BR' });
             });
     }
 
@@ -121,7 +121,6 @@ class RegisterUserView extends React.Component {
         return (
             <div
                 className="card bg-white"
-                style={{ marginTop: '5%', marginLeft: '0%', marginRight: '0%', paddingBottom: '3vh' }}
             >
                 <a href="#" className="text-dark text-right" onClick={() => this.props.handleCard(false)}>
                     <i class="fas fa-2x fa-times-circle" />

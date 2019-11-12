@@ -118,7 +118,6 @@ class ReadUserDataView extends React.Component {
         return (
             <div
                 className="card bg-white"
-                style={{ marginTop: '5%', marginLeft: '0%', marginRight: '0%', paddingBottom: '3vh' }}
             >
                 <a href="#" className="text-dark text-right" onClick={() => this.props.handleCard(false)}>
                     <i class="fas fa-2x fa-times-circle" />
