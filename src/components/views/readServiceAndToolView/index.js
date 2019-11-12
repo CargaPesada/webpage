@@ -1,6 +1,6 @@
 import React from 'react'
 import './style.css'
-import OptionsTable from '../../forms/tables/OptionsTable';
+import OptionsTable from '../../tables/OptionsTable';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 
 export default function ReadServiceAndToolDataView(props) {
