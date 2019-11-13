@@ -18,7 +18,7 @@ class RegisterServiceAndToolView extends React.Component {
     clearForm = () => {
         document.getElementById('nome').value = "";
         document.getElementById('preco').value = "";
-        }
+    }
 
     /**
      * Método para registrar um novo motorista.

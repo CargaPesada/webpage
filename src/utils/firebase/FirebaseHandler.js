@@ -279,6 +279,40 @@ class FirebaseHandler {
 	};
 
 	/**
+	 * Método para deletar um servico
+	 */
+	deleteService = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/service/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar uma peca
+	 */
+	deleteTool = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/piece/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
      * Método para tentar realizar login.
      */
 	tryToLogin = async (email, password, callback) => {
