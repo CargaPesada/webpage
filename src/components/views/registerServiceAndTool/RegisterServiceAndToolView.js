@@ -17,7 +17,7 @@ class RegisterServiceAndToolView extends React.Component {
      */
     clearForm = () => {
         document.getElementById('nome').value = "";
-        document.getElementById('preco').value = "";
+        document.getElementById('price').value = "";
         }
 
     /**
@@ -27,9 +27,8 @@ class RegisterServiceAndToolView extends React.Component {
 
         let errorMessages = "";
 
-        let marca = this.state.marca;
         let nome = document.getElementById('nome').value;
-        let preco = document.getElementById('preco').value;
+        let price = document.getElementById('price').value;
 
         // Validando o campo nome
         if (nome.length === 0) {
@@ -37,18 +36,26 @@ class RegisterServiceAndToolView extends React.Component {
         }
 
         // Validando o campo preco
-        if (preco.length === 0) {
+        if (price.length === 0) {
             errorMessages += "\n* Preco não preenchido";
         }
 
         // Verificando se existe mensagens de erros a serem exibidas...
         if (errorMessages === "") {
 
-            let newServiceAndTool = new ServiceAndTool(nome, preco);
+            let newServiceAndTool = new ServiceAndTool(nome, price);
 
-            let httpHandler = new FirebaseHandler();
-            let registered = await httpHandler.tryToRegisterServiceAndTool(newServiceAndTool);
+            let firebaseHandler = new FirebaseHandler();
+            let registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
 
+            // if (document.getElementById("radio_service").checked) {
+            //     registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
+            // }
+
+            // if (document.getElementById("radio_piece").checked) {
+            //     registered = await firebaseHandler.tryToRegisterPiece(newServiceAndTool);
+            // }
+                
             if (registered) {
                 this.clearForm();
                 alert('Registrado com sucesso!');
@@ -94,6 +101,32 @@ class RegisterServiceAndToolView extends React.Component {
                                 </div>
 
                                 <div className="mt-4 form-group">
+                                    <label>Serviço / Peça *</label>
+
+                                    <div className="d-flex row justify-content-between ml-1" style={{ width: '60%' }}>
+                                        <label>
+                                            <input
+                                                id="radio_service"
+                                                type="radio"
+                                                name="serviceandtool"
+                                                value="service"
+                                                checked
+                                            />
+                                            Serviço
+										</label>
+                                        <label>
+                                            <input
+                                                id="radio_piece"
+                                                type="radio"
+                                                name="serviceandtool"
+                                                value="tool"
+                                            />
+                                            Peça
+										</label>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 form-group">
                                     <label>Nome *</label>
                                     <input
                                         type="text"
@@ -108,9 +141,9 @@ class RegisterServiceAndToolView extends React.Component {
                                     <label>Preço *</label>
                                     <input
                                         maxLength="8"
-                                        type="text"
-                                        name="preco"
-                                        id="preco"
+                                        type="number"
+                                        name="price"
+                                        id="price"
                                         placeholder="Preço"
                                         style={{ width: "100%" }}
                                     />

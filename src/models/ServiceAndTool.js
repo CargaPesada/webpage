@@ -1,7 +1,7 @@
 class ServiceAndTool {
-	constructor(nome, preco) {
+	constructor(nome, price) {
 		this.nome = nome;
-        this.preco = preco;
+        this.price = price;
 	}
 }
 
