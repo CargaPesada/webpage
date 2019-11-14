@@ -46,15 +46,15 @@ class RegisterServiceAndToolView extends React.Component {
             let newServiceAndTool = new ServiceAndTool(nome, price);
 
             let firebaseHandler = new FirebaseHandler();
-            let registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
+            let registered
 
-            // if (document.getElementById("radio_service").checked) {
-            //     registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
-            // }
+            if (document.getElementById('radio_service').checked) {
+                registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
+            }
 
-            // if (document.getElementById("radio_piece").checked) {
-            //     registered = await firebaseHandler.tryToRegisterPiece(newServiceAndTool);
-            // }
+            if (document.getElementById('radio_piece').checked) {
+                registered = await firebaseHandler.tryToRegisterPiece(newServiceAndTool);
+            }
                 
             if (registered) {
                 this.clearForm();
