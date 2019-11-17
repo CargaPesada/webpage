@@ -16,7 +16,7 @@ class FirebaseHandler {
 	tryToRegisterUser = async (user, callback) => {
 		let jsonToSend = {
 			nome: user.nome,
-			cargo: user.cargo,
+			cargo: user.cargo.toLowerCase(),
 			email: user.email,
 			senha: user.senha,
 			cpf: user.cpf,
