@@ -19,7 +19,6 @@ class FirebaseHandler {
 			cargo: user.cargo,
 			email: user.email,
 			senha: user.senha,
-			//rg: "38.733.798-x",
 			cpf: user.cpf,
 			endereco: user.rua,
 			tipocnh: user.cnh,
@@ -121,19 +120,16 @@ class FirebaseHandler {
 	tryToRegisterService = async (ServiceAndTool) => {
 		let jsonToSend = {
 			nome: ServiceAndTool.nome,
-			price: ServiceAndTool.price
+			preco: parseFloat(ServiceAndTool.price)
 		};
 
 		// Acionando promisses para o endpoint
 		try {
-			console.log('foi')
+
 			let res = await axios.post(ENDPOINT_ADDRESS + '/service/register', jsonToSend).then();
-			console.log('foi')
 
 			if (res != null) {
-				console.log('foi')
 				if (res.status >= 200 && res.status <= 299) {
-					console.log('foi')
 					return true;
 				}
 			}
@@ -148,7 +144,8 @@ class FirebaseHandler {
 	tryToRegisterTool = async (ServiceAndTool) => {
 		let jsonToSend = {
 			nome: ServiceAndTool.nome,
-			price: ServiceAndTool.price
+			preco: parseFloat(ServiceAndTool.price),
+			uni: parseInt(1)
 		};
 
 		// Acionando promisses para o endpoint

@@ -17,15 +17,6 @@ class RegisterServiceAndToolView extends React.Component {ent
      * Método para limpar os campos do formulário.
      */
     clearForm = () => {
-        document.getElementById('modelo').value = "";
-        document.getElementById('placa').value = "";
-
-        document.getElementById('comprimento').value = "";
-        document.getElementById('largura').value = "";
-        document.getElementById('altura').value = "";
-        document.getElementById('cargaMaxima').value = "";
-        document.getElementById('pais').value = "";
-
         document.getElementById('nome').value = "";
         document.getElementById('price').value = "";
     }
@@ -64,7 +55,7 @@ class RegisterServiceAndToolView extends React.Component {ent
             }
 
             if (document.getElementById('radio_piece').checked) {
-                registered = await firebaseHandler.tryToRegisterPiece(newServiceAndTool);
+                registered = await firebaseHandler.tryToRegisterTool(newServiceAndTool);
             }
                 
             if (registered) {
