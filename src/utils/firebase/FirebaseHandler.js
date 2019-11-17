@@ -116,6 +116,56 @@ class FirebaseHandler {
 	};
 
 	/**
+     * Método para tentar realizar um novo registro de serviço.
+     */
+	tryToRegisterService = async (ServiceAndTool) => {
+		let jsonToSend = {
+			nome: ServiceAndTool.nome,
+			price: ServiceAndTool.price
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+			console.log('foi')
+			let res = await axios.post(ENDPOINT_ADDRESS + '/service/register', jsonToSend).then();
+			console.log('foi')
+
+			if (res != null) {
+				console.log('foi')
+				if (res.status >= 200 && res.status <= 299) {
+					console.log('foi')
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+     * Método para tentar realizar um novo registro de peça.
+     */
+	tryToRegisterTool = async (ServiceAndTool) => {
+		let jsonToSend = {
+			nome: ServiceAndTool.nome,
+			price: ServiceAndTool.price
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+			let res = await axios.post(ENDPOINT_ADDRESS + '/piece/register', jsonToSend).then();
+
+			if (res != null) {
+				if (res.status >= 200 && res.status <= 299) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
 	 * Método para retornar todas oficinas.
 	 */
 	getAllOffices = async () => {
@@ -267,6 +317,40 @@ class FirebaseHandler {
 	deleteCertainTruck = async (id) => {
 		try {
 			let res = await axios.delete(ENDPOINT_ADDRESS + '/truck/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar um servico
+	 */
+	deleteService = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/service/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar uma peca
+	 */
+	deleteTool = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/piece/delete/' + id);
 
 			if (res != null) {
 				if (res.status === 200) {

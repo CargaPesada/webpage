@@ -2,8 +2,9 @@ import React from 'react';
 import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Truck from '../../../models/Truck';
+import ServiceAndTool from '../../../models/ServiceAndTool';
 
-class RegisterTruckView extends React.Component {
+class RegisterServiceAndToolView extends React.Component {ent
     constructor(props) {
         super(props);
 
@@ -25,74 +26,47 @@ class RegisterTruckView extends React.Component {
         document.getElementById('cargaMaxima').value = "";
         document.getElementById('pais').value = "";
 
-
+        document.getElementById('nome').value = "";
+        document.getElementById('price').value = "";
     }
+
 
     /**
      * Método para registrar um novo motorista.
      */
-    registerNewTruck = async () => {
+    registerNewServiceAndTool = async () => {
 
         let errorMessages = "";
 
-        let marca = this.state.marca;
-        let modelo = document.getElementById('modelo').value;
-        let placa = document.getElementById('placa').value;
-        let comprimento = document.getElementById('comprimento').value;
-        let largura = document.getElementById('largura').value;
-        let altura = document.getElementById('altura').value;
-        let cargaMaxima = document.getElementById('cargaMaxima').value;
-        let pais = document.getElementById('pais').value;
+        let nome = document.getElementById('nome').value;
+        let price = document.getElementById('price').value;
 
         // Validando o campo nome
-        if (marca.length === 0) {
-            errorMessages += "\n* Marca não selecionada";
+        if (nome.length === 0) {
+            errorMessages += "\n* Nome não selecionada";
         }
 
-        // Validando o campo CPF
-        if (modelo.length === 0) {
-            errorMessages += "\n* Modelo não preenchido";
-        }
-
-        // Validando o campo Telefone
-        if (placa.length < 7 || placa.length > 8) {
-            errorMessages += "\n* Placa incorreta";
-        }
-
-        // Validando o campo Comprimento
-        if (comprimento.length === 0) {
-            errorMessages += "\n* Comprimento não preenchido";
-        }
-
-        // Validando o campo Largura
-        if (largura.length === 0) {
-            errorMessages += "\n* Largura não preenchida";
-        }
-
-        // Validando a Altura
-        if (altura.length === 0) {
-            errorMessages += "\n* Altura não preenchida";
-        }
-
-        // Validando a Carga Máxima
-        if (cargaMaxima.length === 0) {
-            errorMessages += "\n* Carga Máxima não preenchida";
-        }
-
-        // Validando a Sigla do País
-        if (pais.length === 0) {
-            errorMessages += "\n* Sigla do País não preenchido";
+        // Validando o campo preco
+        if (price.length === 0) {
+            errorMessages += "\n* Preco não preenchido";
         }
 
         // Verificando se existe mensagens de erros a serem exibidas...
         if (errorMessages === "") {
 
-            let newTruck = new Truck(marca, modelo, placa, comprimento, largura,
-                altura, cargaMaxima, pais);
+            let newServiceAndTool = new ServiceAndTool(nome, price);
 
-            let httpHandler = new FirebaseHandler();
-            let registered = await httpHandler.tryToRegisterTruck(newTruck);
+            let firebaseHandler = new FirebaseHandler();
+            let registered
 
+            if (document.getElementById('radio_service').checked) {
+                registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
+            }
+
+            if (document.getElementById('radio_piece').checked) {
+                registered = await firebaseHandler.tryToRegisterPiece(newServiceAndTool);
+            }
+                
             if (registered) {
                 this.clearForm();
                 alert('Registrado com sucesso!');
@@ -118,18 +92,6 @@ class RegisterTruckView extends React.Component {
      * Método padrão para renderização.
      */
     render() {
-
-        let brandName = this.state.marca == "" ? "Marca do Veículo" : this.state.marca;
-
-        let availableBrands = [];
-
-        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Volkswagen")} name="marca" value="Volkswagen" />)
-        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Scania")} name="marca" value="Scania" />);
-        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Mercedes-Benz")} name="marca" value="Mercedes-Benz" />);
-        availableBrands.push(<input type="button" class="dropdown-item" onClick={() => this.handleBrandChange("Iveco")} name="marca" value="Iveco" />);
-
-
-
         return (
             <div
                 className="card bg-white"
@@ -145,106 +107,64 @@ class RegisterTruckView extends React.Component {
                             <form>
                                 <div className="form-group">
                                     <p>
-                                        <label>Olá! Para cadastrar uma nova oficina, você deverá preencher todos os campos obrigatórios (*)!</label>
+                                        <label>Olá! Para cadastrar um novo Serviço / Peça, você deverá preencher todos os campos obrigatórios (*)!</label>
                                     </p>
                                 </div>
 
-                                <div className="form-group">
-                                    <label>Selecione a Marca *</label>
-                                    <p />
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {brandName}
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {availableBrands}
+                                <div className="mt-4 form-group">
+                                    <label>Serviço / Peça *</label>
+
+                                    <div className="d-flex row justify-content-between ml-1" style={{ width: '60%' }}>
+                                        <label>
+                                            <input
+                                                id="radio_service"
+                                                type="radio"
+                                                name="serviceandtool"
+                                                value="service"
+                                                checked
+                                            />
+                                            Serviço
+										</label>
+                                        <label>
+                                            <input
+                                                id="radio_piece"
+                                                type="radio"
+                                                name="serviceandtool"
+                                                value="tool"
+                                            />
+                                            Peça
+										</label>
                                     </div>
                                 </div>
 
                                 <div className="mt-4 form-group">
-                                    <label>Modelo *</label>
+                                    <label>Nome *</label>
                                     <input
                                         type="text"
-                                        name="modelo"
-                                        id="modelo"
-                                        placeholder="Modelo"
+                                        name="nome"
+                                        id="nome"
+                                        placeholder="Nome"
                                         style={{ width: '100%' }}
                                     />
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Placa *</label>
+                                    <label>Preço *</label>
                                     <input
                                         maxLength="8"
-                                        type="text"
-                                        name="placa"
-                                        id="placa"
-                                        placeholder="Placa"
-                                        style={{ width: "100%" }}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Comprimento (m)*</label>
-                                    <input
                                         type="number"
-                                        name="comprimento"
-                                        id="comprimento"
-                                        placeholder="Comprimento"
+                                        name="price"
+                                        id="price"
+                                        placeholder="Preço"
                                         style={{ width: "100%" }}
                                     />
                                 </div>
-
-                                <div className="form-group">
-                                    <label>Largura (m)*</label>
-                                    <input
-                                        type="number"
-                                        name="largura"
-                                        id="largura"
-                                        placeholder="Largura"
-                                        style={{ width: "100%" }}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Altura (m)*</label>
-                                    <input
-                                        type="number"
-                                        name="altura"
-                                        id="altura"
-                                        placeholder="Altura"
-                                        style={{ width: "100%" }}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Carga Máxima (kg)*</label>
-                                    <input
-                                        type="number"
-                                        name="cargaMaxima"
-                                        id="cargaMaxima"
-                                        placeholder="Carga Máxima"
-                                        style={{ width: "100%" }}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Sigla do País *</label>
-                                    <input
-                                        maxLength="2"
-                                        type="text"
-                                        name="pais"
-                                        id="pais"
-                                        placeholder="Sigla do País"
-                                        style={{ width: "100%" }}
-                                    />
-                                </div>
-
 
                                 <button
                                     type="button"
                                     className="btn btn-primary mt-5"
                                     style={{ width: '100%' }}
-                                    onClick={() => this.registerNewTruck()}
+                                    onClick={() => this.registerNewServiceAndTool()}
                                 >
                                     Cadastrar
 								</button>
@@ -257,4 +177,4 @@ class RegisterTruckView extends React.Component {
     }
 }
 
-export default RegisterTruckView;
+export default RegisterServiceAndToolView;
