@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
+
 const Fade = React.forwardRef(function Fade(props, ref) {
 	const { in: open, children, onEnter, onExited, ...other } = props;
 	const style = useSpring({
@@ -81,13 +82,25 @@ export default function TruckMaintenanceModal(props) {
 
 	const handleClose = () => {
 		clearState();
-		props.closePopup({ isRegisterConfirmed: false });
+
+		if (!props.isReadOnly) {
+			props.closePopup({ isRegisterConfirmed: false });
+		}
+		else {
+			props.closePopup({
+				isUpdating: true,
+				truck: props.selectedMaintance.placa,
+				mechanical: selectedMechanical,
+				title: props.selectedMaintance.nome
+			});
+		}
 	};
 
 	const handleRegister = () => {
 		clearState();
 		props.closePopup({
 			isDeleting: false,
+			isUpdating: false,
 			isRegisterConfirmed: true,
 			truck: selectedTruck,
 			mechanical: selectedMechanical,
@@ -97,13 +110,7 @@ export default function TruckMaintenanceModal(props) {
 
 	const handleDelete = () => {
 		clearState();
-		props.closePopup({
-			isDeleting: true,
-			isRegisterConfirmed: true,
-			truck: selectedTruck,
-			mechanical: selectedMechanical,
-			title
-		});
+		props.closePopup({isDeleting: true});
 	};
 
 	const clearState = () => {
@@ -227,8 +234,13 @@ export default function TruckMaintenanceModal(props) {
 			</div>
 		);
 	}
-	// Showing the read only modal
+	// Showing the read / update only modal
 	else {
+
+		// Aux. variable to handle which name should display in mechanic info area
+		let mechanicLabel = selectedMechanical == ""? props.selectedMaintance.mechanical : selectedMechanical;
+
+		// Drawing...
 		return (
 			<div>
 				<Modal
@@ -254,14 +266,22 @@ export default function TruckMaintenanceModal(props) {
 								type="text"
 								disabled
 							/>
-							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-								Mecânico
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Mecânico
 							</InputLabel>
-							<input
-								defaultValue={props.selectedMaintance.mechanical}
-								type="text"
-								disabled
-							/>
+								<Select
+									id="demo-simple-select-placeholder-label"
+									onChange={handleMechanicalChange}
+									value={mechanicLabel}
+									displayEmpty
+									className={classes.selectEmpty}
+								>
+									{users.map((user) => {
+										return <MenuItem value={user.nome}>{user.nome}</MenuItem>;
+									})}
+								</Select>
+							</FormControl>
 							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
 								Placa do caminhão
 							</InputLabel>
@@ -273,15 +293,15 @@ export default function TruckMaintenanceModal(props) {
 							<div className={classes.buttonsDiv}>
 								<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
 									Voltar
-							</Button>
+								</Button>
 								<Button
 									variant="contained"
-									color="danger"
+									color="primary"
 									className={classes.buttonRegister}
 									onClick={handleDelete}
 								>
 									Excluir
-							</Button>
+								</Button>
 							</div>
 						</div>
 					</Fade>
