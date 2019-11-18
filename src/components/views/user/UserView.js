@@ -13,7 +13,7 @@ import ReadUserDataView from '../readUserDataView/ReadUserDataView';
 import DriverStatusHandlerView from '../driverStatusHandlerView/DriverStatusHandlerView';
 import RegisterServiceAndToolView from '../registerServiceAndTool/RegisterServiceAndToolView';
 import ReadServiceAndToolDataView from '../readServiceAndToolView';
-import DeleteServiceAndToolView from '../deleteServiceAndToolView/DeleteServiceAndToolView';
+import DeleteServiceAndToolView from '../deleteServiceAndToolView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!

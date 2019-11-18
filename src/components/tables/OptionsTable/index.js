@@ -29,9 +29,10 @@ export default function OptionsTable(props) {
     const objects = selectedOptionObjects ?
         selectedOptionObjects.map((object) => {
             return (
-                <div>
+                <div key={object.nome} >
                     <OptionsTableLine
                         object={object}
+                        onDeleteClick={props.onDeleteClick}
                     />
                     <hr />
                 </div>
@@ -50,6 +51,7 @@ export default function OptionsTable(props) {
                             data.map((option) => {
                                 return (
                                     <MenuItem
+                                        key={option.nome}
                                         value={option.nome} >
                                         {option.nome}
                                     </MenuItem>

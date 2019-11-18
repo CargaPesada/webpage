@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import * as credentials from './credential';
 import JOB_TITLE_IDS from '../../models/JobTitle';
+import Tool from '../../models/Tool';
 const axios = require('axios');
 const ENDPOINT_ADDRESS = 'https://carga-pesada-d933f.appspot.com';
 
@@ -118,10 +119,10 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de serviço.
      */
-	tryToRegisterService = async (ServiceAndTool) => {
+	tryToRegisterService = async (Service) => {
 		let jsonToSend = {
-			nome: ServiceAndTool.nome,
-			price: ServiceAndTool.price
+			nome: Service.nome,
+			preco: Service.preco
 		};
 
 		// Acionando promisses para o endpoint
@@ -145,10 +146,11 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de peça.
      */
-	tryToRegisterTool = async (ServiceAndTool) => {
+	tryToRegisterTool = async (Tool) => {
 		let jsonToSend = {
-			nome: ServiceAndTool.nome,
-			price: ServiceAndTool.price
+			nome: Tool.nome,
+			preco: Tool.price,
+			uni: Tool.uni
 		};
 
 		// Acionando promisses para o endpoint
@@ -317,6 +319,40 @@ class FirebaseHandler {
 	deleteCertainTruck = async (id) => {
 		try {
 			let res = await axios.delete(ENDPOINT_ADDRESS + '/truck/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar um servico
+	 */
+	deleteService = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/service/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar uma peca
+	 */
+	deleteTool = async (id) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/piece/delete/' + id);
 
 			if (res != null) {
 				if (res.status === 200) {
