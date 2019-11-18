@@ -4,7 +4,7 @@ import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 import Service from '../../../models/Service'
 import Tool from '../../../models/Tool'
 
-class RegisterServiceAndToolView extends React.Component {
+class RegisterServiceAndToolView extends React.Component {ent
     constructor(props) {
         super(props);
 
@@ -17,6 +17,7 @@ class RegisterServiceAndToolView extends React.Component {
         document.getElementById('nome').value = "";
         document.getElementById('price').value = "";
     }
+
 
     /**
      * Método para registrar um novo motorista.

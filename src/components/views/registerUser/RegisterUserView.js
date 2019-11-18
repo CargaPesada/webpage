@@ -23,7 +23,7 @@ class RegisterUserView extends React.Component {
      * Método para registrar um novo motorista.
      */
     registerNewUser = () => {
-        this.setState({ cargo: 'motorista' });
+
         if (this.state.newUserCategory !== -1) {
             try {
                 let user = new User(this.state);
@@ -66,38 +66,25 @@ class RegisterUserView extends React.Component {
      * Método padrão para renderização.
      */
     render() {
+
         let cargoName = "Tipo de Cargo";
 
-        switch (this.state.newUserCategory) {
-            case 0:
-                cargoName = "Motorista";
-                break;
-            case 1:
-                cargoName = "Mecânico";
-                break;
-            case 2:
-                cargoName = "Supervisor";
-                break;
-            case 3:
-                cargoName = "Gerente Regional";
-                break;
-            case 4:
-                cargoName = "Diretor Global";
-                break;
-            default:
-                cargoName = "Motorista";
+        if (this.state.cargo !== "") {
+            cargoName = this.state.cargo;
         }
 
 
         let toRender = [];
         let cargosToShow = [];
 
-        cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value="Motorista" />)
+        cargosToShow.push(<input type="button" className="dropdown-item" href="#" onClick={this.handleChange} name="cargo" value="Motorista" />);
+        cargosToShow.push(<input type="button" className="dropdown-item" href="#" onClick={this.handleChange} name="cargo" value="Mecanico" />);
+
         if (this.props.cargo >= 3) {
-            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value="Supervisor" />);
+            cargosToShow.push(<input type="button" className="dropdown-item" href="#" onClick={this.handleChange} name="cargo" value="Supervisor" />);
         }
         if (this.props.cargo === 4) {
-            cargosToShow.push(<input type="button" class="dropdown-item" onClick={this.handleChange} name="cargo" value="Gerente Regional" />);
+            cargosToShow.push(<input type="button" className="dropdown-item" href="#" onClick={this.handleChange} name="cargo" value="Gerente Regional" />);
         }
 
 
@@ -363,10 +350,10 @@ class RegisterUserView extends React.Component {
                                 <div className="mt-5 form-group">
                                     <label>Selecione o Cargo *</label>
                                     <p />
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         {cargoName}
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {cargosToShow}
                                     </div>
                                 </div>

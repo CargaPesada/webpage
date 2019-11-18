@@ -179,7 +179,7 @@ class ReadOfficeDataView extends React.Component {
     handlePopupReturn = (data) => {
         let newState = { isPopupOpen: false };
 
-        if (!data.isDeleting && data.isRegisterConfirmed) {
+        if (data.isRegisterConfirmed) {
 
             // TODO: Remover essa gambi de gerar ID
             let id = this.state.gambiarra + 1;
@@ -198,6 +198,38 @@ class ReadOfficeDataView extends React.Component {
                 isPopupOpen: false
             });
 
+        }
+        else if (data.isUpdating) {
+
+            // TODO: Remover essa gambi de gerar ID
+            let id = this.state.gambiarra + 1;
+
+
+            // Deletando versão anterior do evento e criando uma nova
+            // com as informacoes atualizadas!
+
+            let dates = this.state.dates;
+
+            dates.splice(this.state.indexToDrop, 1);
+
+            dates = this.state.dates.concat({
+                id: id,
+                title: data.truck,
+                start: this.state.selectedDate,
+                allDay: true,
+                nome: data.title,
+                placa: data.truck,
+                mechanical: data.mechanical
+            })
+
+            this.setState({
+                gambiarra: id,
+                dates: dates,
+                isReadOnly: false,
+                isPopupOpen: false
+            });
+
+            this.state.selectedEvent.event.remove();
         }
         else if (data.isDeleting) {
             let dates = this.state.dates;
