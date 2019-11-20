@@ -118,6 +118,33 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de serviço.
      */
+	tryToRegisterCalendarEvent = async (event) => {
+		let jsonToSend = {
+			titulo: event.titulo,
+			data: event.data,
+			placa_caminhao: event.placa_caminhao,
+			id_oficina: event.id_oficina,
+			id_usuario: event.id_usuario
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+
+			let res = await axios.post(ENDPOINT_ADDRESS + '/schedule/register', jsonToSend).then();
+
+			if (res != null) {
+				if (res.status >= 200 && res.status <= 299) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+     * Método para tentar realizar um novo registro de serviço.
+     */
 	tryToRegisterService = async (Service) => {
 		let jsonToSend = {
 			nome: Service.nome,

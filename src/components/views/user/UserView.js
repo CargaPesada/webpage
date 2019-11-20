@@ -239,6 +239,7 @@ class UserView extends React.Component {
 								name="fa-warehouse"
 								description="Consultar Oficina"
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
+								email={this.props.email}
 							/>
 
 						</div>
@@ -317,6 +318,7 @@ class UserView extends React.Component {
 								name="fa-warehouse"
 								description="Consultar Oficina"
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
+								email={this.props.email}
 							/>
 
 							{/* Deletar Oficina */}

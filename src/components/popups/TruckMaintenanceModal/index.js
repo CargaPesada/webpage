@@ -69,7 +69,7 @@ export default function TruckMaintenanceModal(props) {
 	const [users, setUsers] = React.useState([]);
 	const [trucks, setTrucks] = React.useState([]);
 	const [selectedTruck, setSelectedTruck] = React.useState('');
-	const [selectedMechanical, setSelectedMechanical] = React.useState('');
+	const [selectedMechanical, setSelectedMechanical] = React.useState({nome: "", email: ""});
 	const [title, setTitle] = React.useState('');
 
 	const handleTruckChange = (event) => {
@@ -90,21 +90,26 @@ export default function TruckMaintenanceModal(props) {
 			props.closePopup({
 				isUpdating: true,
 				truck: props.selectedMaintance.placa,
-				mechanical: selectedMechanical,
+				mechanical: selectedMechanical.nome,
 				title: props.selectedMaintance.nome
 			});
 		}
 	};
 
-	const handleRegister = () => {
+	const handleRegister = async () => {
 		clearState();
+
+
 		props.closePopup({
 			isDeleting: false,
 			isUpdating: false,
 			isRegisterConfirmed: true,
 			truck: selectedTruck,
-			mechanical: selectedMechanical,
-			title
+			mechanical: selectedMechanical.nome,
+			title,
+			titulo: title,
+			placa_caminhao: selectedTruck,
+			id_usuario: selectedMechanical.email
 		});
 	};
 
@@ -144,6 +149,10 @@ export default function TruckMaintenanceModal(props) {
 
 		setTrucks(trucksList);
 	};
+
+	const updateEmail = () => {
+		console.log("Hello");
+	}
 
 	if (users.length === 0) {
 		fetchUsers();
@@ -190,12 +199,12 @@ export default function TruckMaintenanceModal(props) {
 								<Select
 									id="demo-simple-select-placeholder-label"
 									onChange={handleMechanicalChange}
-									value={selectedMechanical}
+									value={selectedMechanical.nome}
 									displayEmpty
 									className={classes.selectEmpty}
 								>
 									{users.map((user) => {
-										return <MenuItem value={user.nome}>{user.nome}</MenuItem>;
+										return <MenuItem value={{nome: user.nome, email: user.email}}>{user.nome}</MenuItem>;
 									})}
 								</Select>
 							</FormControl>

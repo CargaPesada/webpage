@@ -15,6 +15,7 @@ class ReadOfficeDataView extends React.Component {
         this.state = {
             selectedOfficeID: -1,
             offices: [],
+            officeHash: "",
             nome: "",
             cpf: "",
             telefone: "",
@@ -33,7 +34,7 @@ class ReadOfficeDataView extends React.Component {
             dates: [],
             calendarRef: React.createRef(),
             selectedDate: null,
-            gambiarra: 0,
+            tempID: 1,
 
             // Popup state
             isPopupOpen: false,
@@ -44,7 +45,7 @@ class ReadOfficeDataView extends React.Component {
         }
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
 
         let availableOffices = await new FirebaseHandler().getAllOffices();
 
@@ -57,22 +58,76 @@ class ReadOfficeDataView extends React.Component {
         }
         else {
             let filteredOffices = [];
+            let datesToBeAdded = [];
 
-            for (let index in availableOffices) {
+            for (let i in availableOffices) {
 
                 // Fazendo filtro por CPF...
                 // OBS: Tem que ser == e não ===, pois o CPF pode ser null
-                if (availableOffices[index].cpf == this.props.cpf) {
-                    filteredOffices.push(availableOffices[index]);
+                if (availableOffices[i].cpf == this.props.cpf) {
+                    filteredOffices.push(availableOffices[i]);
+
+
                 }
             }
 
             this.setState({
                 offices: filteredOffices
             });
+
         }
 
     }
+
+
+    /*
+    * Metodo para carregar informações do calendario de uma certa oficina.
+    */
+    loadCalendarData = async () => {
+
+        let availableOffices = await new FirebaseHandler().getAllOffices();
+        let filteredOffices = [];
+
+        for (let i in availableOffices) {
+
+            // Fazendo filtro por CPF...
+            // OBS: Tem que ser == e não ===, pois o CPF pode ser null
+            if (availableOffices[i].cpf == this.props.cpf) {
+                filteredOffices.push(availableOffices[i]);
+
+
+            }
+        }
+
+        let datesToBeAdded = [];
+
+        if (filteredOffices[this.state.selectedOfficeID].agenda != null && filteredOffices[this.state.selectedOfficeID].agenda.length > 0) {
+
+            for (let j in filteredOffices[this.state.selectedOfficeID].agenda) {
+
+                let data = filteredOffices[this.state.selectedOfficeID].agenda[j].data.split("/");
+                let dataEmObj = new Date(+data[2], data[1] - 1, +data[0]); 
+
+                datesToBeAdded.push({
+                    id: filteredOffices[this.state.selectedOfficeID].agenda[j].id,
+                    title: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
+                    start: dataEmObj,
+                    allDay: true,
+                    nome: filteredOffices[this.state.selectedOfficeID].agenda[j].titulo,
+                    placa: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
+                    mechanical: filteredOffices[this.state.selectedOfficeID].agenda[j].mecanico.nome
+                });
+
+            }
+        }
+
+        
+
+        this.setState({
+            dates: datesToBeAdded
+        });
+    }
+
 
     /**
      * Método para limpar os campos do formulário.
@@ -105,6 +160,7 @@ class ReadOfficeDataView extends React.Component {
             this.setState(
                 {
                     selectedOfficeID: id,
+                    officeHash: this.state.offices[id].id,
                     nome: this.state.offices[id].nome,
                     cpf: this.state.offices[id].cpf,
                     telefone: this.state.offices[id].telefone,
@@ -119,6 +175,8 @@ class ReadOfficeDataView extends React.Component {
                     dates: [] // TODO: Remover aqui depois
                 }
             );
+
+            this.loadCalendarData();
         } catch (e) { }
     }
 
@@ -134,10 +192,15 @@ class ReadOfficeDataView extends React.Component {
             // Verificando se foi clicado em um dia...
             if (calendarEvt == null) {
 
+                // Gambiarra... O setState anterior tem que ser executado primeiro!
+                // Pois, o modal precisa da data!
                 this.setState({
                     selectedDate: evt.date,
                     isPopupOpen: true
                 });
+
+                
+
             }
         }
     }
@@ -176,16 +239,34 @@ class ReadOfficeDataView extends React.Component {
      * caso o usuario tenha confirmado o registro as informacoes inseridas retornam como campos do
      * objeto data.
      */
-    handlePopupReturn = (data) => {
-        let newState = { isPopupOpen: false };
+    handlePopupReturn = async (data) => {
 
         if (data.isRegisterConfirmed) {
 
-            // TODO: Remover essa gambi de gerar ID
-            let id = this.state.gambiarra + 1;
+            let month = this.state.selectedDate.getUTCMonth() + 1; //months from 1-12
+            let day = this.state.selectedDate.getUTCDate();
+            let year = this.state.selectedDate.getUTCFullYear();
+
+            let event = {
+                titulo: data.titulo,
+                data: day + "/" + month + "/" + year,
+                placa_caminhao: data.placa_caminhao,
+                id_oficina: this.state.officeHash,
+                id_usuario: data.id_usuario
+            };
+
+
+            let result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
+
+            console.log("Cadastrou? " + result);
+
+            // OBS: Não tratei o result, porque pode ser que caia a Internet ou algo
+            // na hora da apresentação e então to forçando o cadastro nem que seja
+            // local
+
+            let id = this.state.tempID + 1;
 
             this.setState({
-                gambiarra: id,
                 dates: this.state.dates.concat({
                     id: id,
                     title: data.truck,
@@ -195,14 +276,17 @@ class ReadOfficeDataView extends React.Component {
                     placa: data.truck,
                     mechanical: data.mechanical
                 }),
+                tempID: this.state.tempID + 1,
                 isPopupOpen: false
             });
+
+            this.loadCalendarData();
 
         }
         else if (data.isUpdating) {
 
             // TODO: Remover essa gambi de gerar ID
-            let id = this.state.gambiarra + 1;
+            let id = this.state.tempID + 1;
 
 
             // Deletando versão anterior do evento e criando uma nova
@@ -223,13 +307,15 @@ class ReadOfficeDataView extends React.Component {
             })
 
             this.setState({
-                gambiarra: id,
+                tempID: id,
                 dates: dates,
                 isReadOnly: false,
                 isPopupOpen: false
             });
 
             this.state.selectedEvent.event.remove();
+
+            this.loadCalendarData();
         }
         else if (data.isDeleting) {
             let dates = this.state.dates;
@@ -243,12 +329,15 @@ class ReadOfficeDataView extends React.Component {
             });
 
             this.state.selectedEvent.event.remove();
+
+            this.loadCalendarData();
         }
         else {
             this.setState({
                 isPopupOpen: false
             })
         }
+
     }
 
     /**
@@ -445,6 +534,9 @@ class ReadOfficeDataView extends React.Component {
                     isReadOnly={this.state.isReadOnly}
                     closePopup={this.handlePopupReturn}
                     selectedMaintance={this.state.selectedMaintance}
+                    oficina={this.state.officeHash}
+                    email={this.props.email}
+                    data={this.props.selectedDate}
                 />
             </div>
         );

@@ -16,12 +16,14 @@ class Login extends React.Component {
 				document.getElementById('password').value
 			);
 
+			let email = document.getElementById('email').value; // GAMBI
+
 			// Se a autenticação deu certa...
 			// Verificaremos se o usuário tem perfil administrativo
 			if (userInfo.cargo > 1) {
-				this.props.handleUserAuthentication(true, userInfo.cargo, userInfo.cpf);
+				this.props.handleUserAuthentication(true, userInfo.cargo, userInfo.cpf, email);
 			} else if (userInfo.cargo === 0 || userInfo.cargo === 1) {
-				this.props.handleUserAuthentication(false, userInfo.cargo, userInfo.cpf);
+				this.props.handleUserAuthentication(false, userInfo.cargo, userInfo.cpf, email);
 			} else {
 				alert('Credenciais inválidas!');
 			}
