@@ -65,11 +65,12 @@ const Fade = React.forwardRef(function Fade(props, ref) {
 });
 
 export default function TruckMaintenanceModal(props) {
+
 	const classes = useStyles();
 	const [users, setUsers] = React.useState([]);
 	const [trucks, setTrucks] = React.useState([]);
 	const [selectedTruck, setSelectedTruck] = React.useState('');
-	const [selectedMechanical, setSelectedMechanical] = React.useState({nome: "", email: ""});
+	const [selectedMechanical, setSelectedMechanical] = React.useState({nome: ""});
 	const [title, setTitle] = React.useState('');
 
 	const handleTruckChange = (event) => {
@@ -83,17 +84,23 @@ export default function TruckMaintenanceModal(props) {
 	const handleClose = () => {
 		clearState();
 
-		if (!props.isReadOnly) {
-			props.closePopup({ isRegisterConfirmed: false });
-		}
-		else {
-			props.closePopup({
-				isUpdating: true,
-				truck: props.selectedMaintance.placa,
-				mechanical: selectedMechanical.nome,
-				title: props.selectedMaintance.nome
-			});
-		}
+		
+		props.closePopup({ isRegisterConfirmed: false });
+	};
+
+	const handleUpdate = () => {
+		clearState();
+
+		props.closePopup({
+			isUpdating: true,
+			isRegisterConfirmed: false,
+			truck: props.selectedMaintance.placa,
+			mechanical: selectedMechanical.nome,
+			titulo: props.selectedMaintance.nome,
+			placa_caminhao: props.selectedMaintance.placa,
+			id_usuario: selectedMechanical.email
+		});
+		
 	};
 
 	const handleRegister = async () => {
@@ -150,10 +157,6 @@ export default function TruckMaintenanceModal(props) {
 		setTrucks(trucksList);
 	};
 
-	const updateEmail = () => {
-		console.log("Hello");
-	}
-
 	if (users.length === 0) {
 		fetchUsers();
 	}
@@ -199,12 +202,12 @@ export default function TruckMaintenanceModal(props) {
 								<Select
 									id="demo-simple-select-placeholder-label"
 									onChange={handleMechanicalChange}
-									value={selectedMechanical.nome}
+									value={selectedMechanical}
 									displayEmpty
 									className={classes.selectEmpty}
 								>
 									{users.map((user) => {
-										return <MenuItem value={{nome: user.nome, email: user.email}}>{user.nome}</MenuItem>;
+										return <MenuItem value={user}>{user.nome}</MenuItem>;
 									})}
 								</Select>
 							</FormControl>
@@ -246,9 +249,6 @@ export default function TruckMaintenanceModal(props) {
 	// Showing the read / update only modal
 	else {
 
-		// Aux. variable to handle which name should display in mechanic info area
-		let mechanicLabel = selectedMechanical == ""? props.selectedMaintance.mechanical : selectedMechanical;
-
 		// Drawing...
 		return (
 			<div>
@@ -275,19 +275,27 @@ export default function TruckMaintenanceModal(props) {
 								type="text"
 								disabled
 							/>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Mecânico (Atual)
+								</InputLabel>
+								<input
+									defaultValue={props.selectedMaintance.mechanical}
+									type="text"
+									disabled
+								/>
 							<FormControl className={classes.formControl}>
 								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-									Mecânico
-							</InputLabel>
+									Trocar para o mecânico...
+								</InputLabel>
 								<Select
 									id="demo-simple-select-placeholder-label"
 									onChange={handleMechanicalChange}
-									value={mechanicLabel}
+									value={selectedMechanical}
 									displayEmpty
 									className={classes.selectEmpty}
 								>
 									{users.map((user) => {
-										return <MenuItem value={user.nome}>{user.nome}</MenuItem>;
+										return <MenuItem value={user}>{user.nome}</MenuItem>;
 									})}
 								</Select>
 							</FormControl>
@@ -302,6 +310,13 @@ export default function TruckMaintenanceModal(props) {
 							<div className={classes.buttonsDiv}>
 								<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
 									Voltar
+								</Button>
+								<Button
+									variant="contained"
+									className={classes.buttonCancel}
+									onClick={handleUpdate}
+								>
+									Alterar
 								</Button>
 								<Button
 									variant="contained"

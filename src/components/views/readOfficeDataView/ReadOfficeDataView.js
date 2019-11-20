@@ -227,6 +227,7 @@ class ReadOfficeDataView extends React.Component {
                 isPopupOpen: true,
                 isReadOnly: true,
                 indexToDrop: indexToDrop,
+                selectedDate: selectedMaintance.start,
                 selectedEvent: evt,
                 selectedMaintance: selectedMaintance
             });
@@ -285,39 +286,66 @@ class ReadOfficeDataView extends React.Component {
         }
         else if (data.isUpdating) {
 
-            // TODO: Remover essa gambi de gerar ID
-            let id = this.state.tempID + 1;
-
-
             // Deletando versão anterior do evento e criando uma nova
             // com as informacoes atualizadas!
 
             let dates = this.state.dates;
 
             dates.splice(this.state.indexToDrop, 1);
+            this.state.selectedEvent.event.remove();
 
-            dates = this.state.dates.concat({
-                id: id,
-                title: data.truck,
-                start: this.state.selectedDate,
-                allDay: true,
-                nome: data.title,
-                placa: data.truck,
-                mechanical: data.mechanical
-            })
+            // Adicionando um novo evento (DO ZERO)
+
+            let month = this.state.selectedDate.getUTCMonth() + 1; //months from 1-12
+            let day = this.state.selectedDate.getUTCDate();
+            let year = this.state.selectedDate.getUTCFullYear();
+
+            let event = {
+                titulo: data.titulo,
+                data: day + "/" + month + "/" + year,
+                placa_caminhao: data.placa_caminhao,
+                id_oficina: this.state.officeHash,
+                id_usuario: data.id_usuario
+            };
+
+
+            let result = await new FirebaseHandler().deleteCertainCalendarEvent(this.state.officeHash, this.state.selectedMaintance.id);
+
+            console.log("Deletou para atualizar? " + result);
+
+            result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
+
+            console.log("Cadastrou com valor atualizado? " + result);
+
+            // OBS: Não tratei o result, porque pode ser que caia a Internet ou algo
+            // na hora da apresentação e então to forçando o cadastro nem que seja
+            // local
+
+            let id = this.state.tempID + 1;
 
             this.setState({
-                tempID: id,
-                dates: dates,
+                dates: this.state.dates.concat({
+                    id: id,
+                    title: data.truck,
+                    start: this.state.selectedDate,
+                    allDay: true,
+                    nome: data.title,
+                    placa: data.truck,
+                    mechanical: data.mechanical
+                }),
+                tempID: this.state.tempID,
                 isReadOnly: false,
                 isPopupOpen: false
             });
 
-            this.state.selectedEvent.event.remove();
-
             this.loadCalendarData();
         }
         else if (data.isDeleting) {
+
+            let result = await new FirebaseHandler().deleteCertainCalendarEvent(this.state.officeHash, this.state.selectedMaintance.id);
+
+            console.log("Deletou? " + result);
+
             let dates = this.state.dates;
 
             dates.splice(this.state.indexToDrop, 1);

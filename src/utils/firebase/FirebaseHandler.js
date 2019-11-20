@@ -354,6 +354,23 @@ class FirebaseHandler {
 	};
 
 	/**
+	 * Método para deletar um certo evento no calendário.
+	 */
+	deleteCertainCalendarEvent = async (officeID, eventID) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/schedule/delete/' + officeID + '/' + eventID);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
 	 * Método para deletar um servico
 	 */
 	deleteService = async (id) => {
