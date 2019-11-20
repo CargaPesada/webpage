@@ -14,6 +14,7 @@ import DriverStatusHandlerView from '../driverStatusHandlerView/DriverStatusHand
 import RegisterServiceAndToolView from '../registerServiceAndTool/RegisterServiceAndToolView';
 import ReadServiceAndToolDataView from '../readServiceAndToolView';
 import DeleteServiceAndToolView from '../deleteServiceAndToolView';
+import MechanicalStatusHandlerView from '../mechanicalStatusHandlerView/MechanicalStatusHandlerView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -25,6 +26,7 @@ class UserView extends React.Component {
 			// DEBUG
 			mustHideCards: false,
 			mustShowDriverInfo: false,
+			mustShowMechanicalStatusSetterView: false,
 			mustShowUserRegisterView: false,
 			mustShowUserDataReaderView: false,
 			mustShowDriverStatusSetterView: false,
@@ -68,6 +70,17 @@ class UserView extends React.Component {
 			this.setState({ mustHideCards: true, mustShowDriverStatusSetterView: true });
 		} else {
 			this.setState({ mustHideCards: false, mustShowDriverStatusSetterView: false });
+		}
+	};
+
+	/**
+	 * Método para esconder os cards e demonstrar a view de leitura do Usuário.
+	 */
+	handleMechanicalStatusSetterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowMechanicalStatusSetterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowMechanicalStatusSetterView: false });
 		}
 	};
 
@@ -203,6 +216,26 @@ class UserView extends React.Component {
 
 						{/* Alerta */}
 						<CustomCard name="fa-exclamation-triangle" description="Emergência" />
+					</div>
+				);
+			}
+
+			// MECANICO
+			else if (this.props.cargo === 1) {
+				toRender.push(
+					<div
+						className="row justify-content-between"
+						style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+					>
+
+						{/* Status do Usuário */}
+						<CustomCard
+							name="fa-user-slash"
+							description="Status do Mecânico"
+							customOnClick={() => this.handleMechanicalStatusSetterCard(true)}
+
+						/>
+
 					</div>
 				);
 			}
@@ -393,6 +426,11 @@ class UserView extends React.Component {
 			else if (this.state.mustShowDriverStatusSetterView) {
 				toRender.push(
 					<DriverStatusHandlerView description="Status do Motorista" handleCard={this.handleDriverStatusSetterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
+				);
+			}
+			else if (this.state.mustShowMechanicalStatusSetterView) {
+				toRender.push(
+					<MechanicalStatusHandlerView description="Status do Mecanico" handleCard={this.handleMechanicalStatusSetterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
 				);
 			}
 			else if (this.state.mustShowUserRegisterView) {
