@@ -186,7 +186,7 @@ class RegisterOfficeView extends React.Component {
                                 <div className="form-group">
                                     <label>Telefone *</label>
                                     <InputMask
-                                        mask="(99) 9999-9999"
+                                        mask="(99) 9999-99999"
                                         type="text"
                                         name="telefone"
                                         id="telefone"

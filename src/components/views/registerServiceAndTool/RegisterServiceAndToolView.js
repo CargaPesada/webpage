@@ -76,6 +76,13 @@ class RegisterServiceAndToolView extends React.Component {ent
 
     }
 
+    handleRadioChange = () => {
+        if (document.getElementById('radio_piece').checked)
+            document.getElementById('uni').disabled = false
+        else
+            document.getElementById('uni').disabled = true
+    }
+
 
     /**
      * Método padrão para renderização.
@@ -110,6 +117,7 @@ class RegisterServiceAndToolView extends React.Component {ent
                                                 type="radio"
                                                 name="serviceandtool"
                                                 value="service"
+                                                onClick={this.handleRadioChange}
                                                 checked
                                             />
                                             Serviço
@@ -120,6 +128,7 @@ class RegisterServiceAndToolView extends React.Component {ent
                                                 type="radio"
                                                 name="serviceandtool"
                                                 value="tool"
+                                                onClick={this.handleRadioChange}
                                             />
                                             Peça
 										</label>
@@ -149,7 +158,7 @@ class RegisterServiceAndToolView extends React.Component {ent
                                     />
                                 </div>
 
-                                <div id="esconde" className="form-group">
+                                <div className="form-group">
                                     <label>Unidade *</label>
                                     <input
                                         maxLength="8"
@@ -158,6 +167,7 @@ class RegisterServiceAndToolView extends React.Component {ent
                                         id="uni"
                                         placeholder="Unidade"
                                         style={{ width: "100%" }}
+                                        disabled
                                     />
                                 </div>
 

@@ -10,20 +10,21 @@ export default function DeleteServiceAndToolView(props) {
 
     const onDeleteClick = (objectId) => {
         console.log(objectId + ' delete clicked');
+        if(window.confirm('Deseja mesmo deletar?')) {
+            services.forEach(service => {
+                if (service.nome === objectId) {
+                    firebaseHandler
+                        .deleteService(objectId).then(getData);
+                }
+            });
 
-        services.forEach(service => {
-            if (service.nome === objectId) {
-                firebaseHandler
-                    .deleteService(objectId).then(getData);
-            }
-        });
-
-        tools.forEach(tool => {
-            if (tool.nome === objectId) {
-                firebaseHandler
-                    .deleteTool(objectId).then(getData);
-            }
-        });
+            tools.forEach(tool => {
+                if (tool.nome === objectId) {
+                    firebaseHandler
+                        .deleteTool(objectId).then(getData);
+                }
+            });
+        }
     }
 
     const getData = async () => {
