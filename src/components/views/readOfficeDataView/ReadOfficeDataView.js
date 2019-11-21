@@ -47,6 +47,8 @@ class ReadOfficeDataView extends React.Component {
 
     async componentDidMount() {
 
+        console.log(this.props.cargo);
+
         let availableOffices = await new FirebaseHandler().getAllOffices();
 
         if (this.props.cargo >= 3) {
@@ -106,7 +108,7 @@ class ReadOfficeDataView extends React.Component {
             for (let j in filteredOffices[this.state.selectedOfficeID].agenda) {
 
                 let data = filteredOffices[this.state.selectedOfficeID].agenda[j].data.split("/");
-                let dataEmObj = new Date(+data[2], data[1] - 1, +data[0]); 
+                let dataEmObj = new Date(+data[2], data[1] - 1, +data[0]);
 
                 datesToBeAdded.push({
                     id: filteredOffices[this.state.selectedOfficeID].agenda[j].id,
@@ -121,7 +123,7 @@ class ReadOfficeDataView extends React.Component {
             }
         }
 
-        
+
 
         this.setState({
             dates: datesToBeAdded
@@ -176,7 +178,9 @@ class ReadOfficeDataView extends React.Component {
                 }
             );
 
-            this.loadCalendarData();
+            if (this.props.cargo <= 2) {
+                this.loadCalendarData();
+            }
         } catch (e) { }
     }
 
@@ -199,7 +203,7 @@ class ReadOfficeDataView extends React.Component {
                     isPopupOpen: true
                 });
 
-                
+
 
             }
         }
@@ -242,128 +246,131 @@ class ReadOfficeDataView extends React.Component {
      */
     handlePopupReturn = async (data) => {
 
-        if (data.isRegisterConfirmed) {
+        if (this.props.cargo <= 2) {
 
-            let month = this.state.selectedDate.getUTCMonth() + 1; //months from 1-12
-            let day = this.state.selectedDate.getUTCDate();
-            let year = this.state.selectedDate.getUTCFullYear();
+            if (data.isRegisterConfirmed) {
 
-            let event = {
-                titulo: data.titulo,
-                data: day + "/" + month + "/" + year,
-                placa_caminhao: data.placa_caminhao,
-                id_oficina: this.state.officeHash,
-                id_usuario: data.id_usuario
-            };
+                let month = this.state.selectedDate.getUTCMonth() + 1; //months from 1-12
+                let day = this.state.selectedDate.getUTCDate();
+                let year = this.state.selectedDate.getUTCFullYear();
 
-
-            let result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
-
-            console.log("Cadastrou? " + result);
-
-            // OBS: Não tratei o result, porque pode ser que caia a Internet ou algo
-            // na hora da apresentação e então to forçando o cadastro nem que seja
-            // local
-
-            let id = this.state.tempID + 1;
-
-            this.setState({
-                dates: this.state.dates.concat({
-                    id: id,
-                    title: data.truck,
-                    start: this.state.selectedDate,
-                    allDay: true,
-                    nome: data.title,
-                    placa: data.truck,
-                    mechanical: data.mechanical
-                }),
-                tempID: this.state.tempID + 1,
-                isPopupOpen: false
-            });
-
-            this.loadCalendarData();
-
-        }
-        else if (data.isUpdating) {
-
-            // Deletando versão anterior do evento e criando uma nova
-            // com as informacoes atualizadas!
-
-            let dates = this.state.dates;
-
-            dates.splice(this.state.indexToDrop, 1);
-            this.state.selectedEvent.event.remove();
-
-            // Adicionando um novo evento (DO ZERO)
-
-            let month = this.state.selectedDate.getUTCMonth() + 1; //months from 1-12
-            let day = this.state.selectedDate.getUTCDate();
-            let year = this.state.selectedDate.getUTCFullYear();
-
-            let event = {
-                titulo: data.titulo,
-                data: day + "/" + month + "/" + year,
-                placa_caminhao: data.placa_caminhao,
-                id_oficina: this.state.officeHash,
-                id_usuario: data.id_usuario
-            };
+                let event = {
+                    titulo: data.titulo,
+                    data: day + "/" + month + "/" + year,
+                    placa_caminhao: data.placa_caminhao,
+                    id_oficina: this.state.officeHash,
+                    id_usuario: data.id_usuario
+                };
 
 
-            let result = await new FirebaseHandler().deleteCertainCalendarEvent(this.state.officeHash, this.state.selectedMaintance.id);
+                let result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
 
-            console.log("Deletou para atualizar? " + result);
+                console.log("Cadastrou? " + result);
 
-            result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
+                // OBS: Não tratei o result, porque pode ser que caia a Internet ou algo
+                // na hora da apresentação e então to forçando o cadastro nem que seja
+                // local
 
-            console.log("Cadastrou com valor atualizado? " + result);
+                let id = this.state.tempID + 1;
 
-            // OBS: Não tratei o result, porque pode ser que caia a Internet ou algo
-            // na hora da apresentação e então to forçando o cadastro nem que seja
-            // local
+                this.setState({
+                    dates: this.state.dates.concat({
+                        id: id,
+                        title: data.truck,
+                        start: this.state.selectedDate,
+                        allDay: true,
+                        nome: data.title,
+                        placa: data.truck,
+                        mechanical: data.mechanical
+                    }),
+                    tempID: this.state.tempID + 1,
+                    isPopupOpen: false
+                });
 
-            let id = this.state.tempID + 1;
+                this.loadCalendarData();
 
-            this.setState({
-                dates: this.state.dates.concat({
-                    id: id,
-                    title: data.truck,
-                    start: this.state.selectedDate,
-                    allDay: true,
-                    nome: data.title,
-                    placa: data.truck,
-                    mechanical: data.mechanical
-                }),
-                tempID: this.state.tempID,
-                isReadOnly: false,
-                isPopupOpen: false
-            });
+            }
+            else if (data.isUpdating) {
 
-            this.loadCalendarData();
-        }
-        else if (data.isDeleting) {
+                // Deletando versão anterior do evento e criando uma nova
+                // com as informacoes atualizadas!
 
-            let result = await new FirebaseHandler().deleteCertainCalendarEvent(this.state.officeHash, this.state.selectedMaintance.id);
+                let dates = this.state.dates;
 
-            console.log("Deletou? " + result);
+                dates.splice(this.state.indexToDrop, 1);
+                this.state.selectedEvent.event.remove();
 
-            let dates = this.state.dates;
+                // Adicionando um novo evento (DO ZERO)
 
-            dates.splice(this.state.indexToDrop, 1);
+                let month = this.state.selectedDate.getUTCMonth() + 1; //months from 1-12
+                let day = this.state.selectedDate.getUTCDate();
+                let year = this.state.selectedDate.getUTCFullYear();
 
-            this.setState({
-                dates: dates,
-                isReadOnly: false,
-                isPopupOpen: false
-            });
+                let event = {
+                    titulo: data.titulo,
+                    data: day + "/" + month + "/" + year,
+                    placa_caminhao: data.placa_caminhao,
+                    id_oficina: this.state.officeHash,
+                    id_usuario: data.id_usuario
+                };
 
-            this.state.selectedEvent.event.remove();
 
-            this.loadCalendarData();
-        }
-        else {
-            this.setState({
-                isPopupOpen: false
-            })
+                let result = await new FirebaseHandler().deleteCertainCalendarEvent(this.state.officeHash, this.state.selectedMaintance.id);
+
+                console.log("Deletou para atualizar? " + result);
+
+                result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
+
+                console.log("Cadastrou com valor atualizado? " + result);
+
+                // OBS: Não tratei o result, porque pode ser que caia a Internet ou algo
+                // na hora da apresentação e então to forçando o cadastro nem que seja
+                // local
+
+                let id = this.state.tempID + 1;
+
+                this.setState({
+                    dates: this.state.dates.concat({
+                        id: id,
+                        title: data.truck,
+                        start: this.state.selectedDate,
+                        allDay: true,
+                        nome: data.title,
+                        placa: data.truck,
+                        mechanical: data.mechanical
+                    }),
+                    tempID: this.state.tempID,
+                    isReadOnly: false,
+                    isPopupOpen: false
+                });
+
+                this.loadCalendarData();
+            }
+            else if (data.isDeleting) {
+
+                let result = await new FirebaseHandler().deleteCertainCalendarEvent(this.state.officeHash, this.state.selectedMaintance.id);
+
+                console.log("Deletou? " + result);
+
+                let dates = this.state.dates;
+
+                dates.splice(this.state.indexToDrop, 1);
+
+                this.setState({
+                    dates: dates,
+                    isReadOnly: false,
+                    isPopupOpen: false
+                });
+
+                this.state.selectedEvent.event.remove();
+
+                this.loadCalendarData();
+            }
+            else {
+                this.setState({
+                    isPopupOpen: false
+                })
+            }
         }
 
     }
@@ -404,6 +411,29 @@ class ReadOfficeDataView extends React.Component {
 
 
         )
+
+        let calendarToRender = [];
+
+        if (this.props.cargo <= 2) {
+            calendarToRender.push(
+                <h1 className="display-5 text-center mt-5 mb-5">Calendário de Manutenções</h1>
+            );
+
+            calendarToRender.push(
+                <FullCalendar
+                    id="calendar"
+                    name="calendar"
+                    editable={false}
+                    ref={this.state.calendarRef}
+                    defaultView="dayGridMonth"
+                    plugins={[dayGridPlugin, interactionPlugin]}
+                    events={this.state.dates}
+                    locale={brLocale}
+                    dateClick={this.handleCalendarOnClick}
+                    eventClick={this.handleEventOnClick}
+                />
+            );
+        }
 
 
         // Renderizando agora!!!
@@ -537,21 +567,7 @@ class ReadOfficeDataView extends React.Component {
                                     />
                                 </div>
 
-
-                                <h1 className="display-5 text-center mt-5 mb-5">Calendário de Manutenções</h1>
-
-                                <FullCalendar
-                                    id="calendar"
-                                    name="calendar"
-                                    editable={false}
-                                    ref={this.state.calendarRef}
-                                    defaultView="dayGridMonth"
-                                    plugins={[dayGridPlugin, interactionPlugin]}
-                                    events={this.state.dates}
-                                    locale={brLocale}
-                                    dateClick={this.handleCalendarOnClick}
-                                    eventClick={this.handleEventOnClick}
-                                />
+                                {calendarToRender}
 
                             </form>
                         </div>

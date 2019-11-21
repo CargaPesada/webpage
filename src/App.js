@@ -9,10 +9,10 @@ class App extends React.Component {
 		super(props);
 
 		this.state = {
-			isUserAuthenticated: true,
-			isAdmin: true,
-			cargo: 2,
-			cpf: "448.892.118-38"
+			isUserAuthenticated: false,
+			isAdmin: false,
+			cargo: -1,
+			cpf: ""
 		};
 	}
 
@@ -21,7 +21,7 @@ class App extends React.Component {
    */
 	handleUserAuthentication = (isAdmin, cargo, cpf, email) => {
 		if (this.state.isUserAuthenticated) {
-			this.setState({ isUserAuthenticated: false, isAdmin: false, cargo: cargo, cpf: cpf, email: email});
+			this.setState({ isUserAuthenticated: false, isAdmin: false, cargo: cargo, cpf: cpf, email: email });
 		} else {
 			if (isAdmin) {
 				this.setState({ isUserAuthenticated: true, isAdmin: true, cargo: cargo, cpf: cpf, email: email });

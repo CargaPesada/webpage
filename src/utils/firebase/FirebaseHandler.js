@@ -86,6 +86,7 @@ class FirebaseHandler {
      */
 	tryToRegisterOffice = async (office) => {
 		let jsonToSend = {
+			agenda: [],
 			nome: office.nome,
 			cpf: office.cpf,
 			telefone: office.telefone,
