@@ -40,9 +40,9 @@ class RegisterServiceAndToolView extends React.Component {ent
             errorMessages += "\n* Preco não preenchido";
         }
 
-        // Validando o campo unidade
+        // Validando o campo quantidade
         if (uni.length === 0) {
-            errorMessages += "\n* Unidade não preenchida";
+            errorMessages += "\n* Quantidade não preenchida";
         }
 
         // Verificando se existe mensagens de erros a serem exibidas...
@@ -159,13 +159,13 @@ class RegisterServiceAndToolView extends React.Component {ent
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Unidade *</label>
+                                    <label>Quantidade *</label>
                                     <input
                                         maxLength="8"
                                         type="number"
                                         name="uni"
                                         id="uni"
-                                        placeholder="Unidade"
+                                        placeholder="Quantidade"
                                         style={{ width: "100%" }}
                                         disabled
                                     />
