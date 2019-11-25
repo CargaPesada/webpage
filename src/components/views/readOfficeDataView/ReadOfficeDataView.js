@@ -106,20 +106,22 @@ class ReadOfficeDataView extends React.Component {
         if (filteredOffices[this.state.selectedOfficeID].agenda != null && filteredOffices[this.state.selectedOfficeID].agenda.length > 0) {
 
             for (let j in filteredOffices[this.state.selectedOfficeID].agenda) {
+                try {
+                    let data = filteredOffices[this.state.selectedOfficeID].agenda[j].data.split("/");
+                    let dataEmObj = new Date(+data[2], data[1] - 1, +data[0]);
 
-                let data = filteredOffices[this.state.selectedOfficeID].agenda[j].data.split("/");
-                let dataEmObj = new Date(+data[2], data[1] - 1, +data[0]);
-
-                datesToBeAdded.push({
-                    id: filteredOffices[this.state.selectedOfficeID].agenda[j].id,
-                    title: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
-                    start: dataEmObj,
-                    allDay: true,
-                    nome: filteredOffices[this.state.selectedOfficeID].agenda[j].titulo,
-                    placa: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
-                    mechanical: filteredOffices[this.state.selectedOfficeID].agenda[j].mecanico.nome
-                });
-
+                    datesToBeAdded.push({
+                        id: filteredOffices[this.state.selectedOfficeID].agenda[j].id,
+                        title: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
+                        start: dataEmObj,
+                        allDay: true,
+                        nome: filteredOffices[this.state.selectedOfficeID].agenda[j].titulo,
+                        placa: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
+                        mechanical: filteredOffices[this.state.selectedOfficeID].agenda[j].mecanico.nome
+                    });
+                } catch (error) {
+                    console.log("Erro processando a agenda")
+                }
             }
         }
 

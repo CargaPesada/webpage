@@ -8,7 +8,7 @@ export default function OptionsTableLine(props) {
         props.onDeleteClick(props.object.nome);
     }
 
-    let deleteIcon = props.onDeleteClick ?
+    const deleteIcon = props.onDeleteClick ?
         <div className='delete-icon'>
             <FontAwesomeIcon
                 icon={faTrashAlt}
@@ -16,7 +16,7 @@ export default function OptionsTableLine(props) {
         </div> :
         null;
 
-    let unitCol = props.object.uni ?
+    const unitCol = props.object.uni ?
         <div className='uni'>
             Unidades: {props.object.uni}
         </div> :
