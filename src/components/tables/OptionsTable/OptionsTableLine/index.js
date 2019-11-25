@@ -8,30 +8,36 @@ export default function OptionsTableLine(props) {
         props.onDeleteClick(props.object.nome);
     }
 
-    let deleteIcon;
-    if (props.onDeleteClick) {
-        deleteIcon =
-            <div className='delete-icon'>
-                <FontAwesomeIcon
-                    icon={faTrashAlt}
-                    onClick={sendNameToDelete} />
-            </div>;
-    }
+    let deleteIcon = props.onDeleteClick ?
+        <div className='delete-icon'>
+            <FontAwesomeIcon
+                icon={faTrashAlt}
+                onClick={sendNameToDelete} />
+        </div> :
+        null;
+
+    let unitCol = props.object.uni ?
+        <div className='uni'>
+            Unidades: {props.object.uni}
+        </div> :
+        null;
 
     return (
         <div
             className='OptionsTableLine' >
+
             <div className='name'>
                 Nome: {props.object.nome}
             </div>
-            <div className='uni'>
-                Unidades: {props.object.uni}
-            </div>
+
+            {unitCol}
+
             <div className='price'>
                 Preco: {props.object.price}
             </div>
 
             {deleteIcon}
+
         </div>
     )
 }
