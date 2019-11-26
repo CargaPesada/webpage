@@ -7,6 +7,8 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import brLocale from '@fullcalendar/core/locales/pt-br';
 import TruckMaintenanceModal from '../../popups/TruckMaintenanceModal'
+import localStorageInstance from '../../../utils/local-storage/localStorage';
+import Maintenance from '../../../models/Maintenance';
 
 class ReadOfficeDataView extends React.Component {
     constructor(props) {
@@ -248,6 +250,16 @@ class ReadOfficeDataView extends React.Component {
      */
     handlePopupReturn = async (data) => {
 
+        const saveMaitenanceLocally = data => {
+            const maintenance = new Maintenance(this.state.selectedDate, data.mechanical, this.state.officeHash, null, null, data.truck);
+
+            if (data.isRegisterConfirmed || data.isUpdating) {
+                localStorageInstance.addMaintenance(maintenance);
+            } else if (data.isDeleting) {
+                localStorageInstance.deleteMaintenance(maintenance);
+            }
+        }
+
         if (this.props.cargo <= 2) {
 
             if (data.isRegisterConfirmed) {
@@ -263,7 +275,6 @@ class ReadOfficeDataView extends React.Component {
                     id_oficina: this.state.officeHash,
                     id_usuario: data.id_usuario
                 };
-
 
                 let result = await new FirebaseHandler().tryToRegisterCalendarEvent(event);
 
@@ -373,6 +384,8 @@ class ReadOfficeDataView extends React.Component {
                     isPopupOpen: false
                 })
             }
+
+            saveMaitenanceLocally(data);
         }
 
     }
@@ -389,7 +402,6 @@ class ReadOfficeDataView extends React.Component {
         let officesItems = [];
 
         for (let index = 0; index < this.state.offices.length; index++) {
-
             officesItems.push(
                 <a className="dropdown-item" href="#" onClick={() => this.handleOfficeDropdown(index)}>{this.state.offices[index].nome}</a>
             );

@@ -1,18 +1,18 @@
 class LocalStorage {
     constructor() {
-        localStorage.maintenances = new Set();
+        this.maintenances = new Set();
     }
 
     addMaintenance(...maintenances) {
-        localStorage.maintenances.add(maintenances);
+        this.maintenances.add(maintenances);
     }
 
     deleteMaintenance(...maintenances) {
-        localStorage.maintenances.delete(maintenances);
+        this.maintenances.delete(maintenances);
     }
 
     getAllMaitenance() {
-        return localStorage.maintenances;
+        return this.maintenances;
     }
 }
 
