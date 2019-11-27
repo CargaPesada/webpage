@@ -15,6 +15,20 @@ import RegisterServiceAndToolView from '../registerServiceAndTool/RegisterServic
 import ReadServiceAndToolDataView from '../readServiceAndToolView';
 import DeleteServiceAndToolView from '../deleteServiceAndToolView';
 import MechanicalStatusHandlerView from '../mechanicalStatusHandlerView/MechanicalStatusHandlerView';
+import localStorageInstance from '../../../utils/local-storage/localStorage';
+
+
+function syncAgenda(cpf) {
+	const saveMaitenanceLocally = (data, maintenance) => {
+		if (data.isRegisterConfirmed || data.isUpdating) {
+			localStorageInstance.addMaintenance(maintenance);
+		} else if (data.isDeleting) {
+			localStorageInstance.deleteMaintenance(maintenance);
+		}
+	}
+
+
+}
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -416,6 +430,8 @@ class UserView extends React.Component {
 			}
 
 		} else {
+			// Salva as informacoes da agenda localmente
+			syncAgenda(this.props.cpf);
 
 			// Verificando qual tipo de card deverá aparecer em fullscreen!
 			if (this.state.mustShowDriverInfo) {

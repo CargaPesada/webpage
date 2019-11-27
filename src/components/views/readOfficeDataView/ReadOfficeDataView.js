@@ -47,6 +47,14 @@ class ReadOfficeDataView extends React.Component {
         }
     }
 
+    saveMaitenanceLocally = (data, maintenance) => {
+        if (data.isRegisterConfirmed || data.isUpdating) {
+            localStorageInstance.addMaintenance(maintenance);
+        } else if (data.isDeleting) {
+            localStorageInstance.deleteMaintenance(maintenance);
+        }
+    }
+
     async componentDidMount() {
 
         console.log(this.props.cargo);
@@ -111,8 +119,7 @@ class ReadOfficeDataView extends React.Component {
                 try {
                     let data = filteredOffices[this.state.selectedOfficeID].agenda[j].data.split("/");
                     let dataEmObj = new Date(+data[2], data[1] - 1, +data[0]);
-
-                    datesToBeAdded.push({
+                    const maintenance = {
                         id: filteredOffices[this.state.selectedOfficeID].agenda[j].id,
                         title: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
                         start: dataEmObj,
@@ -120,7 +127,18 @@ class ReadOfficeDataView extends React.Component {
                         nome: filteredOffices[this.state.selectedOfficeID].agenda[j].titulo,
                         placa: filteredOffices[this.state.selectedOfficeID].agenda[j].caminhao[0].placa,
                         mechanical: filteredOffices[this.state.selectedOfficeID].agenda[j].mecanico.nome
-                    });
+                    }
+                    const maintToBeSavedLocally = new Maintenance(
+                        dataEmObj,
+                        maintenance.mechanical,
+                        this.state.selectedOfficeID,
+                        null,
+                        null,
+                        maintenance.truck
+                    );
+
+                    datesToBeAdded.push(maintenance);
+                    this.saveMaitenanceLocally({ isRegisterConfirmed: true }, maintToBeSavedLocally);
                 } catch (error) {
                     console.log("Erro processando a agenda")
                 }
@@ -250,16 +268,6 @@ class ReadOfficeDataView extends React.Component {
      */
     handlePopupReturn = async (data) => {
 
-        const saveMaitenanceLocally = data => {
-            const maintenance = new Maintenance(this.state.selectedDate, data.mechanical, this.state.officeHash, null, null, data.truck);
-
-            if (data.isRegisterConfirmed || data.isUpdating) {
-                localStorageInstance.addMaintenance(maintenance);
-            } else if (data.isDeleting) {
-                localStorageInstance.deleteMaintenance(maintenance);
-            }
-        }
-
         if (this.props.cargo <= 2) {
 
             if (data.isRegisterConfirmed) {
@@ -385,7 +393,8 @@ class ReadOfficeDataView extends React.Component {
                 })
             }
 
-            saveMaitenanceLocally(data);
+            const maintenance = new Maintenance(this.state.selectedDate, data.mechanical, this.state.officeHash, null, null, data.truck);
+            this.saveMaitenanceLocally(data, maintenance);
         }
 
     }

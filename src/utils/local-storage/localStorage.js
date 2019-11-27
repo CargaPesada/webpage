@@ -1,14 +1,16 @@
 class LocalStorage {
     constructor() {
-        this.maintenances = new Set();
+        this.maintenances = [];
     }
 
-    addMaintenance(...maintenances) {
-        this.maintenances.add(maintenances);
+    addMaintenance(maintenance) {
+        this.maintenances.push(maintenance);
     }
 
-    deleteMaintenance(...maintenances) {
-        this.maintenances.delete(maintenances);
+    deleteMaintenance(maintenance) {
+        this.maintenances = this.maintenances.filter(maint => {
+            return maint.date.getTime() !== maintenance.date.getTime();
+        });
     }
 
     getAllMaitenance() {
@@ -16,8 +18,5 @@ class LocalStorage {
     }
 }
 
-// Singleton class
 const localStorageInstance = new LocalStorage();
-Object.freeze(localStorageInstance);
-
 export default localStorageInstance;
