@@ -88,7 +88,9 @@ class RegisterServiceOrderView extends React.Component {
     /*
     * Método para lidar com o dropdown do mecânico.
     */
-    mecanicoDropdownHandler = async (index) => {
+    mecanicoDropdownHandler = async (e, index) => {
+
+        e.preventDefault();
 
         this.setState({
             mecanicoSelecionado: {
@@ -105,7 +107,9 @@ class RegisterServiceOrderView extends React.Component {
     * Método para lidar com o dropdown da oficina.
     * Ao dropdown ser clicado, os eventos relacionados a essa oficina será populado.
     */
-    oficinaDropdownHandler = async (index) => {
+    oficinaDropdownHandler = async (e, index) => {
+
+        e.preventDefault();
 
         let eventos = [];
 
@@ -131,7 +135,9 @@ class RegisterServiceOrderView extends React.Component {
     }
 
 
-    eventoDropdownHandler = async (index) => {
+    eventoDropdownHandler = async (e, index) => {
+
+        e.preventDefault();
 
         this.setState({
             eventoSelecionado: { 
@@ -143,7 +149,9 @@ class RegisterServiceOrderView extends React.Component {
 
     }
 
-    servicoDropdownHandler = async (index, nome) => {
+    servicoDropdownHandler = async (e, index, nome) => {
+
+        e.preventDefault();
 
         let servicosAdicionados = this.state.servicosAdicionados;
 
@@ -161,7 +169,9 @@ class RegisterServiceOrderView extends React.Component {
 
     }
 
-    pecaDropdownHandler = async (index, nome) => {
+    pecaDropdownHandler = async (e, index, nome) => {
+
+        e.preventDefault();
 
         let pecasAdicionadas = this.state.pecasAdicionadas;
 
@@ -213,35 +223,35 @@ class RegisterServiceOrderView extends React.Component {
 
         for (let index in this.state.mecanicos) {
             mecanicos.push(<a className="dropdown-item" href="#" name="mecanicoRow"
-                onClick={() => this.mecanicoDropdownHandler(index)} >
+                onClick={(e) => this.mecanicoDropdownHandler(e, index)} >
                     {this.state.mecanicos[index].nome}
                 </a>);
         }
 
         for (let index in this.state.oficinas) {
             oficinas.push(<a className="dropdown-item" href="#" name="oficinaRow"
-                onClick={() => this.oficinaDropdownHandler(index)} >
+                onClick={(e) => this.oficinaDropdownHandler(e, index)} >
                     {this.state.oficinas[index].nome}
                 </a>)
         }
 
         for (let index in this.state.eventos) {
             eventos.push(<a className="dropdown-item" href="#" name="oficinaRow"
-                onClick={() => this.eventoDropdownHandler(index)} >
+                onClick={(e) => this.eventoDropdownHandler(e, index)} >
                     {this.state.eventos[index].titulo}
                 </a>)
         }
 
         for (let index in this.state.servicos) {
             servicos.push(<a className="dropdown-item" href="#" name="servicoRow"
-                onClick={() => this.servicoDropdownHandler(index, this.state.servicos[index].nome)} >
+                onClick={(e) => this.servicoDropdownHandler(e, index, this.state.servicos[index].nome)} >
                     {this.state.servicos[index].nome}
                 </a>)
         }
 
         for (let index in this.state.pecas) {
             pecas.push(<a className="dropdown-item" href="#" name="pecaRow"
-                onClick={() => this.pecaDropdownHandler(index, this.state.pecas[index].nome)} >
+                onClick={(e) => this.pecaDropdownHandler(e, index, this.state.pecas[index].nome)} >
                     {this.state.pecas[index].nome}
                 </a>)
         }
@@ -254,7 +264,7 @@ class RegisterServiceOrderView extends React.Component {
                 className="card bg-white"
             >
                 <a href="#" className="text-dark text-right" onClick={() => this.props.handleCard(false)}>
-                    <i class="fas fa-2x fa-times-circle" />
+                    <i className="fas fa-2x fa-times-circle" />
                 </a>
                 <div className="ml-1 row d-flex justify-content-center" style={{ width: '100%', height: '100%' }}>
                     {/* Coluna principal (a do meio) */}
