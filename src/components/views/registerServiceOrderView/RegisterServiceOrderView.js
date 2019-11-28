@@ -9,7 +9,7 @@ class RegisterServiceOrderView extends React.Component {
 
         this.state = {
             eventos: [{ nome: "Manutenção da roda", placa: "ABC-1234", id: "aadasdas" }],
-            eventoSelecionado: { nome: "", index: -1 },
+            eventoSelecionado: { titulo: "", index: -1 },
 
             mecanicos: [],
             mecanicoSelecionado: { nome: "", index: -1 },
@@ -88,11 +88,11 @@ class RegisterServiceOrderView extends React.Component {
     /*
     * Método para lidar com o dropdown do mecânico.
     */
-    mecanicoDropdownHandler = async (index, nome) => {
+    mecanicoDropdownHandler = async (index) => {
 
         this.setState({
             mecanicoSelecionado: {
-                nome: nome,
+                nome: this.state.mecanicos[index].nome,
                 index: index
             }
         });
@@ -103,32 +103,42 @@ class RegisterServiceOrderView extends React.Component {
 
     /*
     * Método para lidar com o dropdown da oficina.
+    * Ao dropdown ser clicado, os eventos relacionados a essa oficina será populado.
     */
-    oficinaDropdownHandler = async (index, nome) => {
+    oficinaDropdownHandler = async (index) => {
 
-        this.setState({
-            oficinaSelecionada: {
-                nome: nome,
-                index: index
+        let eventos = [];
+
+        if (this.state.oficinas[index].agenda != null && this.state.oficinas[index].agenda.length > 0) {
+
+            for (let i in this.state.oficinas[index].agenda) {
+                eventos.push(this.state.oficinas[index].agenda[i]);
             }
-        });
-
-        let firebaseHandler = new FirebaseHandler();
-
-        let event = await firebaseHandler.getEventSchedule();
-
-        if (event != null) {
 
         }
         else {
             alert("Não foi detectado nenhum evento")
         }
 
+        this.setState({
+            oficinaSelecionada: {
+                nome: this.state.oficinas[index].nome,
+                index: index
+            },
+            eventos: eventos
+        });
+
     }
 
 
-    eventoDropdownHandler = () => {
+    eventoDropdownHandler = async (index) => {
 
+        this.setState({
+            eventoSelecionado: { 
+                titulo: this.state.eventos[index].titulo,
+                index: index
+            }
+        })
 
 
     }
@@ -137,8 +147,8 @@ class RegisterServiceOrderView extends React.Component {
 
         let servicosAdicionados = this.state.servicosAdicionados;
 
-        for (let index in servicosAdicionados) {
-            if (servicosAdicionados[index].nome == nome) {
+        for (let i in servicosAdicionados) {
+            if (servicosAdicionados[i].nome == nome) {
                 return;
             }
         }
@@ -155,8 +165,8 @@ class RegisterServiceOrderView extends React.Component {
 
         let pecasAdicionadas = this.state.pecasAdicionadas;
 
-        for (let index in pecasAdicionadas) {
-            if (pecasAdicionadas[index].nome == nome) {
+        for (let i in pecasAdicionadas) {
+            if (pecasAdicionadas[i].nome == nome) {
                 return;
             }
         }
@@ -176,20 +186,25 @@ class RegisterServiceOrderView extends React.Component {
 
         let mecanicoName = "Selecione um Mecânico";
         let oficinaName = "Selecione uma Oficina";
-        let eventoName = "Selecione um Evento";
+        let eventoName = "Selecione uma Manutenção";
 
+        // Verificando se o dropdown do mecanico tem um label "default"
         if (this.state.mecanicoSelecionado["nome"] !== "") {
             mecanicoName = this.state.mecanicoSelecionado["nome"];
         }
 
+        // Verificando se o dropdown da oficina tem um label "default"
         if (this.state.oficinaSelecionada["nome"] !== "") {
             oficinaName = this.state.oficinaSelecionada["nome"];
         }
 
-        if (this.state.eventoSelecionado["nome"] !== "") {
-            eventoName = this.state.eventoSelecionado["nome"];
+        // Verificando se o dropdown do evento (de manutenção) tem um label "default"
+        if (this.state.eventoSelecionado["titulo"] !== "") {
+            eventoName = this.state.eventoSelecionado["titulo"];
         }
 
+
+        // Populando os dropdowns...
         let mecanicos = [];
         let oficinas = [];
         let eventos = [];
@@ -198,15 +213,22 @@ class RegisterServiceOrderView extends React.Component {
 
         for (let index in this.state.mecanicos) {
             mecanicos.push(<a className="dropdown-item" href="#" name="mecanicoRow"
-                onClick={() => this.mecanicoDropdownHandler(index, this.state.mecanicos[index].nome)} >
+                onClick={() => this.mecanicoDropdownHandler(index)} >
                     {this.state.mecanicos[index].nome}
                 </a>);
         }
 
         for (let index in this.state.oficinas) {
             oficinas.push(<a className="dropdown-item" href="#" name="oficinaRow"
-                onClick={() => this.oficinaDropdownHandler(index, this.state.oficinas[index].nome)} >
+                onClick={() => this.oficinaDropdownHandler(index)} >
                     {this.state.oficinas[index].nome}
+                </a>)
+        }
+
+        for (let index in this.state.eventos) {
+            eventos.push(<a className="dropdown-item" href="#" name="oficinaRow"
+                onClick={() => this.eventoDropdownHandler(index)} >
+                    {this.state.eventos[index].titulo}
                 </a>)
         }
 
@@ -225,9 +247,8 @@ class RegisterServiceOrderView extends React.Component {
         }
 
 
-        // eventos.push(<input type="button" className="dropdown-item" href="#" onClick={this.handleChange} name="eventoRow" value="1" />);
-        // eventos.push(<input type="button" className="dropdown-item" href="#" onClick={this.handleChange} name="eventoRow" value="2" />);
 
+        // Desenhando a interface...
         return (
             <div
                 className="card bg-white"
@@ -303,7 +324,7 @@ class RegisterServiceOrderView extends React.Component {
 
 
 
-                                <h1 className="display-4 text-center mt-5">Itens</h1>
+                                <h1 className="display-4 text-center mt-5">Peças</h1>
 
                                 {/* Dropdown dos itens */}
                                 <div className="mt-5 form-group">

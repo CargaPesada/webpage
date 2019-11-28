@@ -213,34 +213,6 @@ class FirebaseHandler {
 	};
 
 	/**
-	 * Método para retornar o event schedule relacionado a um id
-	 */
-	getEventSchedule = async () => {
-		try {
-			//let res = await axios.get(ENDPOINT_ADDRESS + '/office/all');
-
-			let res = "bypass"
-
-			if (res != null) {
-				let schedule = {
-					caminhao: "dI5fZDgMxBqTFEUsKGHj",
-					data: "28/11/2019",
-					id: 49,
-					mecanico: "mecanico@mecanico.com",
-					oficina: "2CFo537Krt4J1OgjBNgU",
-					titulo: "a"
-				};
-
-				console.log("ATENÇÃO! Mudar essa linha aqui para receber os dados de verdade!");
-
-				return schedule;
-			}
-		} catch (e) { }
-
-		return null;
-	}
-
-	/**
 	 * Método para retornar todos caminhões.
 	 */
 	getAllTrucks = async () => {
