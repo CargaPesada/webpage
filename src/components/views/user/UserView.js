@@ -15,6 +15,7 @@ import RegisterServiceAndToolView from '../registerServiceAndTool/RegisterServic
 import ReadServiceAndToolDataView from '../readServiceAndToolView';
 import DeleteServiceAndToolView from '../deleteServiceAndToolView';
 import MechanicalStatusHandlerView from '../mechanicalStatusHandlerView/MechanicalStatusHandlerView';
+import RegisterServiceOrderView from '../registerServiceOrderView/RegisterServiceOrderView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -36,6 +37,7 @@ class UserView extends React.Component {
 			mustShowTruckDataView: false,
 			mustShowTruckRegisterView: false,
 			mustShowTruckDeleterView: false,
+			mustShowOrderServiceView: false,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
@@ -185,6 +187,17 @@ class UserView extends React.Component {
 	}
 
 	/**
+	 * Método para esconder os cards e demonstrar a view de ordem de servicos.
+	 */
+	handleOrderServiceCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowOrderServiceView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowOrderServiceView: false });
+		}
+	}
+
+	/**
      * Método padrão de renderização do componente.
      */
 	render() {
@@ -203,8 +216,6 @@ class UserView extends React.Component {
 						className="row justify-content-between"
 						style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
 					>
-						{/* Dados do Caminhão */}
-						<CustomCard name="fa-truck" description="Dados do Caminhão" />
 
 						{/* Status do Usuário */}
 						<CustomCard
@@ -214,8 +225,6 @@ class UserView extends React.Component {
 
 						/>
 
-						{/* Alerta */}
-						<CustomCard name="fa-exclamation-triangle" description="Emergência" />
 					</div>
 				);
 			}
@@ -302,7 +311,17 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
 						</div>
-						{/* GAMBI de Espaçamento */}
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
+							{/* Ordem de Serviço */}
+							<CustomCard
+								name="fa-shopping-cart"
+								description="Ordem de Serviço"
+								customOnClick={() => this.handleOrderServiceCard(true)}
+							/>
+						</div>
 						<div
 							className="row d-flex justify-content-between"
 							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
@@ -410,7 +429,11 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleServiceAndToolDeleterCard(true)}
 							/>
 						</div>
-						)
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
+						</div>
 					</div>
 				);
 			}
@@ -486,6 +509,11 @@ class UserView extends React.Component {
 			else if (this.state.mustShowServiceAndToolDeleterView) {
 				toRender.push(
 					<DeleteServiceAndToolView description="Excluir Serviços e Peças" handleCard={this.handleServiceAndToolDeleterCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowOrderServiceView) {
+				toRender.push(
+					<RegisterServiceOrderView description="Ordem de Serviço" handleCard={this.handleServiceAndToolDeleterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
 				);
 			}
 		}
