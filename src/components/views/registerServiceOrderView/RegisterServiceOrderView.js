@@ -10,12 +10,19 @@ class RegisterServiceOrderView extends React.Component {
         this.state = {
             eventos: [{ nome: "Manutenção da roda", placa: "ABC-1234", id: "aadasdas" }],
             eventoSelecionado: { nome: "", index: -1 },
+
             mecanicos: [],
             mecanicoSelecionado: { nome: "", index: -1 },
+
             oficinas: [],
             oficinaSelecionada: { nome: "", index: -1 },
-            pecas: [],
+
             servicos: [],
+            servicosAdicionados: [],
+
+            pecas: [],
+            pecasAdicionadas: [],
+
             total: 0
         };
     }
@@ -49,14 +56,25 @@ class RegisterServiceOrderView extends React.Component {
             }
         }
 
-        console.log(myOffices);
 
+        // Carregando os serviços
+        let services = await firebaseHandler.getAllServices();
+        
+        // Carregando os itens (ferramentas, materiais...)
+        let pecas = await firebaseHandler.getAllTools();
+
+
+        // Adicionando ao estado da View os elementos carregados
         this.setState({
             mecanicos: mecanicos,
-            oficinas: myOffices
+            oficinas: myOffices,
+            servicos: services,
+            pecas: pecas
         });
 
     }
+
+
 
     /**
      * Método para limpar os campos do formulário.
@@ -64,6 +82,8 @@ class RegisterServiceOrderView extends React.Component {
     clearForm = () => {
         document.getElementById('formulario').reset();
     }
+
+
 
     /*
     * Método para lidar com o dropdown do mecânico.
@@ -79,6 +99,8 @@ class RegisterServiceOrderView extends React.Component {
 
     }
 
+
+
     /*
     * Método para lidar com o dropdown da oficina.
     */
@@ -91,12 +113,59 @@ class RegisterServiceOrderView extends React.Component {
             }
         });
 
+        let firebaseHandler = new FirebaseHandler();
+
+        let event = await firebaseHandler.getEventSchedule();
+
+        if (event != null) {
+
+        }
+        else {
+            alert("Não foi detectado nenhum evento")
+        }
+
     }
 
 
     eventoDropdownHandler = () => {
 
 
+
+    }
+
+    servicoDropdownHandler = async (index, nome) => {
+
+        let servicosAdicionados = this.state.servicosAdicionados;
+
+        for (let index in servicosAdicionados) {
+            if (servicosAdicionados[index].nome == nome) {
+                return;
+            }
+        }
+
+        servicosAdicionados.push(this.state.servicos[index]);
+
+        this.setState({
+            servicosAdicionados:servicosAdicionados
+        });
+
+    }
+
+    pecaDropdownHandler = async (index, nome) => {
+
+        let pecasAdicionadas = this.state.pecasAdicionadas;
+
+        for (let index in pecasAdicionadas) {
+            if (pecasAdicionadas[index].nome == nome) {
+                return;
+            }
+        }
+
+        pecasAdicionadas.push(this.state.pecas[index]);
+
+        this.setState({
+            pecasAdicionadas:pecasAdicionadas
+        });
 
     }
 
@@ -108,7 +177,6 @@ class RegisterServiceOrderView extends React.Component {
         let mecanicoName = "Selecione um Mecânico";
         let oficinaName = "Selecione uma Oficina";
         let eventoName = "Selecione um Evento";
-
 
         if (this.state.mecanicoSelecionado["nome"] !== "") {
             mecanicoName = this.state.mecanicoSelecionado["nome"];
@@ -122,19 +190,38 @@ class RegisterServiceOrderView extends React.Component {
             eventoName = this.state.eventoSelecionado["nome"];
         }
 
-
         let mecanicos = [];
         let oficinas = [];
         let eventos = [];
+        let servicos = [];
+        let pecas = [];
 
         for (let index in this.state.mecanicos) {
-            mecanicos.push(<input type="button" className="dropdown-item" href="#" name="mecanicoRow"
-                onClick={() => this.mecanicoDropdownHandler(index, this.state.mecanicos[index].nome)} value={this.state.mecanicos[index].nome} />)
+            mecanicos.push(<a className="dropdown-item" href="#" name="mecanicoRow"
+                onClick={() => this.mecanicoDropdownHandler(index, this.state.mecanicos[index].nome)} >
+                    {this.state.mecanicos[index].nome}
+                </a>);
         }
 
         for (let index in this.state.oficinas) {
-            oficinas.push(<input type="button" className="dropdown-item" href="#" name="oficinaRow"
-                onClick={() => this.oficinaDropdownHandler(index, this.state.oficinas[index].nome)} value={this.state.oficinas[index].nome} />)
+            oficinas.push(<a className="dropdown-item" href="#" name="oficinaRow"
+                onClick={() => this.oficinaDropdownHandler(index, this.state.oficinas[index].nome)} >
+                    {this.state.oficinas[index].nome}
+                </a>)
+        }
+
+        for (let index in this.state.servicos) {
+            servicos.push(<a className="dropdown-item" href="#" name="servicoRow"
+                onClick={() => this.servicoDropdownHandler(index, this.state.servicos[index].nome)} >
+                    {this.state.servicos[index].nome}
+                </a>)
+        }
+
+        for (let index in this.state.pecas) {
+            pecas.push(<a className="dropdown-item" href="#" name="pecaRow"
+                onClick={() => this.pecaDropdownHandler(index, this.state.pecas[index].nome)} >
+                    {this.state.pecas[index].nome}
+                </a>)
         }
 
 
@@ -196,17 +283,47 @@ class RegisterServiceOrderView extends React.Component {
                                     </div>
                                 </div>
 
+
+
+
                                 <h1 className="display-4 text-center mt-5">Serviços</h1>
+
+                                {/* Dropdown do Serviço */}
+                                <div className="mt-5 form-group">
+                                    <label>Selecione o Serviço*</label>
+                                    <p />
+                                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Clique em um item para adicionar
+                                    </button>
+                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {servicos}
+                                    </div>
+                                </div>
+
+
 
 
                                 <h1 className="display-4 text-center mt-5">Itens</h1>
+
+                                {/* Dropdown dos itens */}
+                                <div className="mt-5 form-group">
+                                    <label>Selecione a peca utilizada*</label>
+                                    <p />
+                                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Clique em um item para adicionar
+                                    </button>
+                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {pecas}
+                                    </div>
+                                </div>
+
 
                                 <button
                                     type="button"
                                     className="btn btn-primary mt-5"
                                     style={{ width: '100%' }}
                                 >
-                                    Cadastrar
+                                    Confirmar
 								</button>
                             </form>
                         </div>

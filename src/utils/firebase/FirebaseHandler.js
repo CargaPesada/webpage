@@ -237,7 +237,7 @@ class FirebaseHandler {
 			}
 		} catch (e) { }
 
-		return [];
+		return null;
 	}
 
 	/**
