@@ -181,10 +181,26 @@ class RegisterServiceOrderView extends React.Component {
             }
         }
 
-        pecasAdicionadas.push(this.state.pecas[index]);
+        pecasAdicionadas.push({
+            nome: this.state.pecas[index].nome,
+            uni: 1,
+            price: parseFloat(this.state.pecas[index].price)
+        })
 
         this.setState({
             pecasAdicionadas:pecasAdicionadas
+        });
+
+    }
+
+    pecaUniHandler = async (e, index) => {
+
+        let pecasAdicionadas = this.state.pecasAdicionadas;
+
+        pecasAdicionadas[index].uni = parseInt(e.target.value);
+
+        this.setState({
+            pecasAdicionadas: pecasAdicionadas
         });
 
     }
@@ -215,46 +231,75 @@ class RegisterServiceOrderView extends React.Component {
 
 
         // Populando os dropdowns...
-        let mecanicos = [];
-        let oficinas = [];
-        let eventos = [];
-        let servicos = [];
-        let pecas = [];
+        let mecanicosDisponiveis = [];
+        let oficinasDisponiveis = [];
+        let eventosDisponiveis = [];
+        let servicosDisponiveis = [];
+        let pecasDisponiveis = [];
 
         for (let index in this.state.mecanicos) {
-            mecanicos.push(<a className="dropdown-item" href="#" name="mecanicoRow"
+            mecanicosDisponiveis.push(<a className="dropdown-item" href="#" name="mecanicoRow"
                 onClick={(e) => this.mecanicoDropdownHandler(e, index)} >
                     {this.state.mecanicos[index].nome}
                 </a>);
         }
 
         for (let index in this.state.oficinas) {
-            oficinas.push(<a className="dropdown-item" href="#" name="oficinaRow"
+            oficinasDisponiveis.push(<a className="dropdown-item" href="#" name="oficinaRow"
                 onClick={(e) => this.oficinaDropdownHandler(e, index)} >
                     {this.state.oficinas[index].nome}
                 </a>)
         }
 
         for (let index in this.state.eventos) {
-            eventos.push(<a className="dropdown-item" href="#" name="oficinaRow"
+            eventosDisponiveis.push(<a className="dropdown-item" href="#" name="oficinaRow"
                 onClick={(e) => this.eventoDropdownHandler(e, index)} >
                     {this.state.eventos[index].titulo}
                 </a>)
         }
 
         for (let index in this.state.servicos) {
-            servicos.push(<a className="dropdown-item" href="#" name="servicoRow"
+            servicosDisponiveis.push(<a className="dropdown-item" href="#" name="servicoRow"
                 onClick={(e) => this.servicoDropdownHandler(e, index, this.state.servicos[index].nome)} >
                     {this.state.servicos[index].nome}
                 </a>)
         }
 
         for (let index in this.state.pecas) {
-            pecas.push(<a className="dropdown-item" href="#" name="pecaRow"
+            pecasDisponiveis.push(<a className="dropdown-item" href="#" name="pecaRow"
                 onClick={(e) => this.pecaDropdownHandler(e, index, this.state.pecas[index].nome)} >
-                    {this.state.pecas[index].nome}
+                    {this.state.pecas[index].nome + " | " + this.state.pecas[index].uni + " unidades"}
                 </a>)
         }
+
+
+
+
+
+        // Populando as linhas dos serviços e itens / peças
+        let servicosNoCarrinho = [];
+        let pecasNoCarrinho = [];
+
+        for (let index in this.state.servicosAdicionados) {
+            servicosNoCarrinho.push(<tr>
+                <th scope="row">{parseInt(index) + 1}</th>
+                <td>{this.state.servicosAdicionados[index].nome}</td>
+                <td>{this.state.servicosAdicionados[index].price}</td> 
+            </tr>)
+        }
+
+        for (let index in this.state.pecasAdicionadas) {
+            pecasNoCarrinho.push(<tr>
+                <th scope="row">{parseInt(index) + 1}</th>
+
+                <td>{this.state.pecasAdicionadas[index].nome}</td>
+
+                <td><input type="number" value={this.state.pecasAdicionadas[index].uni} onChange={(e) => this.pecaUniHandler(e, index) } /></td>
+
+                <td>{parseFloat(this.state.pecasAdicionadas[index].price) * this.state.pecasAdicionadas[index].uni}</td> 
+            </tr>)
+        }
+
 
 
 
@@ -286,7 +331,7 @@ class RegisterServiceOrderView extends React.Component {
                                         {oficinaName}
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {oficinas}
+                                        {oficinasDisponiveis}
                                     </div>
                                 </div>
 
@@ -298,7 +343,7 @@ class RegisterServiceOrderView extends React.Component {
                                         {eventoName}
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {eventos}
+                                        {eventosDisponiveis}
                                     </div>
                                 </div>
 
@@ -310,7 +355,7 @@ class RegisterServiceOrderView extends React.Component {
                                         {mecanicoName}
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {mecanicos}
+                                        {mecanicosDisponiveis}
                                     </div>
                                 </div>
 
@@ -327,8 +372,21 @@ class RegisterServiceOrderView extends React.Component {
                                         Clique em um item para adicionar
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {servicos}
+                                        {servicosDisponiveis}
                                     </div>
+
+                                    <table className="table mt-5">
+                                        <thead>
+                                            <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nome</th>
+                                            <th scope="col">Preço</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {servicosNoCarrinho}
+                                        </tbody>
+                                    </table>
                                 </div>
 
 
@@ -338,14 +396,28 @@ class RegisterServiceOrderView extends React.Component {
 
                                 {/* Dropdown dos itens */}
                                 <div className="mt-5 form-group">
-                                    <label>Selecione a peca utilizada*</label>
+                                    <label>Selecione a peça utilizada</label>
                                     <p />
                                     <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Clique em um item para adicionar
                                     </button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {pecas}
+                                        {pecasDisponiveis}
                                     </div>
+
+                                    <table className="table mt-5">
+                                        <thead>
+                                            <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nome</th>
+                                            <th scope="col">Quantidade</th>
+                                            <th scope="col">Preço</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {pecasNoCarrinho}
+                                        </tbody>
+                                    </table>
                                 </div>
 
 
