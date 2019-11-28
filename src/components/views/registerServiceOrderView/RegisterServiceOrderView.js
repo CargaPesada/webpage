@@ -156,7 +156,7 @@ class RegisterServiceOrderView extends React.Component {
                             <form id="formulario">
                                 <div className="form-group">
                                     <p>
-                                        <label>Olá! Para cadastrar um novo serviço, você deverá preencher todos os campos obrigatórios (*)!</label>
+                                        <label>Olá! Para cadastrar uma nova ordem de serviço, você deverá preencher todos os campos obrigatórios (*)!</label>
                                     </p>
                                 </div>
 
