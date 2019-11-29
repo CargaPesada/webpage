@@ -9,8 +9,7 @@ class RegisterServiceOrderView extends React.Component {
             eventos: [{ nome: "Manutenção da roda", placa: "ABC-1234", id: "aadasdas" }],
             eventoSelecionado: { titulo: "", index: -1 },
 
-            mecanicos: [],
-            mecanicoSelecionado: { nome: "", index: -1 },
+            mecanicoSelecionado: { nome: "" },
 
             oficinas: [],
             oficinaSelecionada: { nome: "", index: -1 },
@@ -35,17 +34,6 @@ class RegisterServiceOrderView extends React.Component {
 
         let firebaseHandler = new FirebaseHandler();
 
-        // Carregando os usuários do tipo mecânico
-        let users = await firebaseHandler.getAllUsers();
-        let mecanicos = [];
-
-        for (let index in users) {
-            if (users[index].cargo == "mecanico") {
-                mecanicos.push(users[index]);
-            }
-        }
-
-
         // Carregando os eventos das oficinas relacionadas
         let offices = await firebaseHandler.getAllOffices();
         let myOffices = [];
@@ -66,7 +54,6 @@ class RegisterServiceOrderView extends React.Component {
 
         // Adicionando ao estado da View os elementos carregados
         this.setState({
-            mecanicos: mecanicos,
             oficinas: myOffices,
             servicos: services,
             pecas: pecas
@@ -82,25 +69,6 @@ class RegisterServiceOrderView extends React.Component {
     clearForm = () => {
         document.getElementById('formulario').reset();
     }
-
-
-
-    /*
-    * Método para lidar com o dropdown do mecânico.
-    */
-    mecanicoDropdownHandler = async (e, index) => {
-
-        e.preventDefault();
-
-        this.setState({
-            mecanicoSelecionado: {
-                nome: this.state.mecanicos[index].nome,
-                index: index
-            }
-        });
-
-    }
-
 
 
     /*
@@ -149,7 +117,10 @@ class RegisterServiceOrderView extends React.Component {
             eventoSelecionado: {
                 titulo: this.state.eventos[index].titulo,
                 index: index
-            }
+            },
+            mecanicoSelecionado: {
+                nome: this.state.eventos[index].mecanico.nome
+            },
         })
 
 
@@ -339,12 +310,65 @@ class RegisterServiceOrderView extends React.Component {
 
     }
 
+
+
+    sendServiceOrderData = async () => {
+
+        let errorMsg = "";
+
+        // Verificando se o dropdown da oficina foi selecionada!
+        if (this.state.oficinaSelecionada.nome == "") {
+            errorMsg += "* A oficina não foi selecionada!\n";
+        }
+
+        // Verificando se o dropdown do evento foi selecionado!
+        if (this.state.eventoSelecionado.titulo == "") {
+            errorMsg += "* A manutenção não foi selecionada!\n";
+        }
+
+        // Verificando se foi adicionado pelo menos um serviço!
+        if (this.state.servicosAdicionados.length == 0) {
+            errorMsg += "* Selecione pelo menos 1 serviço!\n";
+        }
+
+        // Verificando se o caso OPCIONAL de ter peças se há valores nulos / negativos!
+        if (this.state.pecasAdicionadas.length > 0) {
+
+            for (let i in this.state.pecasAdicionadas) {
+
+                if (this.state.pecasAdicionadas[i].uni == null || this.state.pecasAdicionadas[i].uni <= 0
+                    || Object.is(this.state.pecasAdicionadas[i].uni, NaN)) {
+
+                    errorMsg += "* Há peça(s) com valor(es) nulo(s) ou negativo(s)!\n";
+
+                }
+            }
+
+        }
+
+        if (errorMsg == "") {
+
+            let data = {
+                OrdemDeServico: {
+                    total: this.state.total,
+                    servicosAdicionados: this.state.servicosAdicionados,
+                    pecasAdicionadas: this.state.pecasAdicionadas
+                }
+            }
+
+        }
+        else {
+            alert("Erro! Os seguintes campos estão incorretos:\n\n" + errorMsg);
+        }
+
+    }
+
     /**
      * Método padrão para renderização.
      */
     render() {
 
-        let mecanicoName = "Selecione um Mecânico";
+        let mecanicoName = "Selecione uma manutenção primeiramente!";
         let oficinaName = "Selecione uma Oficina";
         let eventoName = "Selecione uma Manutenção";
 
@@ -365,18 +389,10 @@ class RegisterServiceOrderView extends React.Component {
 
 
         // Populando os dropdowns...
-        let mecanicosDisponiveis = [];
         let oficinasDisponiveis = [];
         let eventosDisponiveis = [];
         let servicosDisponiveis = [];
         let pecasDisponiveis = [];
-
-        for (let index in this.state.mecanicos) {
-            mecanicosDisponiveis.push(<a className="dropdown-item" href="#" name="mecanicoRow"
-                onClick={(e) => this.mecanicoDropdownHandler(e, index)} >
-                {this.state.mecanicos[index].nome}
-            </a>);
-        }
 
         for (let index in this.state.oficinas) {
             oficinasDisponiveis.push(<a className="dropdown-item" href="#" name="oficinaRow"
@@ -454,14 +470,9 @@ class RegisterServiceOrderView extends React.Component {
 
                                 {/* Dropdown do Mecânico */}
                                 <div className="mt-5 form-group">
-                                    <label>Selecione o Mecânico*</label>
+                                    <label>Nome do Mecânico</label>
                                     <p />
-                                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {mecanicoName}
-                                    </button>
-                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {mecanicosDisponiveis}
-                                    </div>
+                                    <label ><b>{mecanicoName}</b></label>
                                 </div>
 
 
@@ -530,6 +541,7 @@ class RegisterServiceOrderView extends React.Component {
                                     type="button"
                                     className="btn btn-primary mt-5"
                                     style={{ width: '100%' }}
+                                    onClick={() => this.sendServiceOrderData()}
                                 >
                                     Confirmar
 								</button>
