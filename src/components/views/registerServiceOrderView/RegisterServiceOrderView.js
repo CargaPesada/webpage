@@ -161,7 +161,8 @@ class RegisterServiceOrderView extends React.Component {
 
         this.setState({
             servicosAdicionados: servicosAdicionados,
-            servicosTableRows: servicosTableRows
+            servicosTableRows: servicosTableRows,
+            total: this.state.total + this.state.servicos[index].price
         });
 
     }
@@ -205,7 +206,8 @@ class RegisterServiceOrderView extends React.Component {
 
         this.setState({
             pecasAdicionadas: pecasAdicionadas,
-            pecasTableRows: pecasTableRows
+            pecasTableRows: pecasTableRows,
+            total: this.state.total + this.state.pecas[index].price
         });
 
 
@@ -227,8 +229,14 @@ class RegisterServiceOrderView extends React.Component {
 
             if (this.state.pecasAdicionadas[index].nome == nome) {
 
+                if (e.target.value <= 0 || Object.is(e.target.value, NaN)) {
+                    return;
+                }
+
+                // Obtendo a nova unidade
                 pecasAdicionadas[index].uni = parseInt(e.target.value);
 
+                // Atualizando a table view
                 pecasTableRows[index] = (
                     <tr>
                         <td>{this.state.pecasAdicionadas[index].nome}</td>
@@ -238,10 +246,29 @@ class RegisterServiceOrderView extends React.Component {
                     </tr>
                 );
 
+                let newTotal = 0;
+
+                // Calculando novamente as peças
+                for (let index in this.state.pecasAdicionadas) {
+
+                    if (this.state.pecasAdicionadas[index].nome == nome) {
+                        newTotal += this.state.pecasAdicionadas[index].price * pecasAdicionadas[index].uni;
+                    }
+                    else {
+                        newTotal += this.state.pecasAdicionadas[index].price * this.state.pecasAdicionadas[index].uni;
+                    }
+                }
+
+                // Calculando novamente os serviços
+                for (let index in this.state.servicosAdicionados) {
+                    newTotal += this.state.servicosAdicionados[index].price;
+                }
+
 
                 this.setState({
                     pecasAdicionadas: pecasAdicionadas,
-                    pecasTableRows: pecasTableRows
+                    pecasTableRows: pecasTableRows,
+                    total: newTotal
                 });
 
                 return;
@@ -271,12 +298,15 @@ class RegisterServiceOrderView extends React.Component {
                     let servicosAdicionados = this.state.servicosAdicionados;
                     let servicosTableRows = this.state.servicosTableRows;
 
+                    let costToSubtract = servicosAdicionados[i].price;
+
                     servicosAdicionados.splice(i, 1);
                     servicosTableRows.splice(i, 1);
 
                     this.setState({
                         servicosAdicionados: servicosAdicionados,
-                        servicosTableRows: servicosTableRows
+                        servicosTableRows: servicosTableRows,
+                        total: this.state.total - costToSubtract
                     });
 
                     return;
@@ -293,12 +323,15 @@ class RegisterServiceOrderView extends React.Component {
                     let pecasAdicionadas = this.state.pecasAdicionadas;
                     let pecasTableRows = this.state.pecasTableRows;
 
+                    let costToSubtract = pecasAdicionadas[i].price * pecasAdicionadas[i].uni;
+
                     pecasAdicionadas.splice(i, 1);
                     pecasTableRows.splice(i, 1);
 
                     this.setState({
                         pecasAdicionadas: pecasAdicionadas,
-                        pecasTableRows: pecasTableRows
+                        pecasTableRows: pecasTableRows,
+                        total: this.state.total - costToSubtract
                     });
 
                     return;
@@ -535,6 +568,11 @@ class RegisterServiceOrderView extends React.Component {
                                         </tbody>
                                     </table>
                                 </div>
+
+
+                                {/* Preço total dos itens + serviços */}
+                                <h1 className="display-5 text-center mt-5">Custo Total: R$ {this.state.total}</h1>
+
 
 
                                 <button
