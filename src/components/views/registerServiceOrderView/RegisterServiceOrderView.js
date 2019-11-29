@@ -1,6 +1,4 @@
 import React from 'react';
-import InputMask from 'react-input-mask';
-import cep from 'cep-promise';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
 
 class RegisterServiceOrderView extends React.Component {
@@ -19,9 +17,11 @@ class RegisterServiceOrderView extends React.Component {
 
             servicos: [],
             servicosAdicionados: [],
+            servicosTableRows: [],
 
             pecas: [],
             pecasAdicionadas: [],
+            pecasTableRows: [],
 
             total: 0
         };
@@ -59,7 +59,7 @@ class RegisterServiceOrderView extends React.Component {
 
         // Carregando os serviços
         let services = await firebaseHandler.getAllServices();
-        
+
         // Carregando os itens (ferramentas, materiais...)
         let pecas = await firebaseHandler.getAllTools();
 
@@ -135,12 +135,18 @@ class RegisterServiceOrderView extends React.Component {
     }
 
 
+
+    /*
+    * Método para lidar com o dropdown do evento.
+    * Ao dropdown ser clicado, o Firebase irá verificar se não já existe uma Ordem de Serviço
+    * pré-existente.
+    */
     eventoDropdownHandler = async (e, index) => {
 
         e.preventDefault();
 
         this.setState({
-            eventoSelecionado: { 
+            eventoSelecionado: {
                 titulo: this.state.eventos[index].titulo,
                 index: index
             }
@@ -149,6 +155,12 @@ class RegisterServiceOrderView extends React.Component {
 
     }
 
+
+
+    /*
+    * Método para lidar com o dropdown do serviço.
+    * Ao dropdown ser clicado, o item selecionado será adicionado a tabela "carrinho".
+    */
     servicoDropdownHandler = async (e, index, nome) => {
 
         e.preventDefault();
@@ -161,10 +173,24 @@ class RegisterServiceOrderView extends React.Component {
             }
         }
 
+        // Adicionando um objeto novo
         servicosAdicionados.push(this.state.servicos[index]);
 
+        // Adicionando uma view nova
+        let servicosTableRows = this.state.servicosTableRows;
+        let newIndex = parseInt(this.state.servicosTableRows.length);
+
+        servicosTableRows.push(
+            <tr>
+                <td>{this.state.servicosAdicionados[newIndex].nome}</td>
+                <td>{this.state.servicosAdicionados[newIndex].price}</td>
+                <td><a href="#" onClick={(e) => this.cartsRowRemover(e, this.state.servicosAdicionados[newIndex].nome, 1)}><i class="fas fa-times"></i></a></td>
+            </tr>
+        );
+
         this.setState({
-            servicosAdicionados:servicosAdicionados
+            servicosAdicionados: servicosAdicionados,
+            servicosTableRows: servicosTableRows
         });
 
     }
@@ -181,18 +207,41 @@ class RegisterServiceOrderView extends React.Component {
             }
         }
 
+        // Adicionando um objeto novo
         pecasAdicionadas.push({
             nome: this.state.pecas[index].nome,
             uni: 1,
             price: parseFloat(this.state.pecas[index].price)
         })
 
+
+        // Adicionando uma view nova
+        let pecasTableRows = this.state.pecasTableRows;
+        let newIndex = parseInt(this.state.pecasTableRows.length);
+
+        pecasTableRows.push(
+            <tr>
+                <td>{this.state.pecasAdicionadas[newIndex].nome}</td>
+                <td><input type="number" value={this.state.pecasAdicionadas[newIndex].uni} onChange={(e) => this.pecaUniHandler(e, newIndex)} /></td>
+                <td>{parseFloat(this.state.pecasAdicionadas[newIndex].price) * this.state.pecasAdicionadas[newIndex].uni}</td>
+                <td><a href="#" onClick={(e) => this.cartsRowRemover(e, this.state.pecasAdicionadas[newIndex].nome, 2)}><i class="fas fa-times"></i></a></td>
+            </tr>
+        );
+
         this.setState({
-            pecasAdicionadas:pecasAdicionadas
+            pecasAdicionadas: pecasAdicionadas,
+            pecasTableRows: pecasTableRows
         });
+
 
     }
 
+
+
+    /*
+    * Método para lidar com o dropdown da peça.
+    * Ao dropdown ser clicado, o item selecionado será adicionado a tabela "carrinho".
+    */
     pecaUniHandler = async (e, index) => {
 
         let pecasAdicionadas = this.state.pecasAdicionadas;
@@ -202,6 +251,65 @@ class RegisterServiceOrderView extends React.Component {
         this.setState({
             pecasAdicionadas: pecasAdicionadas
         });
+
+    }
+
+
+
+
+    /*
+    * Método para lidar com o botão de excluir.
+    * Ao ícone (xis / x) ser clicado do item selecionado, ele será removido do state e da tela.
+    */
+    cartsRowRemover = async (e, name, type) => {
+
+        e.preventDefault();
+
+        // Se o type for igual a 1, então removeremos o X[index] do SERVIÇO
+        if (type === 1) {
+
+            for (let i in this.state.servicosAdicionados) {
+                if (this.state.servicosAdicionados[i].nome == name) {
+
+                    let servicosAdicionados = this.state.servicosAdicionados;
+                    let servicosTableRows = this.state.servicosTableRows;
+
+                    servicosAdicionados.splice(i, 1);
+                    servicosTableRows.splice(i, 1);
+
+                    this.setState({
+                        servicosAdicionados: servicosAdicionados,
+                        servicosTableRows: servicosTableRows
+                    });
+
+                    return;
+                }
+            }
+
+        }
+        // Senão removeremos a X[index] PEÇA
+        else {
+
+            for (let i in this.state.pecasAdicionadas) {
+                if (this.state.pecasAdicionadas[i].nome == name) {
+
+                    let pecasAdicionadas = this.state.pecasAdicionadas;
+                    let pecasTableRows = this.state.pecasTableRows;
+
+                    pecasAdicionadas.splice(i, 1);
+                    pecasTableRows.splice(i, 1);
+
+                    this.setState({
+                        pecasAdicionadas: pecasAdicionadas,
+                        pecasTableRows: pecasTableRows
+                    });
+
+                    return;
+                }
+            }
+
+
+        }
 
     }
 
@@ -240,66 +348,37 @@ class RegisterServiceOrderView extends React.Component {
         for (let index in this.state.mecanicos) {
             mecanicosDisponiveis.push(<a className="dropdown-item" href="#" name="mecanicoRow"
                 onClick={(e) => this.mecanicoDropdownHandler(e, index)} >
-                    {this.state.mecanicos[index].nome}
-                </a>);
+                {this.state.mecanicos[index].nome}
+            </a>);
         }
 
         for (let index in this.state.oficinas) {
             oficinasDisponiveis.push(<a className="dropdown-item" href="#" name="oficinaRow"
                 onClick={(e) => this.oficinaDropdownHandler(e, index)} >
-                    {this.state.oficinas[index].nome}
-                </a>)
+                {this.state.oficinas[index].nome}
+            </a>)
         }
 
         for (let index in this.state.eventos) {
             eventosDisponiveis.push(<a className="dropdown-item" href="#" name="oficinaRow"
                 onClick={(e) => this.eventoDropdownHandler(e, index)} >
-                    {this.state.eventos[index].titulo}
-                </a>)
+                {this.state.eventos[index].titulo}
+            </a>)
         }
 
         for (let index in this.state.servicos) {
             servicosDisponiveis.push(<a className="dropdown-item" href="#" name="servicoRow"
                 onClick={(e) => this.servicoDropdownHandler(e, index, this.state.servicos[index].nome)} >
-                    {this.state.servicos[index].nome}
-                </a>)
+                {this.state.servicos[index].nome}
+            </a>)
         }
 
         for (let index in this.state.pecas) {
             pecasDisponiveis.push(<a className="dropdown-item" href="#" name="pecaRow"
                 onClick={(e) => this.pecaDropdownHandler(e, index, this.state.pecas[index].nome)} >
-                    {this.state.pecas[index].nome + " | " + this.state.pecas[index].uni + " unidades"}
-                </a>)
+                {this.state.pecas[index].nome + " | " + this.state.pecas[index].uni + " unidades"}
+            </a>)
         }
-
-
-
-
-
-        // Populando as linhas dos serviços e itens / peças
-        let servicosNoCarrinho = [];
-        let pecasNoCarrinho = [];
-
-        for (let index in this.state.servicosAdicionados) {
-            servicosNoCarrinho.push(<tr>
-                <th scope="row">{parseInt(index) + 1}</th>
-                <td>{this.state.servicosAdicionados[index].nome}</td>
-                <td>{this.state.servicosAdicionados[index].price}</td> 
-            </tr>)
-        }
-
-        for (let index in this.state.pecasAdicionadas) {
-            pecasNoCarrinho.push(<tr>
-                <th scope="row">{parseInt(index) + 1}</th>
-
-                <td>{this.state.pecasAdicionadas[index].nome}</td>
-
-                <td><input type="number" value={this.state.pecasAdicionadas[index].uni} onChange={(e) => this.pecaUniHandler(e, index) } /></td>
-
-                <td>{parseFloat(this.state.pecasAdicionadas[index].price) * this.state.pecasAdicionadas[index].uni}</td> 
-            </tr>)
-        }
-
 
 
 
@@ -378,13 +457,13 @@ class RegisterServiceOrderView extends React.Component {
                                     <table className="table mt-5">
                                         <thead>
                                             <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nome</th>
-                                            <th scope="col">Preço</th>
+                                                <th scope="col">Nome</th>
+                                                <th scope="col">Preço</th>
+                                                <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {servicosNoCarrinho}
+                                            {this.state.servicosTableRows}
                                         </tbody>
                                     </table>
                                 </div>
@@ -408,14 +487,14 @@ class RegisterServiceOrderView extends React.Component {
                                     <table className="table mt-5">
                                         <thead>
                                             <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nome</th>
-                                            <th scope="col">Quantidade</th>
-                                            <th scope="col">Preço</th>
+                                                <th scope="col">Nome</th>
+                                                <th scope="col">Quantidade</th>
+                                                <th scope="col">Preço</th>
+                                                <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {pecasNoCarrinho}
+                                            {this.state.pecasTableRows}
                                         </tbody>
                                     </table>
                                 </div>
