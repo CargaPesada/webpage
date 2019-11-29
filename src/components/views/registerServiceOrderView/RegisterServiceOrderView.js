@@ -195,6 +195,10 @@ class RegisterServiceOrderView extends React.Component {
 
     }
 
+    /*
+    * Método para lidar com o dropdown da peça.
+    * Ao dropdown ser clicado, o item selecionado será adicionado a tabela "carrinho".
+    */
     pecaDropdownHandler = async (e, index, nome) => {
 
         e.preventDefault();
@@ -217,12 +221,12 @@ class RegisterServiceOrderView extends React.Component {
 
         // Adicionando uma view nova
         let pecasTableRows = this.state.pecasTableRows;
-        let newIndex = parseInt(this.state.pecasTableRows.length);
+        let newIndex = parseInt(this.state.pecasAdicionadas.length) - 1;
 
         pecasTableRows.push(
             <tr>
                 <td>{this.state.pecasAdicionadas[newIndex].nome}</td>
-                <td><input type="number" value={this.state.pecasAdicionadas[newIndex].uni} onChange={(e) => this.pecaUniHandler(e, newIndex)} /></td>
+                <td><input type="number" value={this.state.pecasAdicionadas[newIndex].uni} onChange={(e) => this.pecaUniHandler(e, this.state.pecasAdicionadas[newIndex].nome)} /></td>
                 <td>{parseFloat(this.state.pecasAdicionadas[newIndex].price) * this.state.pecasAdicionadas[newIndex].uni}</td>
                 <td><a href="#" onClick={(e) => this.cartsRowRemover(e, this.state.pecasAdicionadas[newIndex].nome, 2)}><i class="fas fa-times"></i></a></td>
             </tr>
@@ -239,18 +243,40 @@ class RegisterServiceOrderView extends React.Component {
 
 
     /*
-    * Método para lidar com o dropdown da peça.
-    * Ao dropdown ser clicado, o item selecionado será adicionado a tabela "carrinho".
+    * Método para lidar com a quantidade da peça.
+    * Ao ser digitado algo no campo de quantia, ele atualizará o state.
     */
-    pecaUniHandler = async (e, index) => {
+    pecaUniHandler = async (e, nome) => {
 
         let pecasAdicionadas = this.state.pecasAdicionadas;
+        let pecasTableRows = this.state.pecasTableRows;
 
-        pecasAdicionadas[index].uni = parseInt(e.target.value);
 
-        this.setState({
-            pecasAdicionadas: pecasAdicionadas
-        });
+        for (let index in this.state.pecasAdicionadas) {
+
+            if (this.state.pecasAdicionadas[index].nome == nome) {
+
+                pecasAdicionadas[index].uni = parseInt(e.target.value);
+
+                pecasTableRows[index] = (
+                    <tr>
+                        <td>{this.state.pecasAdicionadas[index].nome}</td>
+                        <td><input type="number" value={this.state.pecasAdicionadas[index].uni} onChange={(e) => this.pecaUniHandler(e, this.state.pecasAdicionadas[index].nome)} /></td>
+                        <td>{parseFloat(this.state.pecasAdicionadas[index].price) * this.state.pecasAdicionadas[index].uni}</td>
+                        <td><a href="#" onClick={(e) => this.cartsRowRemover(e, this.state.pecasAdicionadas[index].nome, 2)}><i class="fas fa-times"></i></a></td>
+                    </tr>
+                );
+
+
+                this.setState({
+                    pecasAdicionadas: pecasAdicionadas,
+                    pecasTableRows: pecasTableRows
+                });
+
+                return;
+            }
+        }
+
 
     }
 
