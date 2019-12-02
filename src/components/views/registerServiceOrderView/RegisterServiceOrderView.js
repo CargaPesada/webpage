@@ -7,7 +7,7 @@ class RegisterServiceOrderView extends React.Component {
 
         this.state = {
             eventos: [],
-            eventoSelecionado: { titulo: "", index: -1 },
+            eventoSelecionado: { titulo: "", index: -1, id: -1 },
 
             mecanicoSelecionado: { nome: "" },
 
@@ -54,6 +54,7 @@ class RegisterServiceOrderView extends React.Component {
         let pecas = await firebaseHandler.getAllTools();
 
 
+
         // Adicionando ao estado da View os elementos carregados
         this.setState({
             oficinas: myOffices,
@@ -72,7 +73,7 @@ class RegisterServiceOrderView extends React.Component {
         document.getElementById('formulario').reset();
 
         this.setState({
-            eventoSelecionado: { titulo: "", index: -1 },
+            eventoSelecionado: { titulo: "", index: -1, id: -1 },
 
             mecanicoSelecionado: { nome: "" },
 
@@ -133,20 +134,121 @@ class RegisterServiceOrderView extends React.Component {
 
         e.preventDefault();
 
-        this.setState({
-            eventoSelecionado: {
-                titulo: this.state.eventos[index].titulo,
-                index: index
-            },
-            mecanicoSelecionado: {
-                nome: this.state.eventos[index].mecanico.nome
-            },
-            caminhaoSelecionado: {
-                placa: this.state.eventos[index].caminhao[0].placa
+        let jsonLocal = JSON.parse(localStorage.getItem("OrdemDeServico"));
+
+        let servicosAdicionados = [];
+        let pecasAdicionadas = [];
+
+        let total = 0;
+
+        let dataExists = false;
+
+        for (let i in jsonLocal.listaDeOrdens) {
+
+            // Verificando se já existe um "checkpoint" de uma Ordem de Serviço
+            if (jsonLocal.listaDeOrdens[i].id == this.state.eventos[index].id) {
+
+                // Preenchendo o formulário e o state com os serviços previamente adicionados
+                for (let j in jsonLocal.listaDeOrdens[i].servicosAdicionados) {
+
+                    servicosAdicionados.push(jsonLocal.listaDeOrdens[i].servicosAdicionados[j]);
+
+                }
+
+                // Preenchendo o formulário e o state com as peças previamente adicionados
+                for (let j in jsonLocal.listaDeOrdens[i].pecasAdicionadas) {
+
+                    pecasAdicionadas.push(jsonLocal.listaDeOrdens[i].pecasAdicionadas[j]);
+
+                }
+
+                console.log("Checkpoint carregado de dado anterior!");
+
+                total = jsonLocal.listaDeOrdens[i].total;
+
+                dataExists = true;
+                break;
+
             }
-        })
+        }
+
+        if (dataExists) {
+            this.setState({
+                eventoSelecionado: {
+                    titulo: this.state.eventos[index].titulo,
+                    index: index,
+                    id: this.state.eventos[index].id
+                },
+                mecanicoSelecionado: {
+                    nome: this.state.eventos[index].mecanico.nome
+                },
+                caminhaoSelecionado: {
+                    placa: this.state.eventos[index].caminhao[0].placa
+                },
+                pecasAdicionadas: pecasAdicionadas,
+                servicosAdicionados: servicosAdicionados,
+                total: total
+            },
+                this.loadCachedRows
+            );
+        }
+        else {
+
+            this.setState({
+                eventoSelecionado: {
+                    titulo: this.state.eventos[index].titulo,
+                    index: index,
+                    id: this.state.eventos[index].id
+                },
+                mecanicoSelecionado: {
+                    nome: this.state.eventos[index].mecanico.nome
+                },
+                caminhaoSelecionado: {
+                    placa: this.state.eventos[index].caminhao[0].placa
+                }
+            });
+        }
 
 
+    }
+
+
+
+
+
+    /*
+    * Método auxiliar para carregar os serviços e peças cacheadas.
+    */
+    loadCachedRows = () => {
+
+        let servicosTableRows = [];
+        let pecasTableRows = [];
+
+        for (let i in this.state.servicosAdicionados) {
+            servicosTableRows.push(
+                <tr>
+                    <td>{this.state.servicosAdicionados[i].nome}</td>
+                    <td>{this.state.servicosAdicionados[i].price}</td>
+                    <td><a href="#" onClick={(e) => this.cartsRowRemover(e, this.state.servicosAdicionados[i].nome, 1)}><i class="fas fa-times"></i></a></td>
+                </tr>
+            );
+        }
+
+        for (let i in this.state.pecasAdicionadas) {
+            pecasTableRows.push(
+                <tr>
+                    <td>{this.state.pecasAdicionadas[i].nome}</td>
+                    <td><input type="number" value={this.state.pecasAdicionadas[i].uni} onChange={(e) => this.pecaUniHandler(e, this.state.pecasAdicionadas[i].nome)} /></td>
+                    <td>{parseFloat(this.state.pecasAdicionadas[i].price) * this.state.pecasAdicionadas[i].uni}</td>
+                    <td><a href="#" onClick={(e) => this.cartsRowRemover(e, this.state.pecasAdicionadas[i].nome, 2)}><i class="fas fa-times"></i></a></td>
+                </tr>
+            );
+        }
+
+        this.setState({
+            servicosTableRows: servicosTableRows,
+            pecasTableRows: pecasTableRows
+        });
     }
 
 
@@ -368,6 +470,10 @@ class RegisterServiceOrderView extends React.Component {
 
 
 
+
+    /*
+    * Método para gravar a Ordem de Serviço.
+    */
     sendServiceOrderData = async () => {
 
         let errorMsg = "";
@@ -406,11 +512,57 @@ class RegisterServiceOrderView extends React.Component {
 
             let data = {
                 OrdemDeServico: {
+                    id: this.state.eventoSelecionado.id,
                     total: this.state.total,
                     servicosAdicionados: this.state.servicosAdicionados,
                     pecasAdicionadas: this.state.pecasAdicionadas
                 }
             }
+
+            let jsonLocal = JSON.parse(localStorage.getItem("OrdemDeServico"));
+
+            // Checando se já existe o JSON
+            if (jsonLocal) {
+
+                // Checando se já existe uma informação desse evento / ordem de serviço
+                let dataAlreadyExists = false;
+
+                for (let i in jsonLocal.listaDeOrdens) {
+                    if (jsonLocal.listaDeOrdens[i]["id"] == data.OrdemDeServico.id) {
+
+                        jsonLocal.listaDeOrdens.splice(i, 1);
+
+                        jsonLocal.listaDeOrdens.push({
+                            id: data.OrdemDeServico.id,
+                            total: this.state.total,
+                            servicosAdicionados: this.state.servicosAdicionados,
+                            pecasAdicionadas: this.state.pecasAdicionadas
+                        });
+
+                        dataAlreadyExists = true;
+                        break;
+                    }
+                }
+
+                // Se não existe uma informação prévida... Adicionaremos na lista!
+                if (dataAlreadyExists == false) {
+                    jsonLocal.listaDeOrdens.push(data.OrdemDeServico);
+                }
+
+                // Gravando...
+                localStorage.setItem("OrdemDeServico", JSON.stringify({
+                    listaDeOrdens: jsonLocal.listaDeOrdens
+                }));
+            }
+            else {
+
+                // Criando pela primeira vez o buffer de armazenamento
+                localStorage.setItem("OrdemDeServico", JSON.stringify({
+                    listaDeOrdens: [data.OrdemDeServico]
+                }));
+            }
+
+            alert("Sucesso! A ordem foi gravada no sistema!");
 
         }
         else {
