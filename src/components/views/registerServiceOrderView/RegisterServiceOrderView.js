@@ -6,10 +6,12 @@ class RegisterServiceOrderView extends React.Component {
         super(props);
 
         this.state = {
-            eventos: [{ nome: "Manutenção da roda", placa: "ABC-1234", id: "aadasdas" }],
+            eventos: [],
             eventoSelecionado: { titulo: "", index: -1 },
 
             mecanicoSelecionado: { nome: "" },
+
+            caminhaoSelecionado: { placa: "" },
 
             oficinas: [],
             oficinaSelecionada: { nome: "", index: -1 },
@@ -68,6 +70,24 @@ class RegisterServiceOrderView extends React.Component {
      */
     clearForm = () => {
         document.getElementById('formulario').reset();
+
+        this.setState({
+            eventoSelecionado: { titulo: "", index: -1 },
+
+            mecanicoSelecionado: { nome: "" },
+
+            caminhaoSelecionado: { placa: "" },
+
+            oficinaSelecionada: { nome: "", index: -1 },
+
+            servicosAdicionados: [],
+            servicosTableRows: [],
+
+            pecasAdicionadas: [],
+            pecasTableRows: [],
+
+            total: 0
+        })
     }
 
 
@@ -121,6 +141,9 @@ class RegisterServiceOrderView extends React.Component {
             mecanicoSelecionado: {
                 nome: this.state.eventos[index].mecanico.nome
             },
+            caminhaoSelecionado: {
+                placa: this.state.eventos[index].caminhao[0].placa
+            }
         })
 
 
@@ -402,12 +425,17 @@ class RegisterServiceOrderView extends React.Component {
     render() {
 
         let mecanicoName = "Selecione uma manutenção primeiramente!";
+        let caminhaoPlaca = "Seleciona uma manutenção primeiramente!";
         let oficinaName = "Selecione uma Oficina";
         let eventoName = "Selecione uma Manutenção";
 
         // Verificando se o dropdown do mecanico tem um label "default"
         if (this.state.mecanicoSelecionado["nome"] !== "") {
             mecanicoName = this.state.mecanicoSelecionado["nome"];
+        }
+
+        if (this.state.caminhaoSelecionado["placa"] !== "") {
+            caminhaoPlaca = this.state.caminhaoSelecionado["placa"];
         }
 
         // Verificando se o dropdown da oficina tem um label "default"
@@ -501,11 +529,18 @@ class RegisterServiceOrderView extends React.Component {
                                     </div>
                                 </div>
 
-                                {/* Dropdown do Mecânico */}
+                                {/* Label do Mecânico */}
                                 <div className="mt-5 form-group">
                                     <label>Nome do Mecânico</label>
                                     <p />
                                     <label ><b>{mecanicoName}</b></label>
+                                </div>
+
+                                {/* Label do Caminhão */}
+                                <div className="mt-5 form-group">
+                                    <label>Placa do Caminhão</label>
+                                    <p />
+                                    <label ><b>{caminhaoPlaca}</b></label>
                                 </div>
 
 
