@@ -24,9 +24,18 @@ class RegisterServiceOrderView extends React.Component {
             pecasAdicionadas: [],
             pecasTableRows: [],
 
+            showDelete: false,
+
             total: 0
         };
     }
+
+
+
+
+
+
+
 
     /*
     * Método padrão do React
@@ -66,30 +75,7 @@ class RegisterServiceOrderView extends React.Component {
 
 
 
-    /**
-     * Método para limpar os campos do formulário.
-     */
-    clearForm = () => {
-        document.getElementById('formulario').reset();
 
-        this.setState({
-            eventoSelecionado: { titulo: "", index: -1, id: -1 },
-
-            mecanicoSelecionado: { nome: "" },
-
-            caminhaoSelecionado: { placa: "" },
-
-            oficinaSelecionada: { nome: "", index: -1 },
-
-            servicosAdicionados: [],
-            servicosTableRows: [],
-
-            pecasAdicionadas: [],
-            pecasTableRows: [],
-
-            total: 0
-        })
-    }
 
 
     /*
@@ -118,10 +104,24 @@ class RegisterServiceOrderView extends React.Component {
                 nome: this.state.oficinas[index].nome,
                 index: index
             },
-            eventos: eventos
+            eventos: eventos,
+            eventoSelecionado: { titulo: "", index: -1, id: -1 },
+            mecanicoSelecionado: { nome: "" },
+            caminhaoSelecionado: { placa: "" },
+            servicosAdicionados: [],
+            pecasAdicionadas: [],
+            servicosTableRows: [],
+            pecasTableRows: [],
+            total: 0
         });
 
     }
+
+
+
+
+
+
 
 
 
@@ -143,32 +143,35 @@ class RegisterServiceOrderView extends React.Component {
 
         let dataExists = false;
 
-        for (let i in jsonLocal.listaDeOrdens) {
+        if (jsonLocal) {
 
-            // Verificando se já existe um "checkpoint" de uma Ordem de Serviço
-            if (jsonLocal.listaDeOrdens[i].id == this.state.eventos[index].id) {
+            for (let i in jsonLocal.listaDeOrdens) {
 
-                // Preenchendo o formulário e o state com os serviços previamente adicionados
-                for (let j in jsonLocal.listaDeOrdens[i].servicosAdicionados) {
+                // Verificando se já existe um "checkpoint" de uma Ordem de Serviço
+                if (jsonLocal.listaDeOrdens[i].id == this.state.eventos[index].id) {
 
-                    servicosAdicionados.push(jsonLocal.listaDeOrdens[i].servicosAdicionados[j]);
+                    // Preenchendo o formulário e o state com os serviços previamente adicionados
+                    for (let j in jsonLocal.listaDeOrdens[i].servicosAdicionados) {
+
+                        servicosAdicionados.push(jsonLocal.listaDeOrdens[i].servicosAdicionados[j]);
+
+                    }
+
+                    // Preenchendo o formulário e o state com as peças previamente adicionados
+                    for (let j in jsonLocal.listaDeOrdens[i].pecasAdicionadas) {
+
+                        pecasAdicionadas.push(jsonLocal.listaDeOrdens[i].pecasAdicionadas[j]);
+
+                    }
+
+                    console.log("Checkpoint carregado de dado anterior!");
+
+                    total = jsonLocal.listaDeOrdens[i].total;
+
+                    dataExists = true;
+                    break;
 
                 }
-
-                // Preenchendo o formulário e o state com as peças previamente adicionados
-                for (let j in jsonLocal.listaDeOrdens[i].pecasAdicionadas) {
-
-                    pecasAdicionadas.push(jsonLocal.listaDeOrdens[i].pecasAdicionadas[j]);
-
-                }
-
-                console.log("Checkpoint carregado de dado anterior!");
-
-                total = jsonLocal.listaDeOrdens[i].total;
-
-                dataExists = true;
-                break;
-
             }
         }
 
@@ -187,9 +190,10 @@ class RegisterServiceOrderView extends React.Component {
                 },
                 pecasAdicionadas: pecasAdicionadas,
                 servicosAdicionados: servicosAdicionados,
+                showDelete: true,   // Carregando o botão de "deletar", pois já existe um dado prévio
                 total: total
             },
-                this.loadCachedRows
+                this.loadCachedRows // O setState é async, então chamaremos um callback aqui!
             );
         }
         else {
@@ -205,12 +209,22 @@ class RegisterServiceOrderView extends React.Component {
                 },
                 caminhaoSelecionado: {
                     placa: this.state.eventos[index].caminhao[0].placa
-                }
+                },
+                pecasAdicionadas: [],
+                servicosAdicionados: [],
+                pecasTableRows: [],
+                servicosTableRows: [],
+                showDelete: false,
+                total: 0
             });
         }
 
 
     }
+
+
+
+
 
 
 
@@ -253,6 +267,12 @@ class RegisterServiceOrderView extends React.Component {
 
 
 
+
+
+
+
+
+
     /*
     * Método para lidar com o dropdown do serviço.
     * Ao dropdown ser clicado, o item selecionado será adicionado a tabela "carrinho".
@@ -291,6 +311,15 @@ class RegisterServiceOrderView extends React.Component {
         });
 
     }
+
+
+
+
+
+
+
+
+
 
     /*
     * Método para lidar com o dropdown da peça.
@@ -337,6 +366,10 @@ class RegisterServiceOrderView extends React.Component {
 
 
     }
+
+
+
+
 
 
 
@@ -406,6 +439,11 @@ class RegisterServiceOrderView extends React.Component {
 
 
 
+
+
+
+
+
     /*
     * Método para lidar com o botão de excluir.
     * Ao ícone (xis / x) ser clicado do item selecionado, ele será removido do state e da tela.
@@ -467,6 +505,10 @@ class RegisterServiceOrderView extends React.Component {
         }
 
     }
+
+
+
+
 
 
 
@@ -562,6 +604,10 @@ class RegisterServiceOrderView extends React.Component {
                 }));
             }
 
+            this.setState({
+                showDelete: true
+            });
+
             alert("Sucesso! A ordem foi gravada no sistema!");
 
         }
@@ -570,6 +616,45 @@ class RegisterServiceOrderView extends React.Component {
         }
 
     }
+
+
+
+
+
+
+
+
+
+    deleteServiceOrderData = async () => {
+
+        let jsonLocal = JSON.parse(localStorage.getItem("OrdemDeServico"));
+
+        for (let i in jsonLocal.listaDeOrdens) {
+            if (jsonLocal.listaDeOrdens[i]["id"] == this.state.eventoSelecionado.id) {
+                jsonLocal.listaDeOrdens.splice(i, 1);
+
+                localStorage.setItem("OrdemDeServico", JSON.stringify(jsonLocal));
+
+                this.setState({
+                    pecasAdicionadas: [],
+                    servicosAdicionados: [],
+                    pecasTableRows: [],
+                    servicosTableRows: [],
+                    showDelete: false,
+                    total: 0
+                })
+
+                break;
+            }
+        }
+
+    }
+
+
+
+
+
+
 
     /**
      * Método padrão para renderização.
@@ -633,6 +718,47 @@ class RegisterServiceOrderView extends React.Component {
                 onClick={(e) => this.pecaDropdownHandler(e, index, this.state.pecas[index].nome)} >
                 {this.state.pecas[index].nome + " | " + this.state.pecas[index].uni + " unidades"}
             </a>)
+        }
+
+
+
+        // Verificando quantos botões deverão ser montados
+        let buttons = [];
+
+        if (this.state.showDelete === false) {
+            buttons.push(
+                <button
+                    type="button"
+                    className="btn btn-primary mt-5"
+                    style={{ width: '100%' }}
+                    onClick={() => this.sendServiceOrderData()}
+                >
+                    Confirmar
+                </button>
+            );
+        }
+        else {
+            buttons.push(
+                <button
+                    type="button"
+                    className="btn btn-secondary mt-5 mr-3"
+                    style={{ width: '40%' }}
+                    onClick={() => this.deleteServiceOrderData()}
+                >
+                    Apagar
+                </button>
+            );
+
+            buttons.push(
+                <button
+                    type="button"
+                    className="btn btn-primary mt-5"
+                    style={{ width: '40%' }}
+                    onClick={() => this.sendServiceOrderData()}
+                >
+                    Alterar
+                </button>
+            );
         }
 
 
@@ -762,14 +888,7 @@ class RegisterServiceOrderView extends React.Component {
 
 
 
-                                <button
-                                    type="button"
-                                    className="btn btn-primary mt-5"
-                                    style={{ width: '100%' }}
-                                    onClick={() => this.sendServiceOrderData()}
-                                >
-                                    Confirmar
-								</button>
+                                {buttons}
                             </form>
                         </div>
                     </div>
