@@ -10,23 +10,23 @@ class App extends React.Component {
 
 		this.state = {
 			isUserAuthenticated: true,
-			isAdmin: true,
-			cargo: 3,
-			cpf: "448.892.118-38"
+			isAdmin: false,
+			cargo: 2,
+			cpf: "448.892.118-37"
 		};
 	}
 
 	/**
    * Método para alterar o estado se o usuário está autenticado.
    */
-	handleUserAuthentication = (isAdmin, cargo, cpf) => {
+	handleUserAuthentication = (isAdmin, cargo, cpf, email) => {
 		if (this.state.isUserAuthenticated) {
-			this.setState({ isUserAuthenticated: false, isAdmin: false, cargo: cargo, cpf: cpf });
+			this.setState({ isUserAuthenticated: false, isAdmin: false, cargo: cargo, cpf: cpf, email: email });
 		} else {
 			if (isAdmin) {
-				this.setState({ isUserAuthenticated: true, isAdmin: true, cargo: cargo, cpf: cpf });
+				this.setState({ isUserAuthenticated: true, isAdmin: true, cargo: cargo, cpf: cpf, email: email });
 			} else {
-				this.setState({ isUserAuthenticated: true, isAdmin: false, cargo: cargo, cpf: cpf });
+				this.setState({ isUserAuthenticated: true, isAdmin: false, cargo: cargo, cpf: cpf, email: email });
 			}
 		}
 	};

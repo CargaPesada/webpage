@@ -14,6 +14,8 @@ import DriverStatusHandlerView from '../driverStatusHandlerView/DriverStatusHand
 import RegisterServiceAndToolView from '../registerServiceAndTool/RegisterServiceAndToolView';
 import ReadServiceAndToolDataView from '../readServiceAndToolView';
 import DeleteServiceAndToolView from '../deleteServiceAndToolView';
+import MechanicalStatusHandlerView from '../mechanicalStatusHandlerView/MechanicalStatusHandlerView';
+import RegisterServiceOrderView from '../registerServiceOrderView/RegisterServiceOrderView';
 
 // TODO: Essa classe é ANTI-PATTERN, pois ela é uma God Class
 // TALVEZ SERIA LEGAL QUEBRAR EM 2 PARTES!!!
@@ -25,6 +27,7 @@ class UserView extends React.Component {
 			// DEBUG
 			mustHideCards: false,
 			mustShowDriverInfo: false,
+			mustShowMechanicalStatusSetterView: false,
 			mustShowUserRegisterView: false,
 			mustShowUserDataReaderView: false,
 			mustShowDriverStatusSetterView: false,
@@ -34,6 +37,7 @@ class UserView extends React.Component {
 			mustShowTruckDataView: false,
 			mustShowTruckRegisterView: false,
 			mustShowTruckDeleterView: false,
+			mustShowOrderServiceView: false,
 			infosToShow: [['Nome', 'Teste'], ['Sobrenome', 'Higa']] // Deixar vazio
 		};
 	}
@@ -68,6 +72,17 @@ class UserView extends React.Component {
 			this.setState({ mustHideCards: true, mustShowDriverStatusSetterView: true });
 		} else {
 			this.setState({ mustHideCards: false, mustShowDriverStatusSetterView: false });
+		}
+	};
+
+	/**
+	 * Método para esconder os cards e demonstrar a view de leitura do Usuário.
+	 */
+	handleMechanicalStatusSetterCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowMechanicalStatusSetterView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowMechanicalStatusSetterView: false });
 		}
 	};
 
@@ -172,6 +187,17 @@ class UserView extends React.Component {
 	}
 
 	/**
+	 * Método para esconder os cards e demonstrar a view de ordem de servicos.
+	 */
+	handleOrderServiceCard = (mustHide) => {
+		if (mustHide === true) {
+			this.setState({ mustHideCards: true, mustShowOrderServiceView: true });
+		} else {
+			this.setState({ mustHideCards: false, mustShowOrderServiceView: false });
+		}
+	}
+
+	/**
      * Método padrão de renderização do componente.
      */
 	render() {
@@ -190,8 +216,6 @@ class UserView extends React.Component {
 						className="row justify-content-between"
 						style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
 					>
-						{/* Dados do Caminhão */}
-						<CustomCard name="fa-truck" description="Dados do Caminhão" />
 
 						{/* Status do Usuário */}
 						<CustomCard
@@ -201,8 +225,26 @@ class UserView extends React.Component {
 
 						/>
 
-						{/* Alerta */}
-						<CustomCard name="fa-exclamation-triangle" description="Emergência" />
+					</div>
+				);
+			}
+
+			// MECANICO
+			else if (this.props.cargo === 1) {
+				toRender.push(
+					<div
+						className="row justify-content-between"
+						style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+					>
+
+						{/* Status do Usuário */}
+						<CustomCard
+							name="fa-user-slash"
+							description="Status do Mecânico"
+							customOnClick={() => this.handleMechanicalStatusSetterCard(true)}
+
+						/>
+
 					</div>
 				);
 			}
@@ -239,6 +281,7 @@ class UserView extends React.Component {
 								name="fa-warehouse"
 								description="Consultar Oficina"
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
+								email={this.props.email}
 							/>
 
 						</div>
@@ -268,7 +311,17 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleTruckDeleterCard(true)}
 							/>
 						</div>
-						{/* GAMBI de Espaçamento */}
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
+							{/* Ordem de Serviço */}
+							<CustomCard
+								name="fa-shopping-cart"
+								description="Ordem de Serviço"
+								customOnClick={() => this.handleOrderServiceCard(true)}
+							/>
+						</div>
 						<div
 							className="row d-flex justify-content-between"
 							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
@@ -317,6 +370,7 @@ class UserView extends React.Component {
 								name="fa-warehouse"
 								description="Consultar Oficina"
 								customOnClick={() => this.handleWorkshopDataReaderCard(true)}
+								email={this.props.email}
 							/>
 
 							{/* Deletar Oficina */}
@@ -375,7 +429,11 @@ class UserView extends React.Component {
 								customOnClick={() => this.handleServiceAndToolDeleterCard(true)}
 							/>
 						</div>
-						)
+						<div
+							className="row d-flex justify-content-between"
+							style={{ marginTop: '10%', marginLeft: '10%', marginRight: '10%' }}
+						>
+						</div>
 					</div>
 				);
 			}
@@ -391,6 +449,11 @@ class UserView extends React.Component {
 			else if (this.state.mustShowDriverStatusSetterView) {
 				toRender.push(
 					<DriverStatusHandlerView description="Status do Motorista" handleCard={this.handleDriverStatusSetterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
+				);
+			}
+			else if (this.state.mustShowMechanicalStatusSetterView) {
+				toRender.push(
+					<MechanicalStatusHandlerView description="Status do Mecanico" handleCard={this.handleMechanicalStatusSetterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
 				);
 			}
 			else if (this.state.mustShowUserRegisterView) {
@@ -446,6 +509,11 @@ class UserView extends React.Component {
 			else if (this.state.mustShowServiceAndToolDeleterView) {
 				toRender.push(
 					<DeleteServiceAndToolView description="Excluir Serviços e Peças" handleCard={this.handleServiceAndToolDeleterCard} cargo={this.props.cargo} />
+				);
+			}
+			else if (this.state.mustShowOrderServiceView) {
+				toRender.push(
+					<RegisterServiceOrderView description="Ordem de Serviço" handleCard={this.handleServiceAndToolDeleterCard} cargo={this.props.cargo} cpf={this.props.cpf} />
 				);
 			}
 		}

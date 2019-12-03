@@ -117,7 +117,7 @@ class RegisterOfficeView extends React.Component {
                 this.clearForm();
                 alert('Registrado com sucesso!');
             } else {
-                alert('Erro interno no servidor, contacte um administrador!');
+                alert('CPF incorreto!');
             }
 
         }

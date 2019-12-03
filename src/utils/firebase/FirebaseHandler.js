@@ -1,13 +1,15 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import * as credentials from './credential';
+import credential from './credential'
 import JOB_TITLE_IDS from '../../models/JobTitle';
+import Tool from '../../models/Tool';
 const axios = require('axios');
 const ENDPOINT_ADDRESS = 'https://carga-pesada-d933f.appspot.com';
 
 // Initialize Firebase
-firebase.initializeApp(credentials);
+firebase.initializeApp(credential);
+console.log(credential)
 
 class FirebaseHandler {
 	/**
@@ -16,7 +18,7 @@ class FirebaseHandler {
 	tryToRegisterUser = async (user, callback) => {
 		let jsonToSend = {
 			nome: user.nome,
-			cargo: user.cargo,
+			cargo: user.cargo.toLowerCase(),
 			email: user.email,
 			senha: user.senha,
 			cpf: user.cpf,
@@ -117,10 +119,37 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de serviço.
      */
-	tryToRegisterService = async (ServiceAndTool) => {
+	tryToRegisterCalendarEvent = async (event) => {
 		let jsonToSend = {
-			nome: ServiceAndTool.nome,
-			preco: parseFloat(ServiceAndTool.price)
+			titulo: event.titulo,
+			data: event.data,
+			placa_caminhao: event.placa_caminhao,
+			id_oficina: event.id_oficina,
+			id_usuario: event.id_usuario
+		};
+
+		// Acionando promisses para o endpoint
+		try {
+
+			let res = await axios.post(ENDPOINT_ADDRESS + '/schedule/register', jsonToSend).then();
+
+			if (res != null) {
+				if (res.status >= 200 && res.status <= 299) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+     * Método para tentar realizar um novo registro de serviço.
+     */
+	tryToRegisterService = async (Service) => {
+		let jsonToSend = {
+			nome: Service.nome,
+			preco: Service.preco
 		};
 
 		// Acionando promisses para o endpoint
@@ -141,11 +170,11 @@ class FirebaseHandler {
 	/**
      * Método para tentar realizar um novo registro de peça.
      */
-	tryToRegisterTool = async (ServiceAndTool) => {
+	tryToRegisterTool = async (Tool) => {
 		let jsonToSend = {
-			nome: ServiceAndTool.nome,
-			preco: parseFloat(ServiceAndTool.price),
-			uni: parseInt(1)
+			nome: Tool.nome,
+			preco: Tool.price,
+			uni: Tool.uni
 		};
 
 		// Acionando promisses para o endpoint
@@ -314,6 +343,23 @@ class FirebaseHandler {
 	deleteCertainTruck = async (id) => {
 		try {
 			let res = await axios.delete(ENDPOINT_ADDRESS + '/truck/delete/' + id);
+
+			if (res != null) {
+				if (res.status === 200) {
+					return true;
+				}
+			}
+		} catch (e) { }
+
+		return false;
+	};
+
+	/**
+	 * Método para deletar um certo evento no calendário.
+	 */
+	deleteCertainCalendarEvent = async (officeID, eventID) => {
+		try {
+			let res = await axios.delete(ENDPOINT_ADDRESS + '/schedule/delete/' + officeID + '/' + eventID);
 
 			if (res != null) {
 				if (res.status === 200) {

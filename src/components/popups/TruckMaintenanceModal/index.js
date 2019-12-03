@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
+
 const Fade = React.forwardRef(function Fade(props, ref) {
 	const { in: open, children, onEnter, onExited, ...other } = props;
 	const style = useSpring({
@@ -64,11 +65,12 @@ const Fade = React.forwardRef(function Fade(props, ref) {
 });
 
 export default function TruckMaintenanceModal(props) {
+
 	const classes = useStyles();
 	const [users, setUsers] = React.useState([]);
 	const [trucks, setTrucks] = React.useState([]);
 	const [selectedTruck, setSelectedTruck] = React.useState('');
-	const [selectedMechanical, setSelectedMechanical] = React.useState('');
+	const [selectedMechanical, setSelectedMechanical] = React.useState({nome: ""});
 	const [title, setTitle] = React.useState('');
 
 	const handleTruckChange = (event) => {
@@ -81,29 +83,46 @@ export default function TruckMaintenanceModal(props) {
 
 	const handleClose = () => {
 		clearState();
+
+		
 		props.closePopup({ isRegisterConfirmed: false });
 	};
 
-	const handleRegister = () => {
+	const handleUpdate = () => {
 		clearState();
+
+		props.closePopup({
+			isUpdating: true,
+			isRegisterConfirmed: false,
+			truck: props.selectedMaintance.placa,
+			mechanical: selectedMechanical.nome,
+			titulo: props.selectedMaintance.nome,
+			placa_caminhao: props.selectedMaintance.placa,
+			id_usuario: selectedMechanical.email
+		});
+		
+	};
+
+	const handleRegister = async () => {
+		clearState();
+
+
 		props.closePopup({
 			isDeleting: false,
+			isUpdating: false,
 			isRegisterConfirmed: true,
 			truck: selectedTruck,
-			mechanical: selectedMechanical,
-			title
+			mechanical: selectedMechanical.nome,
+			title,
+			titulo: title,
+			placa_caminhao: selectedTruck,
+			id_usuario: selectedMechanical.email
 		});
 	};
 
 	const handleDelete = () => {
 		clearState();
-		props.closePopup({
-			isDeleting: true,
-			isRegisterConfirmed: true,
-			truck: selectedTruck,
-			mechanical: selectedMechanical,
-			title
-		});
+		props.closePopup({isDeleting: true});
 	};
 
 	const clearState = () => {
@@ -188,7 +207,7 @@ export default function TruckMaintenanceModal(props) {
 									className={classes.selectEmpty}
 								>
 									{users.map((user) => {
-										return <MenuItem value={user.nome}>{user.nome}</MenuItem>;
+										return <MenuItem value={user}>{user.nome}</MenuItem>;
 									})}
 								</Select>
 							</FormControl>
@@ -227,8 +246,10 @@ export default function TruckMaintenanceModal(props) {
 			</div>
 		);
 	}
-	// Showing the read only modal
+	// Showing the read / update only modal
 	else {
+
+		// Drawing...
 		return (
 			<div>
 				<Modal
@@ -254,14 +275,30 @@ export default function TruckMaintenanceModal(props) {
 								type="text"
 								disabled
 							/>
-							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
-								Mecânico
-							</InputLabel>
-							<input
-								defaultValue={props.selectedMaintance.mechanical}
-								type="text"
-								disabled
-							/>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Mecânico (Atual)
+								</InputLabel>
+								<input
+									defaultValue={props.selectedMaintance.mechanical}
+									type="text"
+									disabled
+								/>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="demo-simple-select-placeholder-label-label">
+									Trocar para o mecânico...
+								</InputLabel>
+								<Select
+									id="demo-simple-select-placeholder-label"
+									onChange={handleMechanicalChange}
+									value={selectedMechanical}
+									displayEmpty
+									className={classes.selectEmpty}
+								>
+									{users.map((user) => {
+										return <MenuItem value={user}>{user.nome}</MenuItem>;
+									})}
+								</Select>
+							</FormControl>
 							<InputLabel shrink id="demo-simple-select-placeholder-label-label">
 								Placa do caminhão
 							</InputLabel>
@@ -273,15 +310,22 @@ export default function TruckMaintenanceModal(props) {
 							<div className={classes.buttonsDiv}>
 								<Button variant="contained" className={classes.buttonCancel} onClick={handleClose}>
 									Voltar
-							</Button>
+								</Button>
 								<Button
 									variant="contained"
-									color="danger"
+									className={classes.buttonCancel}
+									onClick={handleUpdate}
+								>
+									Alterar
+								</Button>
+								<Button
+									variant="contained"
+									color="primary"
 									className={classes.buttonRegister}
 									onClick={handleDelete}
 								>
 									Excluir
-							</Button>
+								</Button>
 							</div>
 						</div>
 					</Fade>

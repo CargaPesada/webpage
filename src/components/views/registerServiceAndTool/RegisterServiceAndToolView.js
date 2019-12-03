@@ -1,16 +1,13 @@
 import React from 'react';
 import InputMask from 'react-input-mask';
 import FirebaseHandler from '../../../utils/firebase/FirebaseHandler';
-import Truck from '../../../models/Truck';
-import ServiceAndTool from '../../../models/ServiceAndTool';
+import Service from '../../../models/Service'
+import Tool from '../../../models/Tool'
 
 class RegisterServiceAndToolView extends React.Component {ent
     constructor(props) {
         super(props);
 
-        this.state = {
-            marca: ""
-        }
     }
 
     /**
@@ -30,7 +27,8 @@ class RegisterServiceAndToolView extends React.Component {ent
         let errorMessages = "";
 
         let nome = document.getElementById('nome').value;
-        let price = document.getElementById('price').value;
+        let preco = parseFloat(document.getElementById('price').value);
+        let uni = parseInt(document.getElementById('uni').value);
 
         // Validando o campo nome
         if (nome.length === 0) {
@@ -38,26 +36,32 @@ class RegisterServiceAndToolView extends React.Component {ent
         }
 
         // Validando o campo preco
-        if (price.length === 0) {
+        if (preco.length === 0) {
             errorMessages += "\n* Preco não preenchido";
+        }
+
+        // Validando o campo quantidade
+        if (uni.length === 0) {
+            errorMessages += "\n* Quantidade não preenchida";
         }
 
         // Verificando se existe mensagens de erros a serem exibidas...
         if (errorMessages === "") {
 
-            let newServiceAndTool = new ServiceAndTool(nome, price);
+            let newService = new Service(nome, preco);
+            let newTool = new Tool(nome, preco, uni);
 
             let firebaseHandler = new FirebaseHandler();
             let registered
 
             if (document.getElementById('radio_service').checked) {
-                registered = await firebaseHandler.tryToRegisterService(newServiceAndTool);
+                registered = await firebaseHandler.tryToRegisterService(newService);
             }
 
             if (document.getElementById('radio_piece').checked) {
-                registered = await firebaseHandler.tryToRegisterTool(newServiceAndTool);
+                registered = await firebaseHandler.tryToRegisterTool(newTool);
             }
-                
+
             if (registered) {
                 this.clearForm();
                 alert('Registrado com sucesso!');
@@ -72,10 +76,11 @@ class RegisterServiceAndToolView extends React.Component {ent
 
     }
 
-    handleBrandChange(name) {
-        this.setState({
-            marca: name
-        })
+    handleRadioChange = () => {
+        if (document.getElementById('radio_piece').checked)
+            document.getElementById('uni').disabled = false
+        else
+            document.getElementById('uni').disabled = true
     }
 
 
@@ -112,6 +117,7 @@ class RegisterServiceAndToolView extends React.Component {ent
                                                 type="radio"
                                                 name="serviceandtool"
                                                 value="service"
+                                                onClick={this.handleRadioChange}
                                                 checked
                                             />
                                             Serviço
@@ -122,6 +128,7 @@ class RegisterServiceAndToolView extends React.Component {ent
                                                 type="radio"
                                                 name="serviceandtool"
                                                 value="tool"
+                                                onClick={this.handleRadioChange}
                                             />
                                             Peça
 										</label>
@@ -148,6 +155,19 @@ class RegisterServiceAndToolView extends React.Component {ent
                                         id="price"
                                         placeholder="Preço"
                                         style={{ width: "100%" }}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Quantidade *</label>
+                                    <input
+                                        maxLength="8"
+                                        type="number"
+                                        name="uni"
+                                        id="uni"
+                                        placeholder="Quantidade"
+                                        style={{ width: "100%" }}
+                                        disabled
                                     />
                                 </div>
 
