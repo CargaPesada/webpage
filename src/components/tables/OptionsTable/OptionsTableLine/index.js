@@ -25,7 +25,7 @@ export default function OptionsTableLine(props) {
                 Nome: {props.object.nome}
             </div>
             <div className='uni'>
-                Unidades: {props.object.uni}
+                Quantidade: {props.object.uni}
             </div>
             <div className='price'>
                 Preco: {props.object.price}
