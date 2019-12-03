@@ -9,7 +9,6 @@ const ENDPOINT_ADDRESS = 'https://carga-pesada-d933f.appspot.com';
 
 // Initialize Firebase
 firebase.initializeApp(credential);
-console.log(credential)
 
 class FirebaseHandler {
 	/**

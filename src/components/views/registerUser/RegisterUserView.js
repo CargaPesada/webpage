@@ -51,6 +51,8 @@ class RegisterUserView extends React.Component {
                 this.setState({ bairro: data.neighborhood });
                 this.setState({ rua: data.street });
                 this.setState({ pais: 'BR' });
+            }).catch((error) => {
+                console.log(error);
             });
     }
 
