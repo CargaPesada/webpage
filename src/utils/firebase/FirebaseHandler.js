@@ -1,14 +1,15 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import * as credentials from './credential';
+import credential from './credential'
 import JOB_TITLE_IDS from '../../models/JobTitle';
 import Tool from '../../models/Tool';
 const axios = require('axios');
 const ENDPOINT_ADDRESS = 'https://carga-pesada-d933f.appspot.com';
 
 // Initialize Firebase
-firebase.initializeApp(credentials);
+firebase.initializeApp(credential);
+console.log(credential)
 
 class FirebaseHandler {
 	/**
