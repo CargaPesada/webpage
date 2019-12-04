@@ -449,61 +449,61 @@ class RegisterServiceOrderView extends React.Component {
     * Ao ícone (xis / x) ser clicado do item selecionado, ele será removido do state e da tela.
     */
     cartsRowRemover = async (e, name, type) => {
+        if(window.confirm('Deseja mesmo deletar?')) {
+            e.preventDefault();
 
-        e.preventDefault();
+            // Se o type for igual a 1, então removeremos o X[index] do SERVIÇO
+            if (type === 1) {
 
-        // Se o type for igual a 1, então removeremos o X[index] do SERVIÇO
-        if (type === 1) {
+                for (let i in this.state.servicosAdicionados) {
+                    if (this.state.servicosAdicionados[i].nome == name) {
 
-            for (let i in this.state.servicosAdicionados) {
-                if (this.state.servicosAdicionados[i].nome == name) {
+                        let servicosAdicionados = this.state.servicosAdicionados;
+                        let servicosTableRows = this.state.servicosTableRows;
 
-                    let servicosAdicionados = this.state.servicosAdicionados;
-                    let servicosTableRows = this.state.servicosTableRows;
+                        let costToSubtract = servicosAdicionados[i].price;
 
-                    let costToSubtract = servicosAdicionados[i].price;
+                        servicosAdicionados.splice(i, 1);
+                        servicosTableRows.splice(i, 1);
 
-                    servicosAdicionados.splice(i, 1);
-                    servicosTableRows.splice(i, 1);
+                        this.setState({
+                            servicosAdicionados: servicosAdicionados,
+                            servicosTableRows: servicosTableRows,
+                            total: this.state.total - costToSubtract
+                        });
 
-                    this.setState({
-                        servicosAdicionados: servicosAdicionados,
-                        servicosTableRows: servicosTableRows,
-                        total: this.state.total - costToSubtract
-                    });
-
-                    return;
+                        return;
+                    }
                 }
+
             }
+            // Senão removeremos a X[index] PEÇA
+            else {
 
-        }
-        // Senão removeremos a X[index] PEÇA
-        else {
+                for (let i in this.state.pecasAdicionadas) {
+                    if (this.state.pecasAdicionadas[i].nome == name) {
 
-            for (let i in this.state.pecasAdicionadas) {
-                if (this.state.pecasAdicionadas[i].nome == name) {
+                        let pecasAdicionadas = this.state.pecasAdicionadas;
+                        let pecasTableRows = this.state.pecasTableRows;
 
-                    let pecasAdicionadas = this.state.pecasAdicionadas;
-                    let pecasTableRows = this.state.pecasTableRows;
+                        let costToSubtract = pecasAdicionadas[i].price * pecasAdicionadas[i].uni;
 
-                    let costToSubtract = pecasAdicionadas[i].price * pecasAdicionadas[i].uni;
+                        pecasAdicionadas.splice(i, 1);
+                        pecasTableRows.splice(i, 1);
 
-                    pecasAdicionadas.splice(i, 1);
-                    pecasTableRows.splice(i, 1);
+                        this.setState({
+                            pecasAdicionadas: pecasAdicionadas,
+                            pecasTableRows: pecasTableRows,
+                            total: this.state.total - costToSubtract
+                        });
 
-                    this.setState({
-                        pecasAdicionadas: pecasAdicionadas,
-                        pecasTableRows: pecasTableRows,
-                        total: this.state.total - costToSubtract
-                    });
-
-                    return;
+                        return;
+                    }
                 }
+
+
             }
-
-
         }
-
     }
 
 
@@ -629,22 +629,25 @@ class RegisterServiceOrderView extends React.Component {
 
         let jsonLocal = JSON.parse(localStorage.getItem("OrdemDeServico"));
 
-        for (let i in jsonLocal.listaDeOrdens) {
-            if (jsonLocal.listaDeOrdens[i]["id"] == this.state.eventoSelecionado.id) {
-                jsonLocal.listaDeOrdens.splice(i, 1);
+        console.log(jsonLocal + ' delete clicked');
+        if(window.confirm('Deseja mesmo deletar?')) {
+            for (let i in jsonLocal.listaDeOrdens) {
+                if (jsonLocal.listaDeOrdens[i]["id"] == this.state.eventoSelecionado.id) {
+                    jsonLocal.listaDeOrdens.splice(i, 1);
 
-                localStorage.setItem("OrdemDeServico", JSON.stringify(jsonLocal));
+                    localStorage.setItem("OrdemDeServico", JSON.stringify(jsonLocal));
 
-                this.setState({
-                    pecasAdicionadas: [],
-                    servicosAdicionados: [],
-                    pecasTableRows: [],
-                    servicosTableRows: [],
-                    showDelete: false,
-                    total: 0
-                })
+                    this.setState({
+                        pecasAdicionadas: [],
+                        servicosAdicionados: [],
+                        pecasTableRows: [],
+                        servicosTableRows: [],
+                        showDelete: false,
+                        total: 0
+                    })
 
-                break;
+                    break;
+                }
             }
         }
 
