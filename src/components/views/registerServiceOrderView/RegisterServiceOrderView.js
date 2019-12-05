@@ -466,11 +466,22 @@ class RegisterServiceOrderView extends React.Component {
                     servicosAdicionados.splice(i, 1);
                     servicosTableRows.splice(i, 1);
 
-                    this.setState({
-                        servicosAdicionados: servicosAdicionados,
-                        servicosTableRows: servicosTableRows,
-                        total: this.state.total - costToSubtract
-                    });
+                    // Gambiarra
+                    if (this.state.total - costToSubtract < 0) {
+                        this.setState({
+                            servicosAdicionados: servicosAdicionados,
+                            servicosTableRows: servicosTableRows,
+                            total: 0
+                        });
+                    }
+                    else {
+
+                        this.setState({
+                            servicosAdicionados: servicosAdicionados,
+                            servicosTableRows: servicosTableRows,
+                            total: this.state.total - costToSubtract
+                        });
+                    }
 
                     return;
                 }
@@ -491,11 +502,21 @@ class RegisterServiceOrderView extends React.Component {
                     pecasAdicionadas.splice(i, 1);
                     pecasTableRows.splice(i, 1);
 
-                    this.setState({
-                        pecasAdicionadas: pecasAdicionadas,
-                        pecasTableRows: pecasTableRows,
-                        total: this.state.total - costToSubtract
-                    });
+                    // Gambiarra
+                    if (this.state.total - costToSubtract < 0) {
+                        this.setState({
+                            pecasAdicionadas: pecasAdicionadas,
+                            pecasTableRows: pecasTableRows,
+                            total: 0
+                        });
+                    }
+                    else {
+                        this.setState({
+                            pecasAdicionadas: pecasAdicionadas,
+                            pecasTableRows: pecasTableRows,
+                            total: this.state.total - costToSubtract
+                        });
+                    }
 
                     return;
                 }
@@ -884,7 +905,7 @@ class RegisterServiceOrderView extends React.Component {
 
 
                                 {/* Preço total dos itens + serviços */}
-                                <h1 className="display-5 text-center mt-5">Custo Total: R$ {this.state.total}</h1>
+                                <h1 className="display-5 text-center mt-5">Custo Total: R$ {this.state.total.toFixed(2)}</h1>
 
 
 
